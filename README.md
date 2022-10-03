@@ -7,4 +7,4 @@ SwipeArt is a social platform that connects people looking for art, music and et
 Osman Yavuz Olgun 21703051
 Hasan Taşpolat 21801841
 Mustafa Yiğit Sayın 21703143
-<<
+Ahmet Obuz 21704078
