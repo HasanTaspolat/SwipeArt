@@ -1,0 +1,17 @@
+{
+  "expo": {
+    "name": "swiperart",
+    "slug": "swiperart",
+    "version": "1.0.0",
+    "description": "<< >> Senior Project for CTIS411",
+    "sdkVersion": "47.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "android": {
+      "package": "com.swipeart"
+    }
+  }
+}
