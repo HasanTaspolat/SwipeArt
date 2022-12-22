@@ -1,0 +1,24 @@
+{
+  "name": "swiperart",
+  "version": "1.0.0",
+  "description": "<< >> Senior Project for CTIS411",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HasanTaspolat/SwipeArt.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HasanTaspolat/SwipeArt/issues"
+  },
+  "homepage": "https://github.com/HasanTaspolat/SwipeArt#readme",
+  "dependencies": {
+    "mongodb": "^4.13.0"
+  },
+  "devDependencies": {}
+}
