@@ -1,4 +1,3 @@
-import React, { useState } from 'react'
 import { View, StyleSheet, TouchableOpacity } from 'react-native'
 import { Text } from 'react-native-paper'
 import Background from '../components/Background'
@@ -10,6 +9,26 @@ import BackButton from '../components/BackButton'
 import { emailValidator } from '../helpers/emailValidator'
 import { passwordValidator } from '../helpers/passwordValidator'
 import { nameValidator } from '../helpers/nameValidator'
+import React, { useState, useEffect } from 'react';
+import { firebaseAuth, createUserWithEmailAndPassword } from "firebase/auth";
+
+
+//signUp method
+const handleSingUp = () => {
+  createUserWithEmailAndPassword(firebaseAuth, "myigitsyn@gmail.com", "123456")
+  .then((userCredential) => {
+    // Signed in 
+    const user = userCredential.user;
+    // ...
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // ..
+  });
+}
+
+
 
 export default function RegisterScreen({ navigation }) {
   const [name, setName] = useState({ value: '', error: '' })
@@ -68,10 +87,10 @@ export default function RegisterScreen({ navigation }) {
       />
       <Button
         mode="contained"
-        onPress={onSignUpPressed}
+        onPress={handleSingUp}
         style={{ marginTop: 24 }}
       >
-        Sign Up
+       Sign Up
       </Button>
       <View style={styles.row}>
         <Text>Already have an account? </Text>

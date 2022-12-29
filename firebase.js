@@ -1,32 +1,25 @@
-// // Import the functions you need from the SDKs you need
-// //import firebase from "firebase/app";
-// const firebase = require('firebase/app')
-// const auth = (require('firebase/auth'))
-// const db = (require('firebase/firestore'))
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+//import { get } from "http";
+import { getAuth } from "@firebase/auth";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyAezLZQJVU_WGoxmOKd-kCLjN_56ZEFH_c",
+  authDomain: "swipeart-f3b81.firebaseapp.com",
+  projectId: "swipeart-f3b81",
+  storageBucket: "swipeart-f3b81.appspot.com",
+  messagingSenderId: "145272981770",
+  appId: "1:145272981770:web:ad9fb31c3d6d2b576112f3",
+  measurementId: "G-9B5T539EE8"
+};
 
-// // TODO: Add SDKs for Firebase products that you want to use
-// // https://firebase.google.com/docs/web/setup#available-libraries
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 
-// // Your web app's Firebase configuration
-// const firebaseConfig = {
-//     apiKey: "AIzaSyAezLZQJVU_WGoxmOKd-kCLjN_56ZEFH_c",
-//     authDomain: "jotformparking.firebaseapp.com",
-//     projectId: "swipeart-f3b81",
-//     storageBucket: "jotformparking.appspot.com",
-//     messagingSenderId: "45270793210",
-//     appId: "1:45270793210:web:ba0aa757284c0786cb8243"
-// };
-
-// // Initialize Firebase
-// let app;
-
-// app = firebase.initializeApp(firebaseConfig);
-
-
-
-
-
-// export { app, db }
-
-//THIS IS THE SAMPLE OF FIREBASE THAT REMAINED FROM JOTFORM, YOU CAN CONSIDER IT BUT I DO NOT KNOW IT IS CORRECT OR RIGHT, PLEASE CHECK WEB FOR IT 
+export const firebaseAuth = getAuth(app);

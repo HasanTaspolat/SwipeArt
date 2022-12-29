@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "145272981770",
+    "project_id": "swipeart-f3b81",
+    "storage_bucket": "swipeart-f3b81.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:145272981770:android:4bcb57ccc531417f6112f3",
+        "android_client_info": {
+          "package_name": "com.swipeart"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "145272981770-vg04ppapil9jrl0ea6500h01h8o6109m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVMDDgcAKL3ANQage-utTKUQ46_92B0tc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "145272981770-vg04ppapil9jrl0ea6500h01h8o6109m.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "145272981770-vujh0ee9c8c71pg5rs7h5el7m3g0tmeh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.swipeart"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:145272981770:android:2a824ced60c6ca696112f3",
+        "android_client_info": {
+          "package_name": "com.swiperart"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "145272981770-vg04ppapil9jrl0ea6500h01h8o6109m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVMDDgcAKL3ANQage-utTKUQ46_92B0tc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "145272981770-vg04ppapil9jrl0ea6500h01h8o6109m.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "145272981770-vujh0ee9c8c71pg5rs7h5el7m3g0tmeh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.swipeart"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

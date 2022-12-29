@@ -4,7 +4,6 @@
     "slug": "swiperart",
     "version": "1.0.0",
     "description": "<< >> Senior Project for CTIS411",
-    "sdkVersion": "47.0.0",
     "platforms": [
       "ios",
       "android",
@@ -12,6 +11,9 @@
     ],
     "android": {
       "package": "com.swipeart"
+    },
+    "ios": {
+      "bundleIdentifier": "com.swipeart"
     }
   }
 }
