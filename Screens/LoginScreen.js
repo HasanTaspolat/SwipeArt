@@ -1,111 +1,172 @@
-import React, { useState } from 'react'
-import { TouchableOpacity, StyleSheet, View } from 'react-native'
-import { Text } from 'react-native-paper'
-import Background from '../components/Background'
-import Logo from '../components/Logo'
-import Header from '../components/Header'
-import Button from '../components/Button'
-import TextInput from '../components/TextInput'
-import BackButton from '../components/BackButton'
-import { emailValidator } from '../helpers/emailValidator'
-import { passwordValidator } from '../helpers/passwordValidator' 
-import {auth} from "../firebase"
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import React, { useEffect, useState } from 'react'
 
-//Login method
-const handleLogin = () => {
+import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
+import normalize from 'react-native-normalize';
+import { firebase } from "../firebase.js"
+import {
+  ActivityIndicator, Text, StyleSheet, View, TextInput, ScrollView,
+  Image, TouchableHighlight, Modal, ToastAndroid,
+} from 'react-native';
+
+// import TabsCustomer from './TabsCustomer';
+import '@react-navigation/native-stack'
+import ChooseScreenFirst from './ChooseScreenFirst';
+import ResetPasswordScreen from './ResetPasswordScreen';
+import RegisterScreen from './RegisterScreen';
+// onPress={() => {  navigation.navigate(LoginScreen)  }}
+
+const LoginScreen = ({ navigation }) => {
+  const [email, setEmail] = useState()
+  const [password, setPassword] = useState()
   const auth = getAuth();
-signInWithEmailAndPassword(auth, email, password)
-  .then((userCredential) => {
-    // Signed in 
-    const user = userCredential.user;
-    // ...
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-  });
-}
+  isLoading: false;
+  const [userMessage, setUserMessage] = useState()
 
-export default function LoginScreen({ navigation }) {
-  const [email, setEmail] = useState({ value: '', error: '' })
-  const [password, setPassword] = useState({ value: '', error: '' })
+  const handleSignInCustomer = () => {
 
-  const onLoginPressed = () => {
-    const emailError = emailValidator(email.value)
-    const passwordError = passwordValidator(password.value)
-    if (emailError || passwordError) {
-      setEmail({ ...email, error: emailError })
-      setPassword({ ...password, error: passwordError })
-      return
-    }
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'Dashboard' }],
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        var user = userCredential.user;
+
+      })
+      .catch((error) => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.log(errorCode, errorMessage);
+        // ..
+
+      });
+    onAuthStateChanged(auth, user => {
+      if (user) {
+        navigation.navigate(ChooseScreenFirst)
+        setUserMessage('')
+      }
+      else {
+        setUserMessage('Wrong Password or Email! ');
+      }
     })
-  }
 
+  }
   return (
-    <Background>
-      <BackButton goBack={navigation.goBack} />
-      <Logo />
-      <Header>Welcome back.</Header>
+    <View style={styles.main}>
+      <Text style={styles.header2}>E-mail</Text>
       <TextInput
-        label="Email"
-        returnKeyType="next"
-        value={email.value}
-        onChangeText={(text) => setEmail({ value: text, error: '' })}
-        error={!!email.error}
-        errorText={email.error}
-        autoCapitalize="none"
-        autoCompleteType="email"
-        textContentType="emailAddress"
-        keyboardType="email-address"
+        style={styles.input}
+        placeholder='E-mail'
+        value={email}
+        onChangeText={text => setEmail(text)}
       />
+      <Text style={[styles.header2, styles.passHead]}>Password</Text>
       <TextInput
-        label="Password"
-        returnKeyType="done"
-        value={password.value}
-        onChangeText={(text) => setPassword({ value: text, error: '' })}
-        error={!!password.error}
-        errorText={password.error}
-        secureTextEntry
+        style={styles.input}
+        value={password}
+        placeholder='Password'
+        onChangeText={text => setPassword(text)}
+        secureTextEntry={true}
       />
-      <View style={styles.forgotPassword}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('ResetPasswordScreen')}
-        >
-          <Text style={styles.forgot}>Forgot your password?</Text>
-        </TouchableOpacity>
-      </View>
-      <Button mode="contained" onPress={handleLogin}>
-        Login
-      </Button>
-      <View style={styles.row}>
-        <Text>Don’t have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.replace('RegisterScreen')}>
-          <Text style={styles.link}>Sign up</Text>
-        </TouchableOpacity>
-      </View>
-    </Background>
+
+      <Text style={styles.userMessageTitle}>{userMessage}</Text>
+
+      <TouchableHighlight
+        activeOpacity={0.6}
+        underlayColor="#78bb07"
+        style={styles.button}
+        onPress={handleSignInCustomer}
+      >
+        <Text
+          style={styles.button1title}>Sign In As a Customer</Text>
+      </TouchableHighlight>
+
+      <TouchableHighlight
+        activeOpacity={0.8}
+        underlayColor="#ffffff"
+        style={styles.button2}
+        onPress={() => navigation.navigate(RegisterScreen)}
+      >
+        <Text style={styles.button2title}>Don't Have an Account? <Text style={styles.signUpTitle}> Sign Up </Text> </Text>
+      </TouchableHighlight>
+    </View>
   )
+
 }
 
 const styles = StyleSheet.create({
-  forgotPassword: {
-    width: '100%',
-    alignItems: 'flex-end',
-    marginBottom: 24,
+  main: {
+    backgroundColor: '#ffffff',
+    width: "100%",
+    height: "100%",
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  row: {
-    flexDirection: 'row',
-    marginTop: 4,
+  input: {
+    width: '80%',
+    height: normalize(50),
+    borderWidth: 1.1,
+    borderRadius: normalize(5),
+    marginTop: normalize(20),
+    paddingHorizontal: normalize(10),
+    borderColor: '#C3CAD8',
   },
-  forgot: {
-    fontSize: 13,
+  button: {
+    borderRadius: normalize(6),
+    borderColor: '#78bb07',
+    borderWidth: 1,
+    backgroundColor: '#78bb07',
+    width: '70%',
+    height: normalize(50),
+    marginTop: normalize(50),
+    marginBottom: normalize(-20)
   },
-  link: {
+  button1title: {
+    textAlign: 'center',
+    color: '#fff',
     fontWeight: 'bold',
-  
+    fontSize: normalize(18),
+    paddingTop: normalize(13),
   },
+  button2: {
+    marginTop: normalize(60),
+    paddingBottom: normalize(30),
+  },
+  button2title: {
+    color: '#2C3345',
+    height: normalize(20),
+  },
+  header1: {
+    marginTop: normalize(25),
+    fontSize: normalize(22),
+    marginLeft: normalize(0),
+    fontWeight: 'bold',
+    color: "#2C3345",
+  },
+  header2: {
+    marginTop: normalize(25),
+    fontSize: normalize(17),
+    marginLeft: normalize(40),
+    color: '#2C3345',
+    fontWeight: '600',
+    marginRight: 'auto',
+  },
+  signUpTitle: {
+    color: '#2E69FF',
+  },
+  bottomImage: {
+    fontSize: normalize(16),
+    color: "#92969e",
+
+    marginBottom: normalize(15),
+  },
+  userMessageTitle: {
+    paddingTop: normalize(30),
+    fontSize: normalize(13),
+    alignItems: 'center',
+    fontWeight: 'bold',
+    color: "#ff0033"
+  },
+
 })
+
+
+export default LoginScreen

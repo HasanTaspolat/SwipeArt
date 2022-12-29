@@ -4,27 +4,53 @@ import Logo from '../components/Logo'
 import Header from '../components/Header'
 import Button from '../components/Button'
 import Paragraph from '../components/Paragraph'
+import {
+  StyleSheet,TouchableHighlight,Text
+} from 'react-native';
+import normalize from 'react-native-normalize';
+
+
 
 export default function StartScreen({ navigation }) {
   return (
     <Background>
       <Logo />
-      <Header>Login Template</Header>
-      <Paragraph>
-        The easiest way to start with your amazing application.
+      <Paragraph  style={styles.loginText} >
+        swipeArt.
       </Paragraph>
-      <Button
-        mode="contained"
+
+   <TouchableHighlight mode="contained"
         onPress={() => navigation.navigate('LoginScreen')}
+        style={styles.button}
       >
-        Login
-      </Button>
-      <Button
-        mode="outlined"
+        <Text style={styles.button1title}>  Login</Text>
+      </TouchableHighlight>
+
+      <TouchableHighlight  mode="outlined"
         onPress={() => navigation.navigate('RegisterScreen')}
+        style={styles.button}
+        color="#0000"
       >
-        Sign Up
-      </Button>
+        <Text style={styles.button1title}>  Sign Up</Text>
+      </TouchableHighlight>
+
     </Background>
   )
 }
+
+
+const styles = StyleSheet.create({
+  button: {
+    width: '100%',
+    marginVertical: 10,
+    paddingVertical: 18,
+    color: 'black',
+    backgroundColor: '#ffff',
+    color: '#0000',
+    alignItems:'center',
+    borderRadius: normalize(25),
+  },
+  loginText: {
+    color: '#fff',
+  }
+})

@@ -1,114 +1,181 @@
-import { View, StyleSheet, TouchableOpacity } from 'react-native'
-import { Text } from 'react-native-paper'
-import Background from '../components/Background'
-import Logo from '../components/Logo'
-import Header from '../components/Header'
-import Button from '../components/Button'
-import TextInput from '../components/TextInput'
-import BackButton from '../components/BackButton'
-import { emailValidator } from '../helpers/emailValidator'
-import { passwordValidator } from '../helpers/passwordValidator'
-import { nameValidator } from '../helpers/nameValidator'
-import React, { useState, useEffect } from 'react';
-import { firebaseAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import React, { useState } from 'react'
+
+import {
+  Text, StyleSheet, View, TextInput, ScrollView,
+  Image, TouchableHighlight, Modal, AppRegistry, Linking, TouchableOpacity
+} from 'react-native';
+import normalize from 'react-native-normalize';
+import LoginScreen from './LoginScreen';
+import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { firebase } from "../firebase.js"
+import '@react-navigation/native-stack'
 
 
-//signUp method
-const handleSingUp = () => {
-  createUserWithEmailAndPassword(firebaseAuth, "myigitsyn@gmail.com", "123456")
-  .then((userCredential) => {
-    // Signed in 
-    const user = userCredential.user;
-    // ...
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // ..
-  });
-}
+const RegisterScreen = ({ navigation }) => {
+  const [email, setEmail] = useState()
+  const [password, setPassword] = useState()
+  const [toggleCheckBox, setToggleCheckBox] = useState(true)
+  const [checkBoxMessage, setcheckBoxMessage] = useState()
 
+  const handleSignUp = () => {
+    const auth = getAuth();
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        var user = userCredential.user;
 
+      })
+      .catch((error) => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.log(errorCode, errorMessage);
+        // ..
 
-export default function RegisterScreen({ navigation }) {
-  const [name, setName] = useState({ value: '', error: '' })
-  const [email, setEmail] = useState({ value: '', error: '' })
-  const [password, setPassword] = useState({ value: '', error: '' })
+      });
 
-  const onSignUpPressed = () => {
-    const nameError = nameValidator(name.value)
-    const emailError = emailValidator(email.value)
-    const passwordError = passwordValidator(password.value)
-    if (emailError || passwordError || nameError) {
-      setName({ ...name, error: nameError })
-      setEmail({ ...email, error: emailError })
-      setPassword({ ...password, error: passwordError })
-      return
+    if (toggleCheckBox != true) {
+      setcheckBoxMessage('Account Created');
+      console.log("dawd");
+
     }
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'Dashboard' }],
-    })
   }
 
+
+
+
   return (
-    <Background>
-      <BackButton goBack={navigation.goBack} />
-      <Logo />
-      <Header>Create Account</Header>
-      <TextInput
-        label="Name"
-        returnKeyType="next"
-        value={name.value}
-        onChangeText={(text) => setName({ value: text, error: '' })}
-        error={!!name.error}
-        errorText={name.error}
-      />
-      <TextInput
-        label="Email"
-        returnKeyType="next"
-        value={email.value}
-        onChangeText={(text) => setEmail({ value: text, error: '' })}
-        error={!!email.error}
-        errorText={email.error}
-        autoCapitalize="none"
-        autoCompleteType="email"
-        textContentType="emailAddress"
-        keyboardType="email-address"
-      />
-      <TextInput
-        label="Password"
-        returnKeyType="done"
-        value={password.value}
-        onChangeText={(text) => setPassword({ value: text, error: '' })}
-        error={!!password.error}
-        errorText={password.error}
-        secureTextEntry
-      />
-      <Button
-        mode="contained"
-        onPress={handleSingUp}
-        style={{ marginTop: 24 }}
-      >
-       Sign Up
-      </Button>
-      <View style={styles.row}>
-        <Text>Already have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.replace('LoginScreen')}>
-          <Text style={styles.link}>Login</Text>
-        </TouchableOpacity>
+
+    <ScrollView>
+      <View style={styles.main}>
+
+        <Text style={styles.bottomImage}>welcome to SwipeArt.</Text>
+        <Text style={styles.bottomImage}>welcome to SwipeArt.</Text>
+        <Text style={styles.bottomImage}>welcome to SwipeArt.</Text>
+        <Text style={styles.header1}>Sign Up</Text>
+        <Text style={styles.header2}>E-mail</Text>
+        <TextInput
+          style={styles.input}
+          placeholder='E-mail'
+          placeholderTextColor="#ffff" 
+          value={email}
+          onChangeText={setEmail}
+        />
+        <Text style={[styles.header2, styles.passHead]}>Password</Text>
+        <TextInput
+          style={styles.input}
+          placeholder='Password'
+          value={password}
+          placeholderTextColor="#ffff" 
+          onChangeText={setPassword}
+          secureTextEntry={true}
+        />
+        <Text style={styles.checkBoxTitle}>{checkBoxMessage}</Text>
+
+        <TouchableHighlight style={styles.button}
+          activeOpacity={0.6}
+          underlayColor="#78bb07"
+          onPress={() => { toggleCheckBox ? navigation.navigate(LoginScreen) : <Text > 👎</Text>; handleSignUp() }}
+        >
+          <Text style={styles.button1title}>Create My Account</Text>
+
+
+        </TouchableHighlight>
+
+
       </View>
-    </Background>
+    </ScrollView>
   )
 }
 
 const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    marginTop: 4,
+  main: {
+    backgroundColor: '#000000',
+    width: normalize(380, 'width'),
+    height: normalize(620, 'height'),
+    alignItems: 'center',
+    paddingTop: normalize(100),
   },
-  link: {
+  input: {
+    width: '80%',
+    height: normalize(50),
+    borderWidth: 1.1,
+    borderRadius: normalize(5),
+    marginTop: normalize(20),
+    paddingHorizontal: normalize(10),
+    borderColor: '#C3CAD8',
+    color: '#fff',
+    
+  },
+  button: {
+    borderRadius: normalize(6),
+    borderColor: '#000000',
+    borderWidth: 1,
+    backgroundColor: '#ffff',
+    width: '70%',
+    height: normalize(50),
+    marginBottom: normalize(-20)
+  },
+  button1title: {
+    textAlign: 'center',
+    color: '#000',
     fontWeight: 'bold',
-    color: "blue",
+    fontSize: normalize(18),
+    paddingTop: normalize(13),
   },
+  button2: {
+    paddingTop: normalize(25),
+  },
+  button2title: {
+    color: '#2C3345',
+    height: normalize(20),
+  },
+  header1: {
+    marginTop: normalize(25),
+    fontSize: normalize(22),
+    marginLeft: normalize(0),
+    fontWeight: 'bold',
+    color: "#FFFFF"
+  },
+  checkBoxTitle: {
+    marginBottom: normalize(25),
+    fontSize: normalize(12),
+    alignItems: 'center',
+    fontWeight: 'bold',
+    color: "#ff0033"
+  },
+  header2: {
+    marginTop: normalize(25),
+    fontSize: normalize(17),
+    marginLeft: normalize(40),
+    color: '#FFFFFF',
+    fontWeight: '600',
+    marginRight: 'auto',
+  },
+  bottomImage: {
+   
+    fontSize: normalize(16),
+    color: "#92969e",
+    position: 'absolute',
+    marginTop: normalize(50),
+    },
+  termsText: {
+
+    marginTop: normalize(10),
+    paddingLeft: normalize(20),
+    marginLeft: normalize(40),
+    width: normalize(300, 'width'),
+    height: normalize(50, 'height'),
+    color: 'black',
+
+  },
+  checkBoxStyle: {
+    alignSelf: "center",
+    borderColor: '#C3CAD8',
+    borderWidth: 1.1,
+    borderRadius: normalize(5),
+    marginRight: normalize(270),
+    transform: [{ translateY: normalize(33) }],
+  },
+
 })
+
+export default RegisterScreen
