@@ -13,6 +13,8 @@ import '@react-navigation/native-stack'
 import ChooseScreenFirst from './ChooseScreenFirst';
 import ResetPasswordScreen from './ResetPasswordScreen';
 import RegisterScreen from './RegisterScreen';
+import ResetPassword from './ResetPasswordScreen';
+
 // onPress={() => {  navigation.navigate(LoginScreen)  }}
 
 const LoginScreen = ({ navigation }) => {
@@ -84,6 +86,15 @@ const LoginScreen = ({ navigation }) => {
         onPress={() => navigation.navigate(RegisterScreen)}
       >
         <Text style={styles.button2title}>Don't Have an Account? <Text style={styles.signUpTitle}> Sign Up </Text> </Text>
+      </TouchableHighlight>
+
+      <TouchableHighlight
+        activeOpacity={0.8}
+        underlayColor="#ffffff"
+        style={styles.button2}
+        onPress={() => navigation.navigate(ResetPassword)}
+      >
+        <Text style={styles.button2title}>Forgot your password? <Text style={styles.signUpTitle}> Reset Password </Text> </Text>
       </TouchableHighlight>
     </View>
   )
