@@ -4,30 +4,49 @@ import {
     Text, StyleSheet, View, TextInput, ScrollView,
     Image, TouchableHighlight, Modal, AppRegistry, Linking, TouchableOpacity
 } from 'react-native';
-import ArtistMusician from './ArtistMusician';
-import ArtistPainter from './ArtistPainter';
-export default function ChooseScreenFirst({ navigation }) {
+import ArtistMusicianType from './ArtistMusicianType';
+import MainPage from './MainPage';
+
+export default function ArtistPainter({ navigation }) {
 
     return (
         <Background>
-            <Text style={[{ color: 'white', marginBottom: 20, fontWeight: 'bold' }]} > What kind of artist are you?</Text>
+            <Text style={[{ color: 'white', marginBottom: 20, fontWeight: 'bold' }]} > what is your specific profession?</Text>
             <TouchableHighlight
-                onPress={() => navigation.navigate(ArtistMusician)}
+                onPress={() => navigation.navigate(MainPage)}
             >
                 <View style={styles.button}>
                     <Text style={styles.textButton}>
-                        Musician
+                        Digital Design
+                    </Text>
+                </View>
+            </TouchableHighlight>
+            <TouchableHighlight
+                onPress={() => navigation.navigate(MainPage)}
+            >
+                <View style={styles.button}>
+                    <Text style={styles.textButton}>
+                        Restoration
                     </Text>
                 </View>
             </TouchableHighlight>
 
-
             <TouchableHighlight
-             onPress={() => navigation.navigate(ArtistPainter)}
+                onPress={() => navigation.navigate(MainPage)}
             >
                 <View style={styles.button}>
                     <Text style={styles.textButton}>
-                        Painter
+                        Graffiti
+                    </Text>
+                </View>
+            </TouchableHighlight>
+
+            <TouchableHighlight
+                onPress={() => navigation.navigate(MainPage)}
+            >
+                <View style={styles.button}>
+                    <Text style={styles.textButton}>
+                        Industrial
                     </Text>
                 </View>
             </TouchableHighlight>
@@ -57,11 +76,9 @@ const styles = StyleSheet.create({
             width: 0,
             height: 0,
         },
-
         shadowOpacity: 0.15,
         shadowRadius: 6.46,
         elevation: 9,
-
     },
     textButton: {
         color: 'white',

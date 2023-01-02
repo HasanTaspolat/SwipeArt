@@ -4,30 +4,48 @@ import {
     Text, StyleSheet, View, TextInput, ScrollView,
     Image, TouchableHighlight, Modal, AppRegistry, Linking, TouchableOpacity
 } from 'react-native';
-import ArtistMusician from './ArtistMusician';
-import ArtistPainter from './ArtistPainter';
-export default function ChooseScreenFirst({ navigation }) {
+import ArtistMusicianType from './ArtistMusicianType';
+
+export default function ArtistMusician({ navigation }) {
 
     return (
         <Background>
-            <Text style={[{ color: 'white', marginBottom: 20, fontWeight: 'bold' }]} > What kind of artist are you?</Text>
+            <Text style={[{ color: 'white', marginBottom: 20, fontWeight: 'bold' }]} > what is your specific profession?</Text>
             <TouchableHighlight
-                onPress={() => navigation.navigate(ArtistMusician)}
+                onPress={() => navigation.navigate(ArtistMusicianType)}
             >
                 <View style={styles.button}>
                     <Text style={styles.textButton}>
-                        Musician
+                        Vocalist
+                    </Text>
+                </View>
+            </TouchableHighlight>
+            <TouchableHighlight
+                onPress={() => navigation.navigate(ArtistMusicianType)}
+            >
+                <View style={styles.button}>
+                    <Text style={styles.textButton}>
+                        Producer
                     </Text>
                 </View>
             </TouchableHighlight>
 
-
             <TouchableHighlight
-             onPress={() => navigation.navigate(ArtistPainter)}
+                onPress={() => navigation.navigate(ArtistMusicianType)}
             >
                 <View style={styles.button}>
                     <Text style={styles.textButton}>
-                        Painter
+                        Sound Engineer
+                    </Text>
+                </View>
+            </TouchableHighlight>
+
+            <TouchableHighlight
+                onPress={() => navigation.navigate(ArtistMusicianType)}
+            >
+                <View style={styles.button}>
+                    <Text style={styles.textButton}>
+                        Composer
                     </Text>
                 </View>
             </TouchableHighlight>
