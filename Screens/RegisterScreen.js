@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-
 import {
   Text, StyleSheet, View, TextInput, ScrollView,
   Image, TouchableHighlight, Modal, AppRegistry, Linking, TouchableOpacity
@@ -8,6 +7,8 @@ import normalize from 'react-native-normalize';
 import LoginScreen from './LoginScreen';
 import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import { firebase } from "../firebase.js"
+import ChooseScreenFirst from './ChooseScreenFirst';
+
 import '@react-navigation/native-stack'
 
 
@@ -16,27 +17,51 @@ const RegisterScreen = ({ navigation }) => {
   const [password, setPassword] = useState()
   const [toggleCheckBox, setToggleCheckBox] = useState(true)
   const [checkBoxMessage, setcheckBoxMessage] = useState()
+  const [userMessage, setUserMessage] = useState()
 
   const handleSignUp = () => {
     const auth = getAuth();
+
+    // onAuthStateChanged(auth, user => {
+    //   if (user) {
+    //     setUserMessage('')
+
+    //   }
+    //   else {
+
+    //     setUserMessage('Wrong Password or Email! ');
+    //   }
+    // })
+
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         var user = userCredential.user;
-
+        navigation.navigate(LoginScreen)
+       
       })
       .catch((error) => {
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        console.log(errorCode, errorMessage);
-        // ..
-
+        // var errorCode = error.code;
+        // var errorMessage = error.message;
+        // // console.log(errorCode, errorMessage);
+        navigation.navigate(RegisterScreen)
+       
       });
 
-    if (toggleCheckBox != true) {
-      setcheckBoxMessage('Account Created');
-      console.log("dawd");
 
-    }
+    // createUserWithEmailAndPassword(auth, email, password)
+    //   .then((userCredential) => {
+    //     var user = userCredential.user;
+
+    //   })
+    //   .catch((error) => {
+    //     var errorCode = error.code;
+    //     var errorMessage = error.message;
+    //     console.log(errorCode, errorMessage);
+
+
+    //   });
+
+
   }
 
 
@@ -48,14 +73,13 @@ const RegisterScreen = ({ navigation }) => {
       <View style={styles.main}>
 
         <Text style={styles.bottomImage}>welcome to SwipeArt.</Text>
-        <Text style={styles.bottomImage}>welcome to SwipeArt.</Text>
-        <Text style={styles.bottomImage}>welcome to SwipeArt.</Text>
+     
         <Text style={styles.header1}>Sign Up</Text>
         <Text style={styles.header2}>E-mail</Text>
         <TextInput
           style={styles.input}
           placeholder='E-mail'
-          placeholderTextColor="#ffff" 
+          placeholderTextColor="#ffff"
           value={email}
           onChangeText={setEmail}
         />
@@ -64,7 +88,7 @@ const RegisterScreen = ({ navigation }) => {
           style={styles.input}
           placeholder='Password'
           value={password}
-          placeholderTextColor="#ffff" 
+          placeholderTextColor="#ffff"
           onChangeText={setPassword}
           secureTextEntry={true}
         />
@@ -72,8 +96,8 @@ const RegisterScreen = ({ navigation }) => {
 
         <TouchableHighlight style={styles.button}
           activeOpacity={0.6}
-          underlayColor="#78bb07"
-          onPress={() => { toggleCheckBox ? navigation.navigate(LoginScreen) : <Text > 👎</Text>; handleSignUp() }}
+          underlayColor="#DDDDDD"
+          onPress={() => { handleSignUp() }}
         >
           <Text style={styles.button1title}>Create My Account</Text>
 
@@ -103,7 +127,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: normalize(10),
     borderColor: '#C3CAD8',
     color: '#fff',
-    
+
   },
   button: {
     borderRadius: normalize(6),
@@ -133,7 +157,7 @@ const styles = StyleSheet.create({
     fontSize: normalize(22),
     marginLeft: normalize(0),
     fontWeight: 'bold',
-    color: "#FFFFF"
+    color: "white"
   },
   checkBoxTitle: {
     marginBottom: normalize(25),
@@ -151,12 +175,12 @@ const styles = StyleSheet.create({
     marginRight: 'auto',
   },
   bottomImage: {
-   
-    fontSize: normalize(16),
-    color: "#92969e",
+
+    fontSize: normalize(20),
+    color: "white",
     position: 'absolute',
     marginTop: normalize(50),
-    },
+  },
   termsText: {
 
     marginTop: normalize(10),

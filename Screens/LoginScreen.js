@@ -30,6 +30,17 @@ const LoginScreen = ({ navigation }) => {
       .then((userCredential) => {
         var user = userCredential.user;
 
+        onAuthStateChanged(auth, user => {
+          if (user) {
+            navigation.navigate(ChooseScreenFirst)
+            setUserMessage('')
+          }
+          else {
+            navigation.navigate(LoginScreen)
+            setUserMessage('Wrong Password or Email! ');
+          }
+        })
+
       })
       .catch((error) => {
         var errorCode = error.code;
@@ -38,15 +49,7 @@ const LoginScreen = ({ navigation }) => {
         // ..
 
       });
-    onAuthStateChanged(auth, user => {
-      if (user) {
-        navigation.navigate(ChooseScreenFirst)
-        setUserMessage('')
-      }
-      else {
-        setUserMessage('Wrong Password or Email! ');
-      }
-    })
+
 
   }
   return (
@@ -55,6 +58,7 @@ const LoginScreen = ({ navigation }) => {
       <TextInput
         style={styles.input}
         placeholder='E-mail'
+        placeholderTextColor={'white'}
         value={email}
         onChangeText={text => setEmail(text)}
       />
@@ -63,6 +67,7 @@ const LoginScreen = ({ navigation }) => {
         style={styles.input}
         value={password}
         placeholder='Password'
+        placeholderTextColor={'white'}
         onChangeText={text => setPassword(text)}
         secureTextEntry={true}
       />
@@ -71,17 +76,17 @@ const LoginScreen = ({ navigation }) => {
 
       <TouchableHighlight
         activeOpacity={0.6}
-        underlayColor="#78bb07"
+        underlayColor="blue"
         style={styles.button}
         onPress={handleSignInCustomer}
       >
         <Text
-          style={styles.button1title}>Sign In As a Customer</Text>
+          style={styles.button1title}>Sign In</Text>
       </TouchableHighlight>
 
       <TouchableHighlight
         activeOpacity={0.8}
-        underlayColor="#ffffff"
+       
         style={styles.button2}
         onPress={() => navigation.navigate(RegisterScreen)}
       >
@@ -90,7 +95,7 @@ const LoginScreen = ({ navigation }) => {
 
       <TouchableHighlight
         activeOpacity={0.8}
-        underlayColor="#ffffff"
+       
         style={styles.button2}
         onPress={() => navigation.navigate(ResetPassword)}
       >
@@ -103,7 +108,7 @@ const LoginScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   main: {
-    backgroundColor: '#ffffff',
+    backgroundColor: 'black',
     width: "100%",
     height: "100%",
     flex: 1,
@@ -118,21 +123,22 @@ const styles = StyleSheet.create({
     borderRadius: normalize(5),
     marginTop: normalize(20),
     paddingHorizontal: normalize(10),
-    borderColor: '#C3CAD8',
+    borderColor: 'white',
+    color: 'white'
   },
   button: {
-    borderRadius: normalize(6),
-    borderColor: '#78bb07',
+    borderRadius: normalize(10),
+    borderColor: 'blue',
     borderWidth: 1,
-    backgroundColor: '#78bb07',
+    backgroundColor: 'white',
     width: '70%',
     height: normalize(50),
-    marginTop: normalize(50),
+  
     marginBottom: normalize(-20)
   },
   button1title: {
     textAlign: 'center',
-    color: '#fff',
+    color: 'black',
     fontWeight: 'bold',
     fontSize: normalize(18),
     paddingTop: normalize(13),
@@ -142,7 +148,7 @@ const styles = StyleSheet.create({
     paddingBottom: normalize(30),
   },
   button2title: {
-    color: '#2C3345',
+    color: 'white',
     height: normalize(20),
   },
   header1: {
@@ -156,7 +162,7 @@ const styles = StyleSheet.create({
     marginTop: normalize(25),
     fontSize: normalize(17),
     marginLeft: normalize(40),
-    color: '#2C3345',
+    color: 'white',
     fontWeight: '600',
     marginRight: 'auto',
   },
@@ -176,7 +182,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: "#ff0033"
   },
-
 })
 
 

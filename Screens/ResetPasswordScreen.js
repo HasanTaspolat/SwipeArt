@@ -8,7 +8,7 @@ import {
   TouchableHighlight,
   View
 } from 'react-native';
-import { getAuth, firebase, createUserWithEmailAndPassword, sendPasswordResetEmail,onAuthStateChanged } from "firebase/auth";
+import { getAuth, firebase, createUserWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged } from "firebase/auth";
 
 
 
@@ -28,8 +28,8 @@ export default class ResetPasswordScreen extends Component {
 
   sendResetPasswors() {
     const auth = getAuth();
-   
-      sendPasswordResetEmail(auth,this.state.email)
+
+    sendPasswordResetEmail(auth, this.state.email)
       .then(() => {
         Alert.alert(`CHECK MAIL ${this.state.email}`);
         // call service and logic of business
@@ -48,20 +48,23 @@ export default class ResetPasswordScreen extends Component {
           barStyle="dark-content"
         />
         <Text style={styles.welcome}>
-          Forgot u password?
+          Forgot your password?
         </Text>
+
+
         <TextInput
           style={styles.emailText}
           onChangeText={(email) => this.setState({ email })}
           placeholder={'Enter email'}
-
+          placeholderTextColor={'white'}
         />
         <TouchableHighlight
+        style={styles.button}
           onPress={() => this.sendResetPasswors()}
         >
           <View style={styles.buttonForgot}>
             <Text style={styles.textButton}>
-              Send email now!
+              Send reset password e-mail link!
             </Text>
           </View>
         </TouchableHighlight>
@@ -75,30 +78,45 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'black'
   },
   welcome: {
-    fontSize: 30,
+    fontSize: 24,
     textAlign: 'center',
     margin: 10,
-
+    color: 'white',
     fontWeight: 'bold',
-    marginBottom: 100
+    marginBottom: 30
   },
   emailText: {
-    height: 50,
-    width: 300,
-
+    borderRadius: 6,
+    borderWidth: 1.1,
+    borderColor: 'white',
+    color: 'white',
+    width: '50%',
+    marginBottom: 30,
+    paddingLeft: 8,
   },
   buttonForgot: {
     height: 45,
     width: 300,
-
+    color: 'white',
     justifyContent: 'center',
   },
   textButton: {
     textAlign: 'center',
-    fontSize: 20,
+    fontSize: 16,
+    color: 'white',
 
     fontWeight: 'bold'
+  },
+  button: {
+    borderRadius: 6,
+    borderColor: '#000000',
+    borderWidth: 1,
+    backgroundColor: 'blue',
+    width: '70%',
+    height: 50,
+    marginBottom:-20
   },
 });

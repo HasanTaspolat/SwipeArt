@@ -6,8 +6,6 @@ import {
     TouchableOpacity,
     Image, ImageBackground
 } from 'react-native';
-import ImageBlurShadow from "react-native-image-blur-shadow";
-
 
 export default function MainPage({ navigation }) {
 
@@ -19,6 +17,7 @@ export default function MainPage({ navigation }) {
                 <Text style={styles.imageText}>John Kelly</Text>
                 <Text style={styles.imageText}>Musician</Text>
             </View>
+
 
         </View>
 
@@ -42,7 +41,7 @@ const styles = StyleSheet.create({
         transform: [
             { scale: 0.85 },
         ],
-        
+
     },
     ViewimageText: {
         position: 'absolute',
@@ -50,11 +49,11 @@ const styles = StyleSheet.create({
     },
     imageText: {
         top: 190,
-        left:80,
+        left: 80,
         fontSize: 24,
         fontWeight: 'bold',
         color: 'white',
-      
+
     }
 
 
