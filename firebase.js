@@ -19,13 +19,13 @@ import  'firebase/compat/auth';
 import  'firebase/compat/firestore';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAezLZQJVU_WGoxmOKd-kCLjN_56ZEFH_c",
-  authDomain: "swipeart-f3b81.firebaseapp.com",
-  projectId: "swipeart-f3b81",
-  storageBucket: "swipeart-f3b81.appspot.com",
-  messagingSenderId: "145272981770",
-  appId: "1:145272981770:web:ad9fb31c3d6d2b576112f3",
-  measurementId: "G-9B5T539EE8"
+  apiKey: "AIzaSyAt7cPNnSce0XxIzAP4SlC8Yi0F6pa4-FQ",
+  authDomain: "swipeart-b57c8.firebaseapp.com",
+  projectId: "swipeart-b57c8",
+  storageBucket: "swipeart-b57c8.appspot.com",
+  messagingSenderId: "810827365534",
+  appId: "1:810827365534:web:2f9ec3aac3f032ad8b4f8f",
+  measurementId: "G-NXYF3E2M8V"
 };
 
 firebase.initializeApp(firebaseConfig);
