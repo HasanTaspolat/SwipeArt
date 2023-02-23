@@ -6,33 +6,27 @@ import {
     TouchableOpacity,
     Image, ImageBackground
 } from 'react-native';
+import Sidebar from './Sidebar';
+import SwipeContainer from './SwipeContainer';
+import SwipeCard from './SwipeCard';
+
+
 
 export default function MainPage({ navigation }) {
 
     return (
         <View style={styles.container}>
-
-            <Image source={require("../assets/card-image.png")} style={styles.imageCard} />
-            <View style={styles.ViewimageText}>
-                <Text style={styles.imageText}>John Kelly</Text>
-                <Text style={styles.imageText}>Musician</Text>
-            </View>
-
-
+            <Sidebar navigation={navigation} />
+            <SwipeContainer
+            />
         </View>
-
-
     );
-
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'black',
-
+        backgroundColor: 'white',
     },
     imageCard: {
         width: 350,
@@ -41,7 +35,6 @@ const styles = StyleSheet.create({
         transform: [
             { scale: 0.85 },
         ],
-
     },
     ViewimageText: {
         position: 'absolute',
@@ -58,3 +51,58 @@ const styles = StyleSheet.create({
 
 
 });
+
+
+
+
+
+
+
+
+
+/*
+
+
+import React from 'react';
+import {
+    StyleSheet,
+    View,
+    Text,
+    TouchableOpacity,
+    Image, ImageBackground
+} from 'react-native';
+import Sidebar from './Sidebar';
+
+export default function MainPage({ navigation }) {
+
+    return (
+        <View style={styles.container}>
+        <Sidebar navigation={navigation} />
+       
+      </View>
+
+    );
+
+}
+
+const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: '#f0f0f0',
+    },
+    content: {
+      flex: 1,
+      padding: 20,
+    },
+    heading: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      marginBottom: 10,
+    },
+    text: {
+      fontSize: 16,
+      lineHeight: 24,
+    },
+  });
+  
+  */

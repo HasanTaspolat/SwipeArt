@@ -37,9 +37,6 @@ export default function App() {
           screenOptions={{
             headerShown: false,
           }}
-
-
-
         >
           <Tab.Screen
             options={{
@@ -170,8 +167,6 @@ export default function App() {
 
           <Tab.Screen
             options={{
-              headerShown: true, headerTintColor: 'white', headerTitleAlign: 'center', title: "swipeArt.", headerStyle: { backgroundColor: 'black' }, headerRight: () => <Image style={styles.button}
-                source={require("./assets/settings-icon.png")}  />, headerLeft: () => <Image style={styles.button2} source={require("./assets/three-bars-icon.png")} />,
               tabBarIcon: ({ color, size }) => (
                 <Ionicons name="swap-horizontal" color={color} size={30}   />
               ),

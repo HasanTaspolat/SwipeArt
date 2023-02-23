@@ -10,10 +10,6 @@ import {
 } from 'react-native';
 import { getAuth, firebase, createUserWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged } from "firebase/auth";
 
-
-
-
-
 export default class ResetPasswordScreen extends Component {
   static navigationOptions = {
     title: 'ResetPasswordScreen',
@@ -31,7 +27,7 @@ export default class ResetPasswordScreen extends Component {
 
     sendPasswordResetEmail(auth, this.state.email)
       .then(() => {
-        Alert.alert(`CHECK MAIL ${this.state.email}`);
+        Alert.alert(`Check your e-mail please! ${this.state.email}`);
         // call service and logic of business
       })
       .catch((error) => {

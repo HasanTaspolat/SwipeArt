@@ -37,14 +37,14 @@ const RegisterScreen = ({ navigation }) => {
       .then((userCredential) => {
         var user = userCredential.user;
         navigation.navigate(LoginScreen)
-       
+
       })
       .catch((error) => {
-        // var errorCode = error.code;
-        // var errorMessage = error.message;
-        // // console.log(errorCode, errorMessage);
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.log(errorCode, errorMessage);
         navigation.navigate(RegisterScreen)
-       
+
       });
 
 
@@ -73,7 +73,7 @@ const RegisterScreen = ({ navigation }) => {
       <View style={styles.main}>
 
         <Text style={styles.bottomImage}>welcome to SwipeArt.</Text>
-     
+
         <Text style={styles.header1}>Sign Up</Text>
         <Text style={styles.header2}>E-mail</Text>
         <TextInput
