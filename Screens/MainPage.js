@@ -9,6 +9,7 @@ import {
 import Sidebar from './Sidebar';
 import SwipeContainer from './SwipeContainer';
 import SwipeCard from './SwipeCard';
+import jsonData from '../person.json';
 
 
 
@@ -20,13 +21,14 @@ export default function MainPage({ navigation }) {
             <SwipeContainer
             />
         </View>
+
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: 'white',
+
+        backgroundColor: 'black',
     },
     imageCard: {
         width: 350,

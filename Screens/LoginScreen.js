@@ -86,7 +86,6 @@ const LoginScreen = ({ navigation }) => {
 
       <TouchableHighlight
         activeOpacity={0.8}
-       
         style={styles.button2}
         onPress={() => navigation.navigate(RegisterScreen)}
       >
@@ -95,7 +94,6 @@ const LoginScreen = ({ navigation }) => {
 
       <TouchableHighlight
         activeOpacity={0.8}
-       
         style={styles.button2}
         onPress={() => navigation.navigate(ResetPassword)}
       >
