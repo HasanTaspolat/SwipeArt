@@ -1,98 +1,167 @@
-import React, { useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   View,
+  Text,
+  Image,
   Animated,
   PanResponder,
   Dimensions,
+  TouchableOpacity
 } from 'react-native';
-
-const SWIPE_THRESHOLD = 120;
+import { AntDesign } from '@expo/vector-icons';
 
 const { width, height } = Dimensions.get('window');
 
-const SwipeCard = ({
-  cardIndex,
-  onSwipeLeft = () => {},
-  onSwipeRight = () => {},
-  children,
-}) => {
-  const position = useRef(new Animated.ValueXY()).current;
+const SwipeCard = ({ data, onSwipe, onSwipeLeft, onSwipeRight, children }) => {
+  const [color, setColor] = useState(null);
+  const [isLiked, setIsLiked] = useState(false);
+  const [isDisliked, setIsDisliked] = useState(false);
+  const [constant, setConstant] = useState(true);
+  const [position, setPosition] = useState(new Animated.ValueXY());
 
-  const panResponder = useRef(
+  const [panResponder, setPanResponder] = useState(
     PanResponder.create({
-      onMoveShouldSetPanResponder: () => true,
+      onStartShouldSetPanResponder: () => true,
       onPanResponderMove: (evt, gesture) => {
         position.setValue({ x: gesture.dx, y: gesture.dy });
       },
-      onPanResponderRelease: (evt, gesture) => {
-        if (gesture.dx > SWIPE_THRESHOLD) {
-          Animated.timing(position, {
-            toValue: { x: width + 100, y: gesture.dy },
-            duration: 200,
-            useNativeDriver: false,
-          }).start(() => onSwipeRight(cardIndex));
-        } else if (gesture.dx < -SWIPE_THRESHOLD) {
-          Animated.timing(position, {
-            toValue: { x: -width - 100, y: gesture.dy },
-            duration: 200,
-            useNativeDriver: false,
-          }).start(() => onSwipeLeft(cardIndex));
-        } else {
-          Animated.spring(position, {
-            toValue: { x: 0, y: 0 },
-            friction: 4,
-            useNativeDriver: false,
-          }).start();
+      onPanResponderRelease: (evt, gestureState) => {
+        if (gestureState.dx > 10) {
+          setIsLiked(true);
         }
+        else if (gestureState.dx < -10) {
+          setIsDisliked(true);
+        }
+        else if (gestureState.dx === 0) {
+          setConstant(true);
+        }
+
       },
     })
-  ).current;
+  );
+
+  useEffect(() => {
+    setColor(null);
+    setIsLiked(false);
+    setIsDisliked(false);
+    setPosition(new Animated.ValueXY());
+  }, [data]);
+
+  useEffect(() => {
+    if (isLiked) {
+      setColor('#2ecc71');
+      Animated.timing(position, {
+        toValue: { x: 600, y: 0 },
+        duration: 300,
+        useNativeDriver: false,
+      }).start(() => {
+        onSwipeRight();
+      });
+    }
+    else if (isDisliked) {
+
+      setColor('#e74c3c');
+      Animated.timing(position, {
+        toValue: { x: -600, y: 0 },
+        duration: 300,
+        useNativeDriver: false,
+      }).start(() => {
+        onSwipeLeft();
+      });
+    }
+    else if (constant) {
+      setColor('black');
+    }
+  }, [isLiked, constant, isDisliked]);
 
   const rotateCard = position.x.interpolate({
     inputRange: [-width / 2, 0, width / 2],
-    outputRange: ['-10deg', '0deg', '10deg'],
+    outputRange: ['-50deg', '0deg', '50deg'],
     extrapolate: 'clamp',
   });
 
-  const animatedCardStyle = {
-    transform: [...position.getTranslateTransform(), { rotate: rotateCard }],
+  const handleButtonPressLeft = () => {
+    Animated.timing(position, {
+      toValue: { x: -600, y: 0 },
+      duration: 300,
+      useNativeDriver: false,
+    }).start(() => {
+      onSwipeLeft();
+    });
+  };
+
+  const handleButtonPressRight = () => {
+    Animated.timing(position, {
+      toValue: { x: 600, y: 0 },
+      duration: 300,
+      useNativeDriver: false,
+    }).start(() => {
+      onSwipeRight();
+    });
   };
 
   return (
+
     <View style={styles.container}>
       <Animated.View
-        style={[styles.cardStyle, animatedCardStyle]}
+        style={[
+          styles.card,
+          { transform: [...position.getTranslateTransform(), { rotate: rotateCard }] },
+          color && { backgroundColor: color },
+        ]}
         {...panResponder.panHandlers}
       >
         {children}
       </Animated.View>
+
+      <TouchableOpacity style={styles.button} onPress={() => handleButtonPressLeft()}
+      >
+        <AntDesign name="close" size={24} color="white" />
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.button2} onPress={() => handleButtonPressRight()} >
+        <AntDesign name="check" size={24} color="white" />
+      </TouchableOpacity>
+
     </View>
   );
-};
 
+};
 const styles = StyleSheet.create({
-  container: {
+
+  card: {
     position: 'absolute',
-    width: 400,
-    height: 700,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 250
+    width: "100%",
+    height: 500,
+    borderRadius: 10,
+    left: 0,
+    right: 0,
+    borderColor:"white",
+    borderWidth:0.55,
   },
-  cardStyle: {
-    width: '80%',
-    height: '80%',
-    borderRadius: 16,
-    backgroundColor: '#fff',
-    alignItems: 'center',
+  button: {
+    position: 'absolute',
+    top: height - 170,
+    width: 50,
+    padding: 10,
     justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    elevation: 1,
-    marginBottom: 350
+    alignItems: 'center',
+    backgroundColor: 'red',
+    borderRadius: 15,
+    left: "30%",
+  },
+  button2: {
+    position: 'absolute',
+    top: height - 170,
+    width: 50,
+    padding: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'green',
+    borderRadius: 15,
+    right: "30%",
+
   },
 });
 

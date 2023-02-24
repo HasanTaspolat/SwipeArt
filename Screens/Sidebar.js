@@ -1,15 +1,22 @@
 import React, { useState, useRef } from 'react';
 import { StyleSheet, View, Text, Animated, TouchableOpacity, Dimensions } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
+import LoginScreen from './LoginScreen';
+import { useNavigation } from '@react-navigation/native';
+
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const Sidebar = ({ navigation }) => {
+const Sidebar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const animationValue = useRef(new Animated.Value(0)).current;
   const translation = useRef(new Animated.Value(0)).current;
+  const navigation = useNavigation();
 
+  const handleNavigateToScreen = (screenName) => {
+    navigation.navigate(screenName);
+  };
 
   const handleSidebarOpen = () => {
     setIsSidebarOpen(true);
@@ -45,13 +52,17 @@ const Sidebar = ({ navigation }) => {
           }]}>
             <TouchableOpacity style={styles.closeIcon} onPress={handleSidebarClose}>
               <AntDesign name="close" size={24} color="white" />
+              <Text style={styles.settingsText}> Close </Text>
             </TouchableOpacity>
-            <Text style={styles.sidebarText}>This is the Sidebar will be filled</Text>
+            <TouchableOpacity style={styles.settingsIcon}  onPress={() => handleNavigateToScreen(LoginScreen)}>
+              <AntDesign name="setting" size={24} color="white" />
+              <Text style={styles.settingsText}> Settings </Text>
+            </TouchableOpacity>
           </Animated.View>
         </View>
       )}
       <TouchableOpacity style={styles.icon} onPress={handleSidebarOpen}>
-        <AntDesign name="menu-fold" size={24} color="black" />
+        <AntDesign name="menu-fold" size={24} color="white" />
       </TouchableOpacity>
     </View>
   );
@@ -63,17 +74,18 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'center',
     paddingHorizontal: 20,
+    zIndex: 222,
   },
   icon: {
     position: 'absolute', // add if dont work with above
-    top: 20,
-    left: 20,
+    top: 10,
+    left: 10,
   },
   sidebar: {
     position: 'absolute',
     top: 0,
     left: 0,
-    width: '80%',
+    width: '50%',
     height: windowHeight,
     backgroundColor: 'black',
     zIndex: 22,
@@ -88,7 +100,25 @@ const styles = StyleSheet.create({
   },
   closeIcon: {
     marginBottom: 20,
-  }
+    color: "white",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  settingsText: {
+    color: "white",
+    marginLeft: 10,
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  settingsIcon: {
+    color: "white",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+
+  },
+
 });
 
 export default Sidebar;
