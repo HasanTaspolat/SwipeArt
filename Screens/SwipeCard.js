@@ -19,7 +19,7 @@ const SwipeCard = ({ data, onSwipe, onSwipeLeft, onSwipeRight, children }) => {
   const [isDisliked, setIsDisliked] = useState(false);
   const [constant, setConstant] = useState(true);
   const [position, setPosition] = useState(new Animated.ValueXY());
-
+  const [gestureDy, setGestureDy] = useState(0);
   const [panResponder, setPanResponder] = useState(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
@@ -38,6 +38,7 @@ const SwipeCard = ({ data, onSwipe, onSwipeLeft, onSwipeRight, children }) => {
         }
 
       },
+      
     })
   );
 

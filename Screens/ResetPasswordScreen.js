@@ -33,7 +33,15 @@ export default class ResetPasswordScreen extends Component {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        Alert.alert(`Error... ! : ${errorCode} - ${errorMessage}`);
+        if (`${this.state.email}` === "") {
+          Alert.alert(`Please fill the E-mail box!`);
+        }
+        if (errorMessage === "Firebase: Error (auth/invalid-email)." && `${this.state.email}` !== "") {
+          Alert.alert(`Please fill valid E-mail!`);
+        }
+        if (errorMessage === "Firebase: Error (auth/user-not-found).") {
+          Alert.alert(`Please fill registered E-mail!`);
+        }
       });
   }
 
