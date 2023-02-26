@@ -13,6 +13,10 @@ import ProfileScreen from './Screens/ProfileScreen';
 import MainPage from './Screens/MainPage';
 import RegisterScreen from './Screens/RegisterScreen';
 import ChooseScreenFirst from './Screens/ChooseScreenFirst';
+import CustomerChooseMusician from './Screens/CustomerChooseMusician';
+import CustomerChoosePainter from './Screens/CustomerChoosePainter';
+import ArtistOrCustomer from './Screens/ArtistOrCustomer';
+import CustomerChooseScreenFirst from './Screens/CustomerChooseScreenFirst';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import normalize from 'react-native-normalize';
 import { Ionicons } from '@expo/vector-icons';
@@ -112,6 +116,72 @@ export default function App() {
             name="ChooseScreenFirst"
             component={ChooseScreenFirst}
           />
+          <Tab.Screen options={{
+            tabBarStyle: {
+              backgroundColor: '#000',
+              height: normalize(0, 'height'),
+              borderTopColor: '#000',
+            },
+            headerShown: false,
+            tabBarActiveTintColor: '#000',
+            tabBarInactiveTintColor: '#000',
+            tabBarLabelStyle: {
+            },
+            tabBarButton: (props) => null,
+          }}
+            name="CustomerChooseScreenFirst"
+            component={CustomerChooseScreenFirst}
+          />
+          <Tab.Screen options={{
+            tabBarStyle: {
+              backgroundColor: '#000',
+              height: normalize(0, 'height'),
+              borderTopColor: '#000',
+            },
+            headerShown: false,
+            tabBarActiveTintColor: '#000',
+            tabBarInactiveTintColor: '#000',
+            tabBarLabelStyle: {
+            },
+            tabBarButton: (props) => null,
+          }}
+            name="CustomerChooseMusician"
+            component={CustomerChooseMusician}
+          />
+               <Tab.Screen options={{
+            tabBarStyle: {
+              backgroundColor: '#000',
+              height: normalize(0, 'height'),
+              borderTopColor: '#000',
+            },
+            headerShown: false,
+            tabBarActiveTintColor: '#000',
+            tabBarInactiveTintColor: '#000',
+            tabBarLabelStyle: {
+            },
+            tabBarButton: (props) => null,
+          }}
+            name="CustomerChoosePainter"
+            component={CustomerChoosePainter}
+          />
+
+          <Tab.Screen options={{
+            tabBarStyle: {
+              backgroundColor: '#000',
+              height: normalize(0, 'height'),
+              borderTopColor: '#000',
+            },
+            headerShown: false,
+            tabBarActiveTintColor: '#000',
+            tabBarInactiveTintColor: '#000',
+            tabBarLabelStyle: {
+            },
+            tabBarButton: (props) => null,
+          }}
+            name="ArtistOrCustomer"
+            component={ArtistOrCustomer}
+          />
+
 
           <Tab.Screen options={{
             tabBarStyle: {
@@ -168,7 +238,7 @@ export default function App() {
           <Tab.Screen
             options={{
               tabBarIcon: ({ color, size }) => (
-                <Ionicons name="swap-horizontal" color={color} size={30}   />
+                <Ionicons name="swap-horizontal" color={color} size={30} />
               ),
               tabBarActiveBackgroundColor: 'white',
               tabBarActiveTintColor: 'black',
@@ -183,7 +253,7 @@ export default function App() {
                 overflow: 'hidden',
               },
               tabBarActiveTintColor: "blue",
-              
+
             }}
             name="MainPage"
             component={MainPage}
@@ -192,7 +262,7 @@ export default function App() {
             headerShown: true, headerTintColor: 'white', headerTitleAlign: 'center', title: "Profile", headerStyle: { backgroundColor: 'black' }, headerRight: () => <Image style={styles.button}
               source={require("./assets/settings-icon.png")} />, headerLeft: () => <Image style={styles.button2} source={require("./assets/three-bars-icon.png")} />,
             tabBarIcon: ({ color, size, tintColor }) => (
-              <Ionicons name="person"  color={color} size={30} />
+              <Ionicons name="person" color={color} size={30} />
             ),
             tabBarActiveBackgroundColor: 'white',
             tabBarActiveTintColor: 'black',

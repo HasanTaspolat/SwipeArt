@@ -11,6 +11,7 @@ import {
 // import TabsCustomer from './TabsCustomer';
 import '@react-navigation/native-stack'
 import ChooseScreenFirst from './ChooseScreenFirst';
+import ArtistOrCustomer from './ArtistOrCustomer';
 import ResetPasswordScreen from './ResetPasswordScreen';
 import RegisterScreen from './RegisterScreen';
 import ResetPassword from './ResetPasswordScreen';
@@ -32,7 +33,7 @@ const LoginScreen = ({ navigation }) => {
 
         onAuthStateChanged(auth, user => {
           if (user) {
-            navigation.navigate(ChooseScreenFirst)
+            navigation.navigate(ArtistOrCustomer)
             setUserMessage('')
           }
           else {
