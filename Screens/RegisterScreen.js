@@ -21,6 +21,8 @@ const RegisterScreen = ({ navigation }) => {
 
   const handleSignUp = () => {
     const auth = getAuth();
+    const emailReg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[^0-9a-zA-Z]).{8,12}$/;
 
     // onAuthStateChanged(auth, user => {
     //   if (user) {
@@ -37,31 +39,33 @@ const RegisterScreen = ({ navigation }) => {
       .then((userCredential) => {
         var user = userCredential.user;
         navigation.navigate(LoginScreen)
+        if (passwordRegex.test(password) === false) {
+          navigation.navigate(RegisterScreen)
+          console.log("Please enter a password that contains one uppercase letter, one numeric character, one non-alphanumeric character, and is between 8 and 12 characters long.");
 
+          setUserMessage(<Text style={styles.errorMessage2} > Please enter a password that contains one uppercase letter, one numeric character, one non-alphanumeric character, and is between 8 and 12 characters long. </Text>);
+        }
       })
       .catch((error) => {
         var errorCode = error.code;
         var errorMessage = error.message;
         console.log(errorCode, errorMessage);
         navigation.navigate(RegisterScreen)
+        setUserMessage(<Text style={styles.errorMessage2} > E-mail is already in use!</Text>);
+        if (email === "") {
+          setUserMessage(<Text style={styles.errorMessage2} > Please fill the E-mail box!</Text>);
+        }
+        if (password === "") {
+          setUserMessage(<Text style={styles.errorMessage2} > Please fill the Password box!</Text>);
+        }
 
+        if (password === "" && email === "") {
+          setUserMessage(<Text style={styles.errorMessage2} > Please fill E-mail and Password boxes! </Text>);
+        }
+        if (emailReg.test(email) === false) {
+          setUserMessage(<Text style={styles.errorMessage2} > Please fill valid Email address!</Text>);
+        }
       });
-
-
-    // createUserWithEmailAndPassword(auth, email, password)
-    //   .then((userCredential) => {
-    //     var user = userCredential.user;
-
-    //   })
-    //   .catch((error) => {
-    //     var errorCode = error.code;
-    //     var errorMessage = error.message;
-    //     console.log(errorCode, errorMessage);
-
-
-    //   });
-
-
   }
 
 
@@ -104,6 +108,8 @@ const RegisterScreen = ({ navigation }) => {
 
         </TouchableHighlight>
 
+        <Text style={styles.errorMessage2}>{userMessage}</Text>
+
 
       </View>
     </ScrollView>
@@ -128,6 +134,18 @@ const styles = StyleSheet.create({
     borderColor: '#C3CAD8',
     color: '#fff',
 
+  },
+  errorMessage2: {
+    fontSize: normalize(13),
+    color: 'red',
+    fontWeight: '600',
+    width: normalize(220),
+    marginTop: normalize(80),
+    alignItems: 'center',
+    justifyContent: "center",
+    textAlign: "center",
+    fontWeight: 'bold',
+    color: "#ff0033"
   },
   button: {
     borderRadius: normalize(6),

@@ -47,8 +47,7 @@ const LoginScreen = ({ navigation }) => {
         var errorCode = error.code;
         var errorMessage = error.message;
         console.log(errorCode, errorMessage);
-        // ..
-
+        setUserMessage(<Text style={styles.errorMessage2}>Wrong Password or E-mail!</Text>);
       });
 
 
@@ -132,7 +131,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     width: '70%',
     height: normalize(50),
-  
+    marginTop:normalize(10),
     marginBottom: normalize(-20)
   },
   button1title: {
@@ -162,6 +161,12 @@ const styles = StyleSheet.create({
     fontSize: normalize(17),
     marginLeft: normalize(40),
     color: 'white',
+    fontWeight: '600',
+    marginRight: 'auto',
+  },
+  errorMessage2: {
+    fontSize: normalize(16),
+    color: 'red',
     fontWeight: '600',
     marginRight: 'auto',
   },

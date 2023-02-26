@@ -8,6 +8,7 @@ import { AntDesign } from '@expo/vector-icons';
 
 export default function SwipeContainer() {
     const [cards, setCards] = useState(data);
+    const [gestureDy, setGestureDy] = useState(0);
 
 
     const onSwipeLeft = (cardIndex) => {
@@ -29,6 +30,7 @@ export default function SwipeContainer() {
             {cards.map((card, cardIndex) => (
                 <SwipeCard
                     data={data}
+                    gestureDy={gestureDy}
                     key={cardIndex}
                     card={card}
                     onSwipeLeft={() => onSwipeLeft(cardIndex)}
