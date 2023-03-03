@@ -8,7 +8,6 @@ import LoginScreen from './LoginScreen';
 import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import { firebase } from "../firebase.js"
 import ChooseScreenFirst from './ChooseScreenFirst';
-
 import '@react-navigation/native-stack'
 
 
@@ -24,6 +23,7 @@ const RegisterScreen = ({ navigation }) => {
     const emailReg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     const passwordRegex = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[^0-9a-zA-Z]).{8,12}$/;
 
+
     // onAuthStateChanged(auth, user => {
     //   if (user) {
     //     setUserMessage('')
@@ -35,37 +35,42 @@ const RegisterScreen = ({ navigation }) => {
     //   }
     // })
 
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        var user = userCredential.user;
-        navigation.navigate(LoginScreen)
-        if (passwordRegex.test(password) === false) {
+
+
+    if (passwordRegex.test(password) === false) {
+      console.log("Please enter a password that contains one uppercase letter, one numeric character, one non-alphanumeric character, and is between 8 and 12 characters long.");
+      setUserMessage(<Text style={styles.errorMessage2} > Please enter a password that contains one uppercase letter, one numeric character, one non-alphanumeric character, and is between 8 and 12 characters long. </Text>);
+      navigation.navigate(RegisterScreen)
+    }
+    else if (email === "") {
+      setUserMessage(<Text style={styles.errorMessage2} > Please fill the E-mail box!</Text>);
+    }
+    else if (password === "") {
+      setUserMessage(<Text style={styles.errorMessage2} > Please fill the Password box!</Text>);
+    }
+
+    else if (password === "" && email === "") {
+      setUserMessage(<Text style={styles.errorMessage2} > Please fill E-mail and Password boxes! </Text>);
+    }
+    else if (emailReg.test(email) === false) {
+      setUserMessage(<Text style={styles.errorMessage2} > Please fill valid Email address!</Text>);
+    }
+    else {
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          var user = userCredential.user;
+          navigation.navigate(LoginScreen)
+          setUserMessage(<Text> </Text>);
+
+        })
+        .catch((error) => {
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          console.log(errorCode, errorMessage);
           navigation.navigate(RegisterScreen)
-          console.log("Please enter a password that contains one uppercase letter, one numeric character, one non-alphanumeric character, and is between 8 and 12 characters long.");
-
-          setUserMessage(<Text style={styles.errorMessage2} > Please enter a password that contains one uppercase letter, one numeric character, one non-alphanumeric character, and is between 8 and 12 characters long. </Text>);
-        }
-      })
-      .catch((error) => {
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        console.log(errorCode, errorMessage);
-        navigation.navigate(RegisterScreen)
-        setUserMessage(<Text style={styles.errorMessage2} > E-mail is already in use!</Text>);
-        if (email === "") {
-          setUserMessage(<Text style={styles.errorMessage2} > Please fill the E-mail box!</Text>);
-        }
-        if (password === "") {
-          setUserMessage(<Text style={styles.errorMessage2} > Please fill the Password box!</Text>);
-        }
-
-        if (password === "" && email === "") {
-          setUserMessage(<Text style={styles.errorMessage2} > Please fill E-mail and Password boxes! </Text>);
-        }
-        if (emailReg.test(email) === false) {
-          setUserMessage(<Text style={styles.errorMessage2} > Please fill valid Email address!</Text>);
-        }
-      });
+          setUserMessage(<Text style={styles.errorMessage2} > E-mail is already in use!</Text>);
+        });
+    }
   }
 
 

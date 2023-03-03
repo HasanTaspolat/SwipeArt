@@ -9,6 +9,14 @@
       "android",
       "web"
     ],
+    "plugins": [
+      [
+        "expo-document-picker",
+        {
+          "iCloudContainerEnvironment": "Production"
+        }
+      ]
+    ],
     "android": {
       "package": "com.swipeart"
     },

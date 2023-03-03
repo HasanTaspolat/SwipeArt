@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { StyleSheet, View, Text, Animated, TouchableOpacity, Dimensions } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import LoginScreen from './LoginScreen';
+import SettingsScreen from './SettingsScreen';
 import { useNavigation } from '@react-navigation/native';
 
 
@@ -31,6 +32,11 @@ const Sidebar = () => {
     setIsSidebarOpen(false);
   };
 
+  const multiplePresses = () => {
+    setIsSidebarOpen(false);
+    handleNavigateToScreen(SettingsScreen);
+  };
+
   const sidebarWidth = animationValue.interpolate({
     inputRange: [0, 1],
     outputRange: [0, 200],
@@ -54,7 +60,7 @@ const Sidebar = () => {
               <AntDesign name="close" size={24} color="white" />
               <Text style={styles.settingsText}> Close </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.settingsIcon}  onPress={() => handleNavigateToScreen(LoginScreen)}>
+            <TouchableOpacity style={styles.settingsIcon}   onPress={multiplePresses}>
               <AntDesign name="setting" size={24} color="white" />
               <Text style={styles.settingsText}> Settings </Text>
             </TouchableOpacity>
@@ -75,6 +81,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 20,
     zIndex: 222,
+    marginTop:50,
   },
   icon: {
     position: 'absolute', // add if dont work with above

@@ -17,6 +17,7 @@ import CustomerChooseMusician from './Screens/CustomerChooseMusician';
 import CustomerChoosePainter from './Screens/CustomerChoosePainter';
 import ArtistOrCustomer from './Screens/ArtistOrCustomer';
 import CustomerChooseScreenFirst from './Screens/CustomerChooseScreenFirst';
+import SettingsScreen from './Screens/SettingsScreen';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import normalize from 'react-native-normalize';
 import { Ionicons } from '@expo/vector-icons';
@@ -145,6 +146,22 @@ export default function App() {
             },
             tabBarButton: (props) => null,
           }}
+            name="SettingsScreen"
+            component={SettingsScreen}
+          />
+          <Tab.Screen options={{
+            tabBarStyle: {
+              backgroundColor: '#000',
+              height: normalize(0, 'height'),
+              borderTopColor: '#000',
+            },
+            headerShown: false,
+            tabBarActiveTintColor: '#000',
+            tabBarInactiveTintColor: '#000',
+            tabBarLabelStyle: {
+            },
+            tabBarButton: (props) => null,
+          }}
             name="CustomerChooseMusician"
             component={CustomerChooseMusician}
           />
@@ -259,8 +276,7 @@ export default function App() {
             component={MainPage}
           />
           <Tab.Screen options={{
-            headerShown: true, headerTintColor: 'white', headerTitleAlign: 'center', title: "Profile", headerStyle: { backgroundColor: 'black' }, headerRight: () => <Image style={styles.button}
-              source={require("./assets/settings-icon.png")} />, headerLeft: () => <Image style={styles.button2} source={require("./assets/three-bars-icon.png")} />,
+            headerShown: false, headerTintColor: 'white', headerTitleAlign: 'center', title: "Profile",
             tabBarIcon: ({ color, size, tintColor }) => (
               <Ionicons name="person" color={color} size={30} />
             ),
