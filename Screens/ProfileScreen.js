@@ -1,102 +1,158 @@
-import React from 'react';
-import { View, Text, Image, ScrollView, TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ScrollView, Linking } from 'react-native';
+import { Feather } from '@expo/vector-icons';
+import * as DocumentPicker from 'expo-document-picker';
+import * as ImagePicker from 'expo-image-picker';
 
-const ProfileScreen = () => {
+const EditProfileScreen = ({ navigation }) => {
+    const [editingMode, setEditingMode] = useState(false);
+    const [name, setName] = useState('John Doe');
+    const [bio, setBio] = useState('I like to code.');
+    const [imageUri, setImageUri] = useState('https://i.pravatar.cc/150');
+    const [documentUri, setDocumentUri] = useState('');
+    const [facebook, setFacebook] = useState('https://facebook.com/johndoe');
+    const [twitter, setTwitter] = useState('https://twitter.com/johndoe');
+    const [instagram, setInstagram] = useState('https://instagram.com/johndoe');
+    const [base64Src, setBase64Src] = useState(null);
 
-    const handleEditPress = () => {
 
+    const handleSave = () => {
+        setEditingMode(false);
+        // Save changes to user profile
+    }
+
+    const displayDocument = async (res) => {
+        try {
+            console.log("selam fourth");
+
+
+        } catch (e) {
+            // error
+        }
+
+    };
+
+    const handleImageUpload = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        if (!result.cancelled) {
+            setImageUri(result.uri);
+        }
+    }
+
+    const handleDocumentUpload = async () => {
+
+        let result = await DocumentPicker.getDocumentAsync({});
+
+        if (result.type === 'success') {
+            setDocumentUri(result.uri);
+        }
     }
 
     return (
         <ScrollView style={styles.container}>
-            <View style={styles.headerContainer}>
-
-                <Image
-                    style={styles.coverPhoto}
-                    source={require("../assets/white.png")}
-                />
-                <View style={styles.profileContainer}>
-                    <Image
-                        style={styles.profilePhoto}
-                        source={require("../assets/card-image.png")}
+            <View style={styles.header}>
+                <TouchableOpacity onPress={() => setEditingMode(true)}>
+                    <Text style={styles.editText}>Edit</Text>
+                </TouchableOpacity>
+                {editingMode && (
+                    <TouchableOpacity onPress={handleSave}>
+                        <Text style={styles.saveText}>Save</Text>
+                    </TouchableOpacity>
+                )}
+            </View>
+            <View style={styles.imageContainer}>
+                <TouchableOpacity onPress={handleImageUpload}>
+                    <Image source={{ uri: imageUri }} style={styles.image} />
+                </TouchableOpacity>
+            </View>
+            {editingMode ? (
+                <View style={styles.form}>
+                    <Text style={styles.label}>Name</Text>
+                    <TextInput
+                        style={styles.input}
+                        value={name}
+                        onChangeText={setName}
                     />
-                    <Text style={styles.nameText}>John Kelly</Text>
+                    <Text style={styles.label}>Bio</Text>
+                    <TextInput
+                        style={styles.input}
+                        value={bio}
+                        onChangeText={setBio}
+                    />
+                    <Text style={styles.label}>Document (PDF)</Text>
+                    <TouchableOpacity style={styles.uploadButton} onPress={handleDocumentUpload}>
+                        <Feather name="upload" size={24} color="white" />
+                        <Text style={styles.uploadText}>Upload document</Text>
+                    </TouchableOpacity>
+                    {documentUri ? (
+                        <Text style={styles.documentUri}>{documentUri}</Text>
+                    ) : null}
+                    <Text style={styles.label}>Social Media Links</Text>
+                    <TextInput
+                        style={styles.input}
+                        value={facebook}
+                        onChangeText={setFacebook}
+                        placeholder="Facebook"
+                    />
+                    <TextInput
+                        style={styles.input}
+                        value={twitter}
+                        onChangeText={setTwitter}
+                        placeholder="Twitter"
+                    />
+                    <TextInput
+                        style={styles.input}
+                        value={instagram}
+                        onChangeText={setInstagram}
+                        placeholder="Instagram"
+                    />
                 </View>
-            </View>
-            <View style={styles.bioContainer}>
-                <Text style={styles.bioText}>
-                    Bio Text of the user..  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et
-                    ullamcorper nisi.
-                </Text>
-            </View>
-            <View style={styles.statsContainer}>
-                <View style={styles.statContainer}>
-                    <Text style={styles.statCount}>1</Text>
-                    <Text style={styles.statLabel}>Listing</Text>
+            ) : (
+                <View style={styles.profileInfo}>
+                    <Text style={styles.name}>{name}</Text>
+                    <Text style={styles.bio}>{bio}</Text>
+                    <View style={styles.socialLinks}>
+                        <Text style={styles.statCount}>Social Links:</Text>
+                        <TouchableOpacity onPress={() => Linking.openURL(facebook)}>
+                            <Feather name="facebook" size={20} color="white" />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => Linking.openURL(twitter)}>
+                            <Feather style={styles.socialLinks2} name="twitter" size={20} color="white" />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => Linking.openURL(instagram)}>
+                            <Feather style={styles.socialLinks2} name="instagram" size={20} color="white" />
+                        </TouchableOpacity>
+                    </View>
+                    {documentUri ? (
+                        <TouchableOpacity onPress={() => displayDocument()}>
+                            <Text style={styles.documentLink}>View Document</Text>
+                        </TouchableOpacity>
+                    ) : null}
                 </View>
-                <View style={styles.statContainer}>
-                    <Text style={styles.statCount}>12</Text>
-                    <Text style={styles.statLabel}>Orders</Text>
-                </View>
-                <View style={styles.statContainer}>
-                    <Text style={styles.statCount}>38</Text>
-                    <Text style={styles.statLabel}>Followers</Text>
-                </View>
-            </View>
-            <TouchableOpacity style={styles.button} onPress={handleEditPress}>
-                <Text style={styles.buttonText}>Edit Profile</Text>
-            </TouchableOpacity>
-            <Text style={styles.buttonText2}>Social Media Links</Text>
-
-            <Text style={styles.buttonText2}><Ionicons name="logo-twitter" color='white' size={20} />   twitter.com</Text>
-              
-            <Text style={styles.buttonText2}><Ionicons name="pause-circle-outline" color='white' size={20} />   spotify.com</Text>
-            <Text style={styles.buttonText2}><Ionicons name="logo-facebook" color='white' size={20} />   facebook.com</Text>
-            <Text style={styles.buttonText2}><Ionicons name="logo-linkedin" color='white' size={20} />   linkedin.com</Text>
-     
-
-
+            )}
         </ScrollView>
     );
 };
 
-const styles = {
+const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'black',
     },
-    headerContainer: {
+    header: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
         alignItems: 'center',
-    },
-    coverPhoto: {
-        width: '100%',
-        height: 100,
-    },
-    profileContainer: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        display: 'flex',
-        marginTop: -50,
-    },
-    profilePhoto: {
-        width: 100,
-        height: 100,
-        borderRadius: 50,
-    },
-    nameText: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        marginTop: 10,
-        color: 'white',
-    },
-    bioContainer: {
-        padding: 15,
-    },
-    bioText: {
-        fontSize: 16,
-        textAlign: 'center',
-        color: 'white',
+        padding: 16,
+        color: "white",
+        borderBottomWidth: 1,
+        borderBottomColor: '#ddd',
     },
     statsContainer: {
         flexDirection: 'row',
@@ -116,24 +172,98 @@ const styles = {
         fontSize: 16,
         color: 'white',
     },
-    button: {
-        backgroundColor: '#0066cc',
-        borderRadius: 5,
-        padding: 10,
-        marginHorizontal: 20,
+    titleText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: "white",
     },
-    buttonText: {
-        fontSize: 16,
-        color: '#fff',
-        textAlign: 'center',
-    },
-    buttonText2: {
-        fontSize: 16,
-        color: 'white',
-        textAlign: 'left',
-        marginLeft: 22,
-        marginTop: 15,
-    },
-};
+    editText: {
+        color: 'red',
+        fontWeight: 'bold',
+        marginTop: 40,
 
-export default ProfileScreen;
+    },
+    saveText: {
+        color: 'red',
+        fontWeight: 'bold',
+        marginTop: 40,
+    },
+    imageContainer: {
+        alignItems: 'center',
+        padding: 16,
+    },
+    image: {
+        width: 150,
+        height: 150,
+        borderRadius: 75,
+    },
+    form: {
+        padding: 16,
+    },
+    label: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 8,
+        color: "white",
+    },
+    input: {
+        borderWidth: 1,
+        borderColor: '#ddd',
+        borderRadius: 4,
+        padding: 8,
+        marginBottom: 16,
+        color: "white",
+    },
+    uploadButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#007AFF',
+        borderRadius: 4,
+        padding: 8,
+        marginBottom: 16,
+    },
+    uploadText: {
+        color: 'white',
+        fontWeight: 'bold',
+        marginLeft: 8,
+    },
+    profileInfo: {
+        alignItems: 'center',
+        padding: 16,
+        color: "white",
+    },
+    name: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 8,
+        color: "white",
+    },
+    bio: {
+        fontSize: 16,
+        marginBottom: 16,
+        color: "white",
+    },
+    socialLinks: {
+        flexDirection: 'row',
+        justifyContent: "center",
+        marginBottom: 16,
+        alignItems:"center"
+    },
+
+    socialLinks2: {
+        marginLeft: 10,
+        marginBottom: 16,
+    },
+    documentLink: {
+        color: 'red',
+        textDecorationLine: 'underline',
+    },
+    documentUri: {
+        fontSize: 14,
+        color: '#666',
+        marginBottom: 16,
+    },
+});
+
+export default EditProfileScreen;
