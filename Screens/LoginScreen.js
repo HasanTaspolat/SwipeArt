@@ -1,8 +1,11 @@
+// eslint-disable-next-line no-use-before-define
 import React, { useEffect, useState } from 'react'
-
 import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 import normalize from 'react-native-normalize';
 import { firebase } from "../firebase.js"
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LogBox } from 'react-native';
+
 import {
   ActivityIndicator, Text, StyleSheet, View, TextInput, ScrollView,
   Image, TouchableHighlight, Modal, ToastAndroid,
@@ -17,8 +20,11 @@ import RegisterScreen from './RegisterScreen';
 import ResetPassword from './ResetPasswordScreen';
 
 // onPress={() => {  navigation.navigate(LoginScreen)  }}
+LogBox.ignoreAllLogs(); // to hide the warnings
+
 
 const LoginScreen = ({ navigation }) => {
+  
   const [email, setEmail] = useState()
   const [password, setPassword] = useState()
   const auth = getAuth();
