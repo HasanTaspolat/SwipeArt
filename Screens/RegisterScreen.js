@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-use-before-define
 import React, { useState } from 'react'
 import {
   Text, StyleSheet, View, TextInput, ScrollView,
@@ -12,6 +13,7 @@ import '@react-navigation/native-stack'
 
 
 const RegisterScreen = ({ navigation }) => {
+  
   const [email, setEmail] = useState()
   const [password, setPassword] = useState()
   const [toggleCheckBox, setToggleCheckBox] = useState(true)

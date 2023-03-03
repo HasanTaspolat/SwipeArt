@@ -11,6 +11,7 @@ import ArtistPainter from './Screens/ArtistPainter';
 import ResetPasswordScreen from './Screens/ResetPasswordScreen';
 import ProfileScreen from './Screens/ProfileScreen';
 import MainPage from './Screens/MainPage';
+import ArtistDashboardPage from './Screens/ArtistDashboardPage';
 import RegisterScreen from './Screens/RegisterScreen';
 import ChooseScreenFirst from './Screens/ChooseScreenFirst';
 import CustomerChooseMusician from './Screens/CustomerChooseMusician';
@@ -165,7 +166,7 @@ export default function App() {
             name="CustomerChooseMusician"
             component={CustomerChooseMusician}
           />
-               <Tab.Screen options={{
+          <Tab.Screen options={{
             tabBarStyle: {
               backgroundColor: '#000',
               height: normalize(0, 'height'),
@@ -274,6 +275,29 @@ export default function App() {
             }}
             name="MainPage"
             component={MainPage}
+          />
+          <Tab.Screen
+            options={{
+              tabBarIcon: ({ color, size }) => (
+                <Ionicons name="swap-horizontal" color={color} size={30} />
+              ),
+              tabBarActiveBackgroundColor: 'white',
+              tabBarActiveTintColor: 'black',
+              tabBarInactiveTintColor: 'black',
+              tabBarLabelStyle: {
+              },
+              tabBarLabel: 'ArtistDashboardPage',
+              tabBarStyle: {
+                borderBottomLeftRadius: 14,
+                borderBottomRightRadius: 14,
+                position: 'absolute',
+                overflow: 'hidden',
+              },
+              tabBarActiveTintColor: "blue",
+
+            }}
+            name="ArtistDashboardPage"
+            component={ArtistDashboardPage}
           />
           <Tab.Screen options={{
             headerShown: false, headerTintColor: 'white', headerTitleAlign: 'center', title: "Profile",

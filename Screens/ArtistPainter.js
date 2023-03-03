@@ -6,6 +6,7 @@ import {
 } from 'react-native';
 import ArtistMusicianType from './ArtistMusicianType';
 import MainPage from './MainPage';
+import ArtistDashboardPage from './ArtistDashboardPage';
 
 export default function ArtistPainter({ navigation }) {
 
@@ -13,7 +14,7 @@ export default function ArtistPainter({ navigation }) {
         <Background>
             <Text style={[{ color: 'white', marginBottom: 20, fontWeight: 'bold' }]} > what is your specific profession?</Text>
             <TouchableHighlight
-                onPress={() => navigation.navigate(MainPage)}
+                onPress={() => navigation.navigate(ArtistDashboardPage)}
             >
                 <View style={styles.button}>
                     <Text style={styles.textButton}>
@@ -22,7 +23,7 @@ export default function ArtistPainter({ navigation }) {
                 </View>
             </TouchableHighlight>
             <TouchableHighlight
-                onPress={() => navigation.navigate(MainPage)}
+                onPress={() => navigation.navigate(ArtistDashboardPage)}
             >
                 <View style={styles.button}>
                     <Text style={styles.textButton}>
@@ -32,7 +33,7 @@ export default function ArtistPainter({ navigation }) {
             </TouchableHighlight>
 
             <TouchableHighlight
-                onPress={() => navigation.navigate(MainPage)}
+                onPress={() => navigation.navigate(ArtistDashboardPage)}
             >
                 <View style={styles.button}>
                     <Text style={styles.textButton}>
@@ -42,7 +43,7 @@ export default function ArtistPainter({ navigation }) {
             </TouchableHighlight>
 
             <TouchableHighlight
-                onPress={() => navigation.navigate(MainPage)}
+                onPress={() => navigation.navigate(ArtistDashboardPage)}
             >
                 <View style={styles.button}>
                     <Text style={styles.textButton}>

@@ -5,14 +5,14 @@ import {
     Image, TouchableHighlight, Modal, AppRegistry, Linking, TouchableOpacity
 } from 'react-native';
 import MainPage from './MainPage';
-
+import ArtistDashboardPage from './ArtistDashboardPage';
 export default function ArtistMusicianType({ navigation }) {
 
     return (
         <Background>
             <Text style={[{ color: 'white', marginBottom: 20, fontWeight: 'bold' }]} > what is your specific profession?</Text>
             <TouchableHighlight
-                onPress={() => navigation.navigate(MainPage)}
+                onPress={() => navigation.navigate(ArtistDashboardPage)}
             >
                 <View style={styles.button}>
                     <Text style={styles.textButton}>
@@ -31,7 +31,7 @@ export default function ArtistMusicianType({ navigation }) {
             </TouchableHighlight>
 
             <TouchableHighlight
-                onPress={() => navigation.navigate(MainPage)}
+                onPress={() => navigation.navigate(ArtistDashboardPage)}
             >
                 <View style={styles.button}>
                     <Text style={styles.textButton}>
@@ -41,7 +41,7 @@ export default function ArtistMusicianType({ navigation }) {
             </TouchableHighlight>
 
             <TouchableHighlight
-                onPress={() => navigation.navigate(MainPage)}
+                onPress={() => navigation.navigate(ArtistDashboardPage)}
             >
                 <View style={styles.button}>
                     <Text style={styles.textButton}>
@@ -51,7 +51,7 @@ export default function ArtistMusicianType({ navigation }) {
             </TouchableHighlight>
 
             <TouchableHighlight
-                onPress={() => navigation.navigate(MainPage)}
+                onPress={() => navigation.navigate(ArtistDashboardPage)}
             >
                 <View style={styles.button}>
                     <Text style={styles.textButton}>
@@ -62,7 +62,7 @@ export default function ArtistMusicianType({ navigation }) {
 
 
             <TouchableHighlight
-                onPress={() => navigation.navigate(MainPage)}
+                onPress={() => navigation.navigate(ArtistDashboardPage)}
             >
                 <View >
                     <Text style={styles.textButton2}>

@@ -6,6 +6,7 @@ import {
 } from 'react-native';
 import ArtistMusicianType from './ArtistMusicianType';
 
+
 export default function ArtistMusician({ navigation }) {
 
     return (
