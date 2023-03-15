@@ -1,23 +1,68 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Background from '../components/Background'
 import {
-    Text, StyleSheet, View, TextInput, ScrollView,
-    Image, TouchableHighlight, Modal, AppRegistry, Linking, TouchableOpacity
-} from 'react-native';
-import ArtistMusician from './ArtistMusician';
-import ArtistPainter from './ArtistPainter';
+    Text, StyleSheet, View, 
+    TouchableHighlight} from 'react-native';
 import ChooseScreenFirst from './ChooseScreenFirst';
 import CustomerChooseScreenFirst from './CustomerChooseScreenFirst';
-
-
+import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
+import { collection, doc, setDoc, addDoc, updateDoc, deleteDoc, getDoc, getDocs, where, query } from "firebase/firestore";
+import { db } from '../components/config';
 
 export default function ArtistOrCustomer({ navigation }) {
+    const [isCustomer, setCustomer] = useState()
+    const [isArtist, setArtist] = useState()
+    const auth = getAuth();
+    const user = auth.currentUser;
+    const uid = user.uid;
 
+
+    function updateUserType(navigatorNum) {
+        if(navigatorNum === 1) {
+            updateDoc(doc(db, "users", uid), {     
+                isArtist: 1,
+              }).then(() => { 
+                // Data saved successfully!
+                console.log('data submitted');  
+              
+              }).catch((error) => {
+                    // The write failed...
+                    console.log(error);
+              });
+        }
+        else {
+            updateDoc(doc(db, "users", uid), {     
+                isCustomer: 1,
+              }).then(() => { 
+                // Data saved successfully!
+                console.log('data submitted');  
+              
+              }).catch((error) => {
+                    // The write failed...
+                    console.log(error);
+              });
+        }
+    }
+
+
+    function handleUserType(navigatorNum) {
+        if(navigatorNum === 0) {
+            updateUserType(navigatorNum);
+            navigation.navigate(CustomerChooseScreenFirst);
+
+        }
+        else {
+            updateUserType(navigatorNum);
+            navigation.navigate(ChooseScreenFirst);
+        }
+
+    }
+    
     return (
         <Background>
             <Text style={[{ color: 'white', marginBottom: 20, fontWeight: 'bold' }]} >Are u customer or artist?</Text>
             <TouchableHighlight
-                onPress={() => navigation.navigate(ChooseScreenFirst)}
+                 onPress={() => {handleUserType(1)}}
             >
                 <View style={styles.button}>
                     <Text style={styles.textButton}>
@@ -28,7 +73,7 @@ export default function ArtistOrCustomer({ navigation }) {
 
 
             <TouchableHighlight
-                onPress={() => navigation.navigate(CustomerChooseScreenFirst)}
+                 onPress={() => {handleUserType(0)}}
             >
                 <View style={styles.button}>
                     <Text style={styles.textButton}>

@@ -7,7 +7,8 @@ import {
 import normalize from 'react-native-normalize';
 import LoginScreen from './LoginScreen';
 import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
-import { firebase } from "../firebase.js"
+import { collection, doc, setDoc, addDoc, updateDoc, deleteDoc, getDoc, getDocs, where, query } from "firebase/firestore"; 
+import { db } from '../components/config';
 import ChooseScreenFirst from './ChooseScreenFirst';
 import '@react-navigation/native-stack'
 
@@ -19,6 +20,22 @@ const RegisterScreen = ({ navigation }) => {
   const [toggleCheckBox, setToggleCheckBox] = useState(true)
   const [checkBoxMessage, setcheckBoxMessage] = useState()
   const [userMessage, setUserMessage] = useState()
+
+  function create (userUID) {
+    setDoc(doc(db, "users", userUID), {     
+      email: email,
+      isArtist: 0,
+      isCustomer: 0,
+      }).then(() => { 
+    // Data saved successfully!
+    console.log('data submitted');  
+
+    }).catch((error) => { 
+        // The write failed...
+      console.log(error);
+  });
+};
+
 
   const handleSignUp = () => {
     const auth = getAuth();
@@ -61,9 +78,9 @@ const RegisterScreen = ({ navigation }) => {
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           var user = userCredential.user;
+          create(user.uid);
           navigation.navigate(LoginScreen)
           setUserMessage(<Text> </Text>);
-
         })
         .catch((error) => {
           var errorCode = error.code;
@@ -135,7 +152,7 @@ const styles = StyleSheet.create({
     width: '80%',
     height: normalize(50),
     borderWidth: 1.1,
-    borderRadius: normalize(5),
+    borderRadius: normalize(10),
     marginTop: normalize(20),
     paddingHorizontal: normalize(10),
     borderColor: '#C3CAD8',

@@ -1,10 +1,13 @@
 // eslint-disable-next-line no-use-before-define
 import React, { useEffect, useState } from 'react'
 import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
+import { collection, doc, setDoc, addDoc, updateDoc, deleteDoc, getDoc, getDocs, where, query } from "firebase/firestore";
+import { db } from '../components/config';
 import normalize from 'react-native-normalize';
 import { firebase } from "../firebase.js"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LogBox } from 'react-native';
+
 
 import {
   ActivityIndicator, Text, StyleSheet, View, TextInput, ScrollView,
@@ -18,20 +21,45 @@ import ArtistOrCustomer from './ArtistOrCustomer';
 import ResetPasswordScreen from './ResetPasswordScreen';
 import RegisterScreen from './RegisterScreen';
 import ResetPassword from './ResetPasswordScreen';
+import ArtistDashboardPage from './ArtistDashboardPage.js';
 
 // onPress={() => {  navigation.navigate(LoginScreen)  }}
 LogBox.ignoreAllLogs(); // to hide the warnings
 
 
 const LoginScreen = ({ navigation }) => {
-  
+
   const [email, setEmail] = useState()
   const [password, setPassword] = useState()
   const auth = getAuth();
   isLoading: false;
   const [userMessage, setUserMessage] = useState()
+  let UserType;
 
-  const handleSignInCustomer = () => {
+  
+  async function getUserType(mail) {
+    let users = [];
+    await getDocs(query(collection(db, "users"), where('email', '==', mail))).then(docSnap => {
+      docSnap.forEach((doc) => {
+        users.push({ ...doc.data(), id: doc.id })
+      });
+    });
+    UserType = users[0].isArtist;
+    console.log("Artist : " + users[0].isArtist);
+    console.log("User Type : " + UserType);
+  }
+  async function handleNavigation(mail) {
+    await getUserType(mail);
+    console.log("User Type Before Check : " + UserType);
+    if (UserType === 1) {
+      navigation.navigate(ArtistDashboardPage);
+    }
+    else {
+      navigation.navigate(ArtistOrCustomer);
+    }
+  }
+
+ const handleSignInCustomer = () => {
 
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
@@ -39,7 +67,7 @@ const LoginScreen = ({ navigation }) => {
 
         onAuthStateChanged(auth, user => {
           if (user) {
-            navigation.navigate(ArtistOrCustomer)
+            handleNavigation(user.email); 
             setUserMessage('')
           }
           else {
@@ -124,7 +152,7 @@ const styles = StyleSheet.create({
     width: '80%',
     height: normalize(50),
     borderWidth: 1.1,
-    borderRadius: normalize(5),
+    borderRadius: normalize(10),
     marginTop: normalize(20),
     paddingHorizontal: normalize(10),
     borderColor: 'white',
@@ -137,7 +165,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     width: '70%',
     height: normalize(50),
-    marginTop:normalize(10),
+    marginTop: normalize(10),
     marginBottom: normalize(-20)
   },
   button1title: {
@@ -146,6 +174,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: normalize(18),
     paddingTop: normalize(13),
+    borderRadius: normalize(10),
   },
   button2: {
     marginTop: normalize(60),
