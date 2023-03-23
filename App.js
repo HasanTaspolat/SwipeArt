@@ -278,21 +278,19 @@ export default function App() {
           />
           <Tab.Screen
             options={{
+              headerShown: false,
               tabBarIcon: ({ color, size }) => (
                 <Ionicons name="swap-horizontal" color={color} size={30} />
               ),
-              tabBarActiveBackgroundColor: 'white',
-              tabBarActiveTintColor: 'black',
-              tabBarInactiveTintColor: 'black',
-              tabBarLabelStyle: {
-              },
-              tabBarLabel: 'ArtistDashboardPage',
               tabBarStyle: {
-                borderBottomLeftRadius: 14,
-                borderBottomRightRadius: 14,
-                position: 'absolute',
-                overflow: 'hidden',
+                backgroundColor: '#000',
+                height: normalize(0, 'height'),
+                borderTopColor: '#000',
               },
+              headerShown: false,
+           
+              tabBarLabel: 'ArtistDashboardPage',
+            
               tabBarActiveTintColor: "blue",
 
             }}
@@ -309,14 +307,15 @@ export default function App() {
             tabBarInactiveTintColor: 'black',
             tabBarLabelStyle: {
             },
+            tabBarStyle: {
+              backgroundColor: '#000',
+              height: normalize(0, 'height'),
+              borderTopColor: '#000',
+            },
+            headerShown: false,
             tabBarActiveTintColor: "blue",
             tabBarLabel: 'Profile',
-            tabBarStyle: {
-              borderBottomLeftRadius: 14,
-              borderBottomRightRadius: 14,
-              position: 'absolute',
-              overflow: 'hidden',
-            },
+
 
           }}
             name="ProfileScreen"

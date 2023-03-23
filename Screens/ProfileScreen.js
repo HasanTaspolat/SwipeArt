@@ -4,6 +4,7 @@ import { Feather } from '@expo/vector-icons';
 import * as DocumentPicker from 'expo-document-picker';
 import * as ImagePicker from 'expo-image-picker';
 import BottomNavigationArtist from './BottomNavigationArtist';
+import normalize from 'react-native-normalize';
 
 const EditProfileScreen = ({ navigation }) => {
     const [editingMode, setEditingMode] = useState(false);
@@ -137,7 +138,7 @@ const EditProfileScreen = ({ navigation }) => {
                     ) : null}
                 </View>
             )}
-               <BottomNavigationArtist></BottomNavigationArtist>
+               <BottomNavigationArtist  style={styles.BottomNavigationArtistContainer}></BottomNavigationArtist>
         </ScrollView>
     );
 };
@@ -146,6 +147,9 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'black',
+    },
+    BottomNavigationArtistContainer: {
+       paddingTop:normalize(150),
     },
     header: {
         flexDirection: 'row',
