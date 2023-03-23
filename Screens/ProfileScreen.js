@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ScrollView,
 import { Feather } from '@expo/vector-icons';
 import * as DocumentPicker from 'expo-document-picker';
 import * as ImagePicker from 'expo-image-picker';
+import BottomNavigationArtist from './BottomNavigationArtist';
 
 const EditProfileScreen = ({ navigation }) => {
     const [editingMode, setEditingMode] = useState(false);
@@ -136,6 +137,7 @@ const EditProfileScreen = ({ navigation }) => {
                     ) : null}
                 </View>
             )}
+               <BottomNavigationArtist></BottomNavigationArtist>
         </ScrollView>
     );
 };
