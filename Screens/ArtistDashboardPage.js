@@ -80,7 +80,7 @@ const ArtistDashboardPage = () => {
                     </View>
                 </View>
             </View>
-            <BottomNavigationArtist></BottomNavigationArtist>
+            <BottomNavigationArtist style={styles.bottomNavigation}></BottomNavigationArtist>
         </ScrollView >
     );
 };
@@ -88,7 +88,6 @@ const ArtistDashboardPage = () => {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: "black",
-        padding: 20,
     },
     cardContainer: {
         display: "flex",
@@ -96,8 +95,8 @@ const styles = StyleSheet.create({
         justifyContent: "space-around",
     },
     header: {
-        marginTop: 20,
-        marginBottom: 30,
+        marginTop: 22,
+        marginBottom: 20,
     },
     greeting: {
         fontSize: 24,
