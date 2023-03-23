@@ -1,11 +1,20 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import normalize from 'react-native-normalize';
 
 const BottomNavigation = () => {
     const navigation = useNavigation();
+  
+    const [isPressed, setIsPressed] = useState(false);
+    const handlePressIn = () => setIsPressed(true);
+    const handlePressOut = () => setIsPressed(false);
+
+
+    const [isPressedProfile, setisPressedProfile] = useState(false);
+    const handlePressInProfile = () => setisPressedProfile(true);
+    const handlePressOutProfile = () => setisPressedProfile(false);
 
     const [activeScreen, setActiveScreen] = useState('ArtistDashboardPage');
 
@@ -16,27 +25,40 @@ const BottomNavigation = () => {
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity
-                style={[styles.tabButton, activeScreen === 'ArtistDashboardPage' && styles.activeTabButton]}
-                onPress={() => onPress('ArtistDashboardPage')}
-            >
-                <Icon
-                    name={activeScreen === 'ArtistDashboardPage' ? 'ios-home' : 'ios-home'}
-                    size={24}
-                />
-                <Text style={[styles.tabText, activeScreen === 'ArtistDashboardPage']}>ArtistDashboardPage</Text>
-            </TouchableOpacity>
 
-            <TouchableOpacity
-                style={[styles.tabButton, activeScreen === 'ProfileScreen' && styles.activeTabButton]}
-                onPress={() => onPress('ProfileScreen')}
-            >
-                <Icon
-                    name={activeScreen === 'ProfileScreen' ? 'ios-list' : 'ios-list-outline'}
-                    size={24}
-                />
-                <Text style={[styles.tabText, activeScreen === 'ProfileScreen' && styles.activeTabText]}>ProfileScreen</Text>
-            </TouchableOpacity>
+            <TouchableWithoutFeedback>
+                <TouchableOpacity
+                    onPressIn={handlePressIn}
+                    onPressOut={handlePressOut}
+                    style={[styles.tabButton, activeScreen === 'ArtistDashboardPage' && styles.activeTabButton]}
+                    onPress={() => onPress('ArtistDashboardPage')}
+                >
+                    <Icon
+                        style={[{ color: isPressed ? 'blue' : 'black' }]}
+                        name={activeScreen === 'ArtistDashboardPage' ? 'ios-home' : 'ios-home'}
+                        size={24}
+                    />
+                    <Text  style={[styles.tabText, activeScreen === 'ArtistDashboardPage' && { color: isPressed ? 'blue' : 'black' }]}>Dashboard</Text>
+                </TouchableOpacity>
+            </TouchableWithoutFeedback>
+
+
+            <TouchableWithoutFeedback>
+                <TouchableOpacity
+                 onPressIn={handlePressInProfile}
+                 onPressOut={handlePressOutProfile}
+                    style={[styles.tabButton, activeScreen === 'ProfileScreen' && styles.activeTabButton]}
+                    onPress={() => onPress('ProfileScreen')}
+                >
+                    <Icon
+                        style={[{ color: isPressedProfile ? 'blue' : 'black' }]}
+                        name={activeScreen === 'ProfileScreen' ? 'ios-person' : 'ios-person'}
+                        size={24}
+                    />
+                    <Text style={[styles.tabText, activeScreen === 'ProfileScreen' && { color: isPressedProfile ? 'blue' : 'black' }]}>Profile</Text>
+
+                </TouchableOpacity>
+            </TouchableWithoutFeedback>
         </View>
     );
 };
