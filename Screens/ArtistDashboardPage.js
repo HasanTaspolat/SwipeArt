@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import BottomNavigationArtist from './BottomNavigationArtist';
 
 const ArtistDashboardPage = () => {
     const [orderCount, setOrderCount] = useState(0);
@@ -79,6 +80,7 @@ const ArtistDashboardPage = () => {
                     </View>
                 </View>
             </View>
+            <BottomNavigationArtist></BottomNavigationArtist>
         </ScrollView >
     );
 };
