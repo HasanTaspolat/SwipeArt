@@ -20,16 +20,13 @@ export default function MainPage({ navigation }) {
             <SwipeContainer />
             <BottomNavigationCustomer style={styles.naviationContainer}></BottomNavigationCustomer>
         </View >
-
-
     );
 }
 
 const styles = StyleSheet.create({
-    naviationContainer: {
-        marginTop: 1200,
-    },
+
     container: {
+        justifyContent: 'flex-end',
         backgroundColor: 'black',
         display: "flex",
         flexDirection: "column",
@@ -38,9 +35,6 @@ const styles = StyleSheet.create({
         width: 350,
         height: 620,
         marginBottom: 40,
-        transform: [
-            { scale: 0.85 },
-        ],
     },
     ViewimageText: {
         position: 'absolute',
