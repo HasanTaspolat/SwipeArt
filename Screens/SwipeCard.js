@@ -38,7 +38,7 @@ const SwipeCard = ({ data, onSwipe, onSwipeLeft, onSwipeRight, children }) => {
         }
 
       },
-      
+
     })
   );
 
@@ -132,9 +132,8 @@ const SwipeCard = ({ data, onSwipe, onSwipeLeft, onSwipeRight, children }) => {
 const styles = StyleSheet.create({
 
   card: {
-    marginTop:0,
+    marginTop: 290,
     position: 'absolute',
-   
     height: 500,
     borderRadius: 10,
     left: 0,
@@ -142,7 +141,7 @@ const styles = StyleSheet.create({
   },
   button: {
     position: 'absolute',
-    top: height - 250,
+    top: height + 50,
     width: 50,
     padding: 10,
     justifyContent: 'center',
@@ -153,7 +152,7 @@ const styles = StyleSheet.create({
   },
   button2: {
     position: 'absolute',
-    top: height - 250,
+    top: height + 50,
     width: 50,
     padding: 10,
     justifyContent: 'center',

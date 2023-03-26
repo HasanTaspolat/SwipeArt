@@ -54,7 +54,7 @@ const ProfileScreenCustomer = ({ navigation }) => {
     }
 
     return (
-        <ScrollView style={styles.container}>
+        <ScrollView contentContainerStyle={styles.container}>
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => setEditingMode(true)}>
                     <Text style={styles.editText}>Edit</Text>
@@ -111,6 +111,7 @@ const ProfileScreenCustomer = ({ navigation }) => {
                         onChangeText={setInstagram}
                         placeholder="Instagram"
                     />
+                    <BottomNavigationCustomer></BottomNavigationCustomer>
                 </View>
             ) : (
                 <View style={styles.profileInfo}>
@@ -135,7 +136,8 @@ const ProfileScreenCustomer = ({ navigation }) => {
                     ) : null}
                 </View>
             )}
-            <BottomNavigationCustomer style={styles.BottomNavigationArtistContainer}></BottomNavigationCustomer>
+            <BottomNavigationCustomer></BottomNavigationCustomer>
+
         </ScrollView>
     );
 };
@@ -144,10 +146,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'black',
-    },
-    BottomNavigationArtistContainer: {
-        marginTop: normalize(1250),
-        backgroundColor:"red",
     },
     header: {
         flexDirection: 'row',

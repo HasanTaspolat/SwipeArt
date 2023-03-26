@@ -6,7 +6,7 @@ import normalize from 'react-native-normalize';
 
 const BottomNavigationCustomer = () => {
     const navigation = useNavigation();
-  
+
     const [isPressed, setIsPressed] = useState(false);
     const handlePressIn = () => setIsPressed(true);
     const handlePressOut = () => setIsPressed(false);
@@ -25,7 +25,6 @@ const BottomNavigationCustomer = () => {
 
     return (
         <View style={styles.container}>
-
             <TouchableWithoutFeedback>
                 <TouchableOpacity
                     onPressIn={handlePressIn}
@@ -38,15 +37,13 @@ const BottomNavigationCustomer = () => {
                         name={activeScreen === 'MainPage' ? 'ios-home' : 'ios-home'}
                         size={24}
                     />
-                    <Text  style={[styles.tabText, activeScreen === 'MainPage' && { color: isPressed ? 'blue' : 'black' }]}>Swipe</Text>
+                    <Text style={[styles.tabText, activeScreen === 'MainPage' && { color: isPressed ? 'blue' : 'black' }]}>Swipe</Text>
                 </TouchableOpacity>
             </TouchableWithoutFeedback>
-
-
             <TouchableWithoutFeedback>
                 <TouchableOpacity
-                 onPressIn={handlePressInProfile}
-                 onPressOut={handlePressOutProfile}
+                    onPressIn={handlePressInProfile}
+                    onPressOut={handlePressOutProfile}
                     style={[styles.tabButton, activeScreen === 'ProfileScreenCustomer' && styles.activeTabButton]}
                     onPress={() => onPress('ProfileScreenCustomer')}
                 >
@@ -70,14 +67,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         height: 60,
         backgroundColor: 'white',
-        position:"relative",
-        bottom:0
+        position: "relative",
+        bottom: 0,
+        marginTop: normalize(172),
     },
     tabButton: {
         justifyContent: 'center',
         alignItems: 'center',
     },
-
     activeTabButton: {
     },
     tabText: {
