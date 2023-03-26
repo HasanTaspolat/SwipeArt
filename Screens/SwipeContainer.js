@@ -3,13 +3,13 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import SwipeCard from './SwipeCard';
 import data from '../person.json';
 import { AntDesign } from '@expo/vector-icons';
+import BottomNavigationCustomer from './BottomNavigationCustomer';
 
 
 
 export default function SwipeContainer() {
     const [cards, setCards] = useState(data);
     const [gestureDy, setGestureDy] = useState(0);
-
 
     const onSwipeLeft = (cardIndex) => {
         const newCards = [...cards];
@@ -44,25 +44,9 @@ export default function SwipeContainer() {
                         </View>
 
                     </View>
-                    {/* <TouchableOpacity style={styles.button} onPress={() => handleButtonPress(onSwipeLeft)}
-                    >
-                        <AntDesign name="close" size={24} color="white" />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.button2} >
-                        <AntDesign name="check" size={24} color="white" />
-                    </TouchableOpacity> */}
                 </SwipeCard>
-
             ))}
-
-            {/* <TouchableOpacity style={styles.button} onPress={() => handleButtonPress(onSwipeLeft)}
-            >
-                <AntDesign name="close" size={24} color="white" />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button2} >
-                <AntDesign name="check" size={24} color="white" />
-            </TouchableOpacity> */}
-
+            <BottomNavigationCustomer></BottomNavigationCustomer>
         </View>
 
     );
@@ -73,22 +57,17 @@ const styles = StyleSheet.create({
     cardContainer: {
         width: '100%',
         height: '100%',
-        marginTop: 50,
     },
 
     cardImage: {
-        width: '100%',
+        width: '80%',
         height: '80%',
-        marginBottom: 10,
         borderRadius: 10,
     },
     card: {
-        borderRadius: 10,
         flexDirection: 'column',
         paddingHorizontal: 55,
-        paddingVertical: 18,
         width: 400,
-        height: "100%",
         alignItems: "center",
         justifyContent: 'center',
     },
@@ -118,7 +97,6 @@ const styles = StyleSheet.create({
         width: 50,
         padding: 10,
         position: "absolute",
-        bottom: 180,
         left: "30%",
         backgroundColor: 'red',
         borderRadius: 15,
@@ -129,7 +107,6 @@ const styles = StyleSheet.create({
         width: 50,
         padding: 10,
         position: "absolute",
-        bottom: 180,
         right: "30%",
         backgroundColor: 'green',
         borderRadius: 15,
