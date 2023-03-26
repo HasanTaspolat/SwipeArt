@@ -134,17 +134,15 @@ const styles = StyleSheet.create({
   card: {
     marginTop:0,
     position: 'absolute',
-    width: "100%",
+   
     height: 500,
     borderRadius: 10,
     left: 0,
     right: 0,
-    borderColor:"white",
-    borderWidth:0.55,
   },
   button: {
     position: 'absolute',
-    top: height - 300,
+    top: height - 250,
     width: 50,
     padding: 10,
     justifyContent: 'center',
@@ -155,7 +153,7 @@ const styles = StyleSheet.create({
   },
   button2: {
     position: 'absolute',
-    top: height - 300,
+    top: height - 250,
     width: 50,
     padding: 10,
     justifyContent: 'center',

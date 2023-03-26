@@ -10,6 +10,7 @@ import ArtistMusicianType from './Screens/ArtistMusicianType';
 import ArtistPainter from './Screens/ArtistPainter';
 import ResetPasswordScreen from './Screens/ResetPasswordScreen';
 import ProfileScreen from './Screens/ProfileScreen';
+import ProfileScreenCustomer from './Screens/ProfileScreenCustomer';
 import MainPage from './Screens/MainPage';
 import ArtistDashboardPage from './Screens/ArtistDashboardPage';
 import RegisterScreen from './Screens/RegisterScreen';
@@ -264,13 +265,14 @@ export default function App() {
               tabBarLabelStyle: {
               },
               tabBarLabel: 'Swipe',
-              tabBarStyle: {
-                borderBottomLeftRadius: 14,
-                borderBottomRightRadius: 14,
-                position: 'absolute',
-                overflow: 'hidden',
-              },
+          
               tabBarActiveTintColor: "blue",
+              tabBarStyle: {
+                backgroundColor: '#000',
+                height: normalize(0, 'height'),
+                borderTopColor: '#000',
+              },
+              headerShown: false,
 
             }}
             name="MainPage"
@@ -320,6 +322,31 @@ export default function App() {
           }}
             name="ProfileScreen"
             component={ProfileScreen}
+          />
+
+<Tab.Screen options={{
+            headerShown: false, headerTintColor: 'white', headerTitleAlign: 'center', title: "Profile",
+            tabBarIcon: ({ color, size, tintColor }) => (
+              <Ionicons name="person" color={color} size={30} />
+            ),
+            tabBarActiveBackgroundColor: 'white',
+            tabBarActiveTintColor: 'black',
+            tabBarInactiveTintColor: 'black',
+            tabBarLabelStyle: {
+            },
+            tabBarStyle: {
+              backgroundColor: '#000',
+              height: normalize(0, 'height'),
+              borderTopColor: '#000',
+            },
+            headerShown: false,
+            tabBarActiveTintColor: "blue",
+            tabBarLabel: 'Profile',
+
+
+          }}
+            name="ProfileScreenCustomer"
+            component={ProfileScreenCustomer}
           />
 
         </Tab.Navigator>
