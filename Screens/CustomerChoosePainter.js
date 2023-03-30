@@ -5,50 +5,114 @@ import {
     Image, TouchableHighlight, Modal, AppRegistry, Linking, TouchableOpacity
 } from 'react-native';
 import MainPage from './MainPage';
+import { getAuth } from "firebase/auth";
+import { collection, doc, setDoc, addDoc, updateDoc, deleteDoc, getDoc, getDocs, where, query } from "firebase/firestore";
+import { db } from '../components/config';
+import { RadioButton } from 'react-native-paper';
 
 export default function CustomerChoosePainter({ navigation }) {
+    
+    const auth = getAuth();
+    const user = auth.currentUser;
+    const uid = user.uid;
+    const [design, setdesign] = useState(false);
+    const [restoration, setrest] = useState(false);
+    const [graf, setgraf] = useState(false);
+    const [industrial, setind] = useState(false);
+
+
+ // THIS SECTION ONLY SETS INITIAL SCORES
+ // REST WILL CHANGE ON ALGORITHM
+    function setMusicianPreference() {
+            updateDoc(doc(db, "users", uid , "userPreference", "ArtistTypes"), {  
+                designScore: design === true ? 1 : 0,
+                restScore: restoration === true ? 1 : 0,
+                grafScore: graf === true ? 1 : 0,
+                indScore: industrial === true ? 1 : 0,
+            }).then(() => { 
+            // Data saved successfully!
+            console.log('data submitted');  
+            navigation.navigate(MainPage)        
+            }).catch((error) => { 
+                // The write failed...
+            console.log("error");
+            });
+    }
+
 
     return (
         <Background>
-            <Text style={[{ color: 'white', marginBottom: 20, fontWeight: 'bold' }]} > which specific profession are you looking for?</Text>
-            <TouchableHighlight
-                onPress={() => navigation.navigate(MainPage)}
-            >
-                <View style={styles.button}>
+            <Text style={[{ color: 'white', marginBottom: 20, fontWeight: 'bold' }]} > Which specific profession are you looking for?</Text>
+            <View style={styles.container}>
+                <RadioButton 
+                    label="Design"
+                    value="1"
+                    status={ design === true ? 'checked' : 'unchecked' }
+                    onPress={() => setdesign(!design)}
+                    />
                     <Text style={styles.textButton}>
                         Digital Design
                     </Text>
-                </View>
-            </TouchableHighlight>
-            <TouchableHighlight
-                onPress={() => navigation.navigate(MainPage)}
-            >
-                <View style={styles.button}>
+            </View>
+            <View style={styles.container}>
+                <RadioButton 
+                    label="Restoration"
+                    value="1"
+                    status={ restoration === true ? 'checked' : 'unchecked' }
+                    onPress={() => setrest(!restoration)}
+                    />
                     <Text style={styles.textButton}>
                         Restoration
                     </Text>
-                </View>
-            </TouchableHighlight>
-
-            <TouchableHighlight
-                onPress={() => navigation.navigate(MainPage)}
-            >
-                <View style={styles.button}>
+            </View>
+            <View style={styles.container}>
+                <RadioButton 
+                    label="graffiti"
+                    value="1"
+                    status={ graf === true ? 'checked' : 'unchecked' }
+                    onPress={() => setgraf(!graf)}
+                    />
                     <Text style={styles.textButton}>
                         Graffiti
                     </Text>
+            </View>
+
+            <View style={styles.container}>
+                <RadioButton 
+                    label="industrial"
+                    value="1"
+                    status={ industrial === true ? 'checked' : 'unchecked' }
+                    onPress={() => setind(!industrial)}
+                    />
+                    <Text style={styles.textButton}>
+                        Industrial
+                    </Text>
+            </View>
+
+            <TouchableHighlight
+                onPress={() => setMusicianPreference()}
+            >
+                <View style={styles.button}>
+                    <Text style={styles.textButton}>
+                        Next
+                    </Text>
                 </View>
             </TouchableHighlight>
+
 
             <TouchableHighlight
                 onPress={() => navigation.navigate(MainPage)}
             >
-                <View style={styles.button}>
-                    <Text style={styles.textButton}>
-                        Industrial
+                <View >
+                    <Text style={styles.textButton2}>
+                        Others+
+                    </Text>
+                    <Text style={styles.textButton2}>
+                        feel free to contact us!
                     </Text>
                 </View>
             </TouchableHighlight>
+
         </Background >
     )
 }

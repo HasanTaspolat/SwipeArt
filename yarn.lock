@@ -7615,14 +7615,14 @@ react-native-normalize@^1.0.1:
   resolved "https://registry.npmjs.org/react-native-normalize/-/react-native-normalize-1.0.1.tgz"
   integrity sha512-QYs95xhARhlcWWcDC77r4nVfxa3pDSfIBx2gdYZ+DOcLhSdPzRHFivWbGu3mL01JcvE69pMK7BmbPCda28vXwA==
 
-react-native-paper@^5.1.0:
-  version "5.1.0"
-  resolved "https://registry.npmjs.org/react-native-paper/-/react-native-paper-5.1.0.tgz"
-  integrity sha512-cNW/k1i/bd08eSmCpWyMt5aZMrAAl/c56bG2VnPrJtVyQtBgdCvMXnpXhDOWEBJPR6ZEiAJl6VWutYvi9XcDcg==
+react-native-paper@^5.5.2:
+  version "5.5.2"
+  resolved "https://registry.npmjs.org/react-native-paper/-/react-native-paper-5.5.2.tgz"
+  integrity sha512-cgkx67++r1oDoZRhzTohb0//qkD1Z20C/OcLfrE0HzyAkG+bYm0fA6gWqvHpdC7icQmuDS8iOOLu2288IYWiOA==
   dependencies:
     "@callstack/react-theme-provider" "^3.0.8"
     color "^3.1.2"
-    use-event-callback "^0.1.0"
+    use-latest-callback "^0.1.5"
 
 react-native-pdf@^6.6.2:
   version "6.6.2"
@@ -7637,7 +7637,7 @@ react-native-remote-svg@^2.0.10:
   resolved "https://registry.npmjs.org/react-native-remote-svg/-/react-native-remote-svg-2.0.10.tgz"
   integrity sha512-6s+IpcX8xBe5SI/5J/IbgqtnMBZTUU+qGKAz1klEtlwC+3EiGTvVZX9e0QgJ3DQ7Jf2CN1YQ4pDBkEH1WA5Q+A==
 
-react-native-safe-area-context@*, "react-native-safe-area-context@>= 3.0.0", react-native-safe-area-context@4.4.1:
+react-native-safe-area-context@*, react-native-safe-area-context@^4.4.1, "react-native-safe-area-context@>= 3.0.0":
   version "4.4.1"
   resolved "https://registry.npmjs.org/react-native-safe-area-context/-/react-native-safe-area-context-4.4.1.tgz"
   integrity sha512-N9XTjiuD73ZpVlejHrUWIFZc+6Z14co1K/p1IFMkImU7+avD69F3y+lhkqA2hN/+vljdZrBSiOwXPkuo43nFQA==
@@ -7755,7 +7755,7 @@ react-transition-group@^4.4.2:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
-react@*, "react@^16.0.0 || ^17.0.0 || ^18.0.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^16.8.0 || ^17.0.0-rc.1 || ^18.0.0", "react@^17.0.2 || ^18.0.0", react@^18.1.0, react@>=0.14.0, react@>=15, react@>=15.0.0, react@>=16.14.0, react@>=16.3.0, react@>=16.6.0, react@>=16.8, react@>=16.8.0, react@>=17.0.0, react@18.1.0:
+react@*, "react@^16.0.0 || ^17.0.0 || ^18.0.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^16.8.0 || ^17.0.0-rc.1 || ^18.0.0", "react@^17.0.2 || ^18.0.0", react@^18.1.0, react@>=0.14.0, react@>=15, react@>=15.0.0, react@>=16.14.0, react@>=16.3.0, react@>=16.6.0, react@>=16.8.0, react@>=17.0.0, react@18.1.0:
   version "18.1.0"
   resolved "https://registry.npmjs.org/react/-/react-18.1.0.tgz"
   integrity sha512-4oL8ivCz5ZEPyclFQXaNksK3adutVS8l2xzZU0cqEFrE9Sb7fC0EFK5uEk74wIreL1DERyjvsU915j1pcT2uEQ==
@@ -8934,11 +8934,6 @@ url-parse@^1.5.9:
   dependencies:
     querystringify "^2.1.1"
     requires-port "^1.0.0"
-
-use-event-callback@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.npmjs.org/use-event-callback/-/use-event-callback-0.1.0.tgz"
-  integrity sha512-5fTzY5UEXHMK5UR0NRkUz6TPfWmmX9fO8Tx3SnHrfMPdrQ7Rna0gDBy0r56SP68TwsP9DgwSBzeysCu3A/Z2NA==
 
 use-latest-callback@^0.1.5:
   version "0.1.5"
