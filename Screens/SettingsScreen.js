@@ -2,10 +2,26 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, Switch, TouchableOpacity, Linking } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import MainPage from './MainPage';
+import { getAuth, signOut } from "firebase/auth";
+import LoginScreen from './LoginScreen';
+
+
 
 
 const SettingsScreen = ({ navigation }) => {
+    
+    const auth = getAuth();
+    const onSignOut = () => {
+        
+        signOut(auth).then(() => {
+            console.log("succss");
+          }).catch((error) => {
+            console.log("failed");
+          });
+        }
 
+    
+ 
     const handleEmailPress = () => {
         Linking.openURL('mailto:osmanyavuzolgun@gmail.com');
     };
@@ -46,7 +62,7 @@ const SettingsScreen = ({ navigation }) => {
                 </View>
             </View>
 
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={() => onSignOut()}>
                 <Text style={styles.buttonText}>
                     Logout
 
