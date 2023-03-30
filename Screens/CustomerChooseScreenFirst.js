@@ -7,15 +7,48 @@ import {
 import ArtistMusician from './ArtistMusician';
 import CustomerChooseMusician from './CustomerChooseMusician';
 import CustomerChoosePainter from './CustomerChoosePainter';
-
+import { getAuth } from "firebase/auth";
+import { collection, doc, setDoc, addDoc, updateDoc, deleteDoc, getDoc, getDocs, where, query } from "firebase/firestore";
+import { db } from '../components/config';
 import ArtistPainter from './ArtistPainter';
 export default function CustomerChooseScreenFirst({ navigation }) {
+
+    const auth = getAuth();
+    const user = auth.currentUser;
+    const uid = user.uid;
+
+    function setCustomerPreference(preference) {
+        if(preference === 1) {
+            setDoc(doc(db, "users", uid , "userPreference", "MusicianTypes"), {  
+                startingScore: 1,
+            }).then(() => { 
+            // Data saved successfully!
+            console.log('data submitted');  
+            navigation.navigate(CustomerChooseMusician);          
+            }).catch((error) => { 
+                // The write failed...
+            console.log("error");
+            });
+        }
+        else {
+            setDoc(doc(db, "users", uid , "userPreference", "PainterTypes"), {  
+                startingScore: 1,
+            }).then(() => { 
+            // Data saved successfully!
+            console.log('data submitted');  
+            navigation.navigate(CustomerChoosePainter);        
+            }).catch((error) => { 
+                // The write failed...
+            console.log("error");
+            });
+        }
+    };
 
     return (
         <Background>
             <Text style={[{ color: 'white', marginBottom: 20, fontWeight: 'bold' }]} > What kind of artist are you looking for?</Text>
             <TouchableHighlight
-                onPress={() => navigation.navigate(CustomerChooseMusician)}
+                onPress={() =>setCustomerPreference(1)}
             >
                 <View style={styles.button}>
                     <Text style={styles.textButton}>
