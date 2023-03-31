@@ -33,7 +33,10 @@ export default function CustomerChooseMusician({ navigation }) {
                 bluesScore: blues === true ? 1 : 0,
             }).then(() => { 
             // Data saved successfully!
-            console.log('data submitted');  
+            console.log('data submitted');
+            updateDoc(doc(db, "users", uid), {  
+                completed: 1,
+            })    
             navigation.navigate(MainPage)        
             }).catch((error) => { 
                 // The write failed...

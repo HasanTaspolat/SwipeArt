@@ -8,14 +8,38 @@ import CustomerChooseScreenFirst from './CustomerChooseScreenFirst';
 import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 import { collection, doc, setDoc, addDoc, updateDoc, deleteDoc, getDoc, getDocs, where, query } from "firebase/firestore";
 import { db } from '../components/config';
+import MainPage from './MainPage';
 
 export default function ArtistOrCustomer({ navigation }) {
     const [isCustomer, setCustomer] = useState()
+    const [isCompleted, setComplete] = useState()
     const [isArtist, setArtist] = useState()
     const auth = getAuth();
     const user = auth.currentUser;
     const uid = user.uid;
 
+    async function getUserType() {
+        let users = [];
+        await getDocs(collection(db, "users", uid)).then(docSnap => {
+            let users = [];
+            docSnap.forEach((doc)=> {
+                users.push({ ...doc.data(), id:doc.id })
+            });
+            setComplete(users[0].completed);
+        })
+
+        console.log("log is here: " + isCompleted);
+    }
+    async function handlePreCreate() {
+        console.log("log is here: " + isCompleted);
+        await getUserType();
+        if(isCompleted) {
+            navigation.navigate(MainPage);
+        }
+    }
+    // Check if the user is handled this process before.
+    // If yes, then navigate to mainpage. 
+    handlePreCreate();
 
     function updateUserType(navigatorNum) {
         if(navigatorNum === 1) {

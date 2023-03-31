@@ -24,14 +24,17 @@ export default function CustomerChoosePainter({ navigation }) {
  // THIS SECTION ONLY SETS INITIAL SCORES
  // REST WILL CHANGE ON ALGORITHM
     function setMusicianPreference() {
-            updateDoc(doc(db, "users", uid , "userPreference", "ArtistTypes"), {  
+            updateDoc(doc(db, "users", uid , "userPreference", "PainterTypes"), {  
                 designScore: design === true ? 1 : 0,
                 restScore: restoration === true ? 1 : 0,
                 grafScore: graf === true ? 1 : 0,
                 indScore: industrial === true ? 1 : 0,
             }).then(() => { 
             // Data saved successfully!
-            console.log('data submitted');  
+            console.log('data submitted');
+            updateDoc(doc(db, "users", uid), {  
+                completed: 1,
+            })  
             navigation.navigate(MainPage)        
             }).catch((error) => { 
                 // The write failed...

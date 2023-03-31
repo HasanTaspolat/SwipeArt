@@ -35,7 +35,7 @@ export default function CustomerChooseScreenFirst({ navigation }) {
                 startingScore: 1,
             }).then(() => { 
             // Data saved successfully!
-            console.log('data submitted');  
+            console.log('data submitted, for the painter, collection created');  
             navigation.navigate(CustomerChoosePainter);        
             }).catch((error) => { 
                 // The write failed...
@@ -59,7 +59,7 @@ export default function CustomerChooseScreenFirst({ navigation }) {
 
 
             <TouchableHighlight
-                onPress={() => navigation.navigate(CustomerChoosePainter)}
+                onPress={() => setCustomerPreference(0)}
             >
                 <View style={styles.button}>
                     <Text style={styles.textButton}>
