@@ -2,10 +2,8 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, Switch, TouchableOpacity, Linking } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import MainPage from './MainPage';
-import { getAuth, signOut, deleteUser  } from "firebase/auth";
+import { getAuth, signOut } from "firebase/auth";
 import LoginScreen from './LoginScreen';
-
-
 
 
 
@@ -22,16 +20,7 @@ const SettingsScreen = ({ navigation }) => {
           });
         }
 
-    const user = auth.currentUser;
-
-    const deletAccount = () => {
-        
-        deleteUser(user).then(() => {
-            console.log("deleted")
-          }).catch((error) => {
-           console.log("error");
-          });
-    }  
+    
  
     const handleEmailPress = () => {
         Linking.openURL('mailto:osmanyavuzolgun@gmail.com');
@@ -76,13 +65,6 @@ const SettingsScreen = ({ navigation }) => {
             <TouchableOpacity style={styles.button} onPress={() => onSignOut()}>
                 <Text style={styles.buttonText}>
                     Logout
-
-                </Text>
-                <AntDesign style={styles.logoutIcon} name="logout" size={16} color="white" />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button} onPress={() => deletAccount()}>
-                <Text style={styles.buttonText}>
-                    Delete Your Account
 
                 </Text>
                 <AntDesign style={styles.logoutIcon} name="logout" size={16} color="white" />
