@@ -86,15 +86,15 @@ const styles = StyleSheet.create({
   },
   icon: {
     position: 'absolute', // add if dont work with above
-    top: 0,
+    top: 300,
     left: 10,
   },
   sidebar: {
     position: 'absolute',
-    top: 0,
+    top: 125,
     left: 0,
     height:windowHeight,
-    width: '75%',
+    width: '50%',
     backgroundColor: 'black',
     zIndex: 22,
     paddingHorizontal: 20,
