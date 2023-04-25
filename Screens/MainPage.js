@@ -6,7 +6,7 @@ import {
     TouchableOpacity,
     Image, ImageBackground
 } from 'react-native';
-import Sidebar from './Sidebar';
+import Sidebar from './SidebarCustomer';
 import SwipeContainer from './SwipeContainer';
 import SwipeCard from './SwipeCard';
 import jsonData from '../person.json';
@@ -20,6 +20,7 @@ export default function MainPage({ navigation }) {
             <SwipeContainer />
             <BottomNavigationCustomer style={styles.naviationContainer}></BottomNavigationCustomer>
         </View >
+        
     );
 }
 
