@@ -59,6 +59,22 @@ const BottomNavigation = () => {
 
                 </TouchableOpacity>
             </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback>
+                <TouchableOpacity
+                 onPressIn={handlePressInProfile}
+                 onPressOut={handlePressOutProfile}
+                    style={[styles.tabButton, activeScreen === 'ChatScreen' && styles.activeTabButton]}
+                    onPress={() => onPress('ChatScreen')}
+                >
+                    <Icon
+                        style={[{ color: isPressedProfile ? 'blue' : 'black' }]}
+                        name={activeScreen === 'ChatScreen' ? 'ios-chatbox' : 'ios-chatbox'}
+                        size={24}
+                    />
+                    <Text style={[styles.tabText, activeScreen === 'ChatScreen' && { color: isPressedProfile ? 'blue' : 'black' }]}>Chat</Text>
+
+                </TouchableOpacity>
+            </TouchableWithoutFeedback>
         </View>
     );
 };
