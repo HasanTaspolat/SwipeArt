@@ -97,13 +97,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: 120,
     zIndex: 222,
-    marginTop: 150,
-    backgroundColor: "red",
   },
   icon: {
     position: "absolute", // add if dont work with above
     top: 0,
     left: 10,
+    paddingVertical: 20,
   },
   sidebar: {
     position: "absolute",
