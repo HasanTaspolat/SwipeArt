@@ -3,14 +3,25 @@ import { View, Text, StyleSheet, ScrollView } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import BottomNavigationArtist from "./BottomNavigationArtist";
 import Sidebar from "./Sidebar-2";
+import ListingArtistCreator from "./ListingArtistCreator";
+import { useNavigation } from '@react-navigation/native';
 
-const ArtistDashboardPage = (navigation) => {
+const ArtistDashboardPage = () => {
   const [orderCount, setOrderCount] = useState(0);
   const [orderType, setOrderType] = useState("");
   const [activeOrders, setActiveOrders] = useState(0);
   const [rating, setRating] = useState(0);
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
+  const navigation = useNavigation();
+
+  const uploadListing = () => {
+    navigation.navigate('ListingArtistCreator');
+  };
+
+  const seeListings = () => {
+    navigation.navigate('AllListings');
+  };
 
   useEffect(() => {
     // Here you can fetch data from your API or database
@@ -82,6 +93,24 @@ const ArtistDashboardPage = (navigation) => {
           </View>
         </View>
       </View>
+      <View style={styles.cardContainer}>
+        <View style={styles.card} >
+          <View style={styles.textContainer} >
+            <Icon name="upload" size={20} color="#fff" onPress={uploadListing} />
+          </View>
+          <View style={styles.textContainer}>
+            <Text style={styles.title}>Upload Listing</Text>
+          </View>
+        </View>
+        <View style={styles.card} >
+          <View style={styles.textContainer} >
+            <Icon name="tripadvisor" size={20} color="#fff" onPress={seeListings} />
+          </View>
+          <View style={styles.textContainer}>
+            <Text style={styles.title}>Show Listings</Text>
+          </View>
+        </View>
+      </View>
       <BottomNavigationArtist style={styles.bottomNavigation} />
     </ScrollView>
   );
@@ -106,18 +135,17 @@ const styles = StyleSheet.create({
     color: "#fff",
     width: "100%",
     paddingVertical: 20,
-    paddingLeft:10,
-    marginTop:20,
+    paddingLeft: 10,
+    marginTop: 20,
   },
   name: {
     fontSize: 32,
     fontWeight: "bold",
     color: "#fff",
-
   },
   card: {
     width: "45%",
-    height: 120,
+    height: 110,
     borderRadius: 10,
     backgroundColor: "#000212",
     borderColor: "#004d6b",
@@ -125,8 +153,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 15,
-    elevation: 5,
+    marginTop: 10,
   },
   title: {
     fontSize: 16,
