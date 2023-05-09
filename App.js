@@ -23,6 +23,7 @@ import SettingsScreen from "./Screens/SettingsScreen";
 import ChatScreen from "./Screens/ChatScreen";
 import ListingArtistCreator from "./Screens/ListingArtistCreator";
 import AllListings from "./Screens/AllListings";
+import EditListing from "./Screens/EditListing";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import normalize from "react-native-normalize";
 import { Ionicons } from "@expo/vector-icons";
@@ -357,6 +358,24 @@ export default function App() {
             }}
             name="AllListings"
             component={AllListings}
+          />
+          <Tab.Screen
+            options={{
+              headerShown: false,
+              tabBarIcon: ({ color, size }) => (
+                <Ionicons name="swap-horizontal" color={color} size={30} />
+              ),
+              tabBarStyle: {
+                backgroundColor: "#000",
+                height: normalize(0, "height"),
+                borderTopColor: "#000",
+              },
+              headerShown: false,
+              tabBarLabel: "ArtistDashboardPage",
+              tabBarActiveTintColor: "blue",
+            }}
+            name="EditListing"
+            component={EditListing}
           />
           <Tab.Screen
             options={{

@@ -7,9 +7,16 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import { collection, query, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  query,
+  onSnapshot,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
 import { auth, database } from "../firebase";
 import { Ionicons } from "@expo/vector-icons";
+import { firestore } from "@react-native-firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
 
 const AllListings = () => {
@@ -17,6 +24,10 @@ const AllListings = () => {
   const navigation = useNavigation();
   const handlePress = () => {
     navigation.navigate("ArtistDashboardPage");
+  };
+
+  const deleteListing = async (id) => {
+    await deleteDoc(doc(database, "listings", id));
   };
 
   useEffect(() => {
@@ -28,6 +39,7 @@ const AllListings = () => {
       });
       setData(docs);
     });
+
     return () => {
       unsubscribe();
     };
@@ -49,7 +61,10 @@ const AllListings = () => {
       <Text style={styles.topTitle}> All Listings Information: </Text>
       {data.map((item) => (
         <View style={styles.container} key={item.id}>
-          <Text style={styles.title}>Listing Title: {item.title}</Text>
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>Listing Title: {item.title}</Text>
+            <View style={styles.iconsContainer}></View>
+          </View>
           <Text style={styles.desc}>Listing Desc: {item.desc}</Text>
 
           <Text numberOfLines={1} ellipsizeMode="tail" style={styles.image}>
@@ -62,12 +77,34 @@ const AllListings = () => {
               style={{ width: 100, height: 100 }}
             />
           </View>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity onPress={() => handleDelete(item.id)}>
+              <Ionicons
+                name="trash"
+                size={24}
+                color="white"
+                onPress={() => deleteListing(item.id)}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button2}
+              onPress={() =>
+                navigation.navigate("EditListing", { id: item.id })
+              }
+            >
+              <Ionicons
+                name="pencil-outline"
+                size={24}
+                color="white"
+                style={styles.icon}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
       ))}
     </ScrollView>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -76,6 +113,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderBottomColor: "white",
     borderWidth: 1,
+  },
+  buttonContainer: {
+    display: "flex",
+    flexDirection: "row",
+    marginRight: "auto",
+    marginVertical: 10,
+  },
+  button2: {
+    marginLeft: 40,
   },
   title: {
     color: "white",
