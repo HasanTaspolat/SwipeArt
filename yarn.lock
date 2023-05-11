@@ -7792,6 +7792,11 @@ remove-trailing-slash@^0.1.0:
   resolved "https://registry.npmjs.org/remove-trailing-slash/-/remove-trailing-slash-0.1.1.tgz"
   integrity sha512-o4S4Qh6L2jpnCy83ysZDau+VORNvnFw07CKSAymkd6ICNVEPisMyzlc00KlvvicsxKck94SEwhDnMNdICzO+tA==
 
+render-if@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.npmjs.org/render-if/-/render-if-0.1.1.tgz"
+  integrity sha512-T1HkFdSOh44DkpFxriF3ofy33Gk5jb/O8sHd3GT/+IuOMIit8JZtLFphgXJEz4rIq4+u3sh4OD6kVMZBBKCFCA==
+
 repeat-element@^1.1.2:
   version "1.1.4"
   resolved "https://registry.npmjs.org/repeat-element/-/repeat-element-1.1.4.tgz"

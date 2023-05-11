@@ -26,13 +26,18 @@ const EditListing = () => {
   const [image, setImage] = useState(route.params.image);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [visible, setVisible] = useState(route.params.visible);
 
   const handleEditListing = async () => {
     try {
       setError("");
       setLoading(true);
       const listingRef = doc(database, "listings", route.params.id);
-      await setDoc(listingRef, { title, desc, image }, { merge: true });
+      await setDoc(
+        listingRef,
+        { title, desc, image, visible },
+        { merge: true }
+      );
       if (image !== route.params.image) {
         // delete old image if it exists
         if (route.params.image) {
@@ -67,6 +72,10 @@ const EditListing = () => {
     }
   };
 
+  const toggleVisible = () => {
+    setVisible(!visible);
+  };
+
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={handlePress} style={styles.back}>
@@ -97,6 +106,13 @@ const EditListing = () => {
       >
         <Text style={styles.buttonText}>{loading ? "Loading..." : "Save"}</Text>
       </TouchableOpacity>
+      <TouchableOpacity style={styles.visibilityButton} onPress={toggleVisible}>
+        <Ionicons name={visible ? "eye" : "eye-off"} size={24} color="white" />
+        <Text style={styles.visibilityText}>
+          {visible ? "Visible" : "Hidden"}
+        </Text>
+      </TouchableOpacity>
+      {error ? <Text style={styles.error}>{error}</Text> : null}
     </View>
   );
 };
@@ -119,6 +135,10 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
+    color: "white",
+  },
+  visibilityButton: {
+    textAlign: "center",
     color: "white",
   },
   input: {
