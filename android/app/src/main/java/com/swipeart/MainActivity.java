@@ -1,4 +1,4 @@
-package com.swiperart;
+package com.swipeart;
 
 import android.os.Build;
 import android.os.Bundle;

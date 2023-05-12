@@ -1,4 +1,4 @@
-package com.swiperart.newarchitecture;
+package com.swipeart.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -20,9 +20,9 @@ import com.facebook.react.fabric.EmptyReactNativeConfig;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.fabric.ReactNativeConfig;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.swiperart.BuildConfig;
-import com.swiperart.newarchitecture.components.MainComponentsRegistry;
-import com.swiperart.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.swipeart.BuildConfig;
+import com.swipeart.newarchitecture.components.MainComponentsRegistry;
+import com.swipeart.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 

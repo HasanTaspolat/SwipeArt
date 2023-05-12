@@ -4,18 +4,15 @@
     "slug": "swiperart",
     "version": "1.0.0",
     "description": "<< >> Senior Project for CTIS411",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "platforms": ["ios", "android", "web"],
     "plugins": [
       [
         "expo-document-picker",
         {
           "iCloudContainerEnvironment": "Production"
         }
-      ]
+      ],
+      ["@react-native-google-signin/google-signin"]
     ],
     "android": {
       "package": "com.swipeart"
