@@ -1,4 +1,4 @@
-package com.swiperart.newarchitecture.modules;
+package com.swipeart.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;
