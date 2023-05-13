@@ -21,6 +21,10 @@ const BottomNavigation = () => {
   const handlePressInProfile = () => setisPressedProfile(true);
   const handlePressOutProfile = () => setisPressedProfile(false);
 
+  const [isPressedChat, setisPressedChat] = useState(false);
+  const handlePressInChat = () => setisPressedChat(true);
+  const handlePressOutChat = () => setisPressedChat(false);
+
   const [activeScreen, setActiveScreen] = useState("ArtistDashboardPage");
 
   const onPress = (screenName) => {
@@ -91,8 +95,8 @@ const BottomNavigation = () => {
       </TouchableWithoutFeedback>
       <TouchableWithoutFeedback>
         <TouchableOpacity
-          onPressIn={handlePressInProfile}
-          onPressOut={handlePressOutProfile}
+          onPressIn={handlePressInChat}
+          onPressOut={handlePressOutChat}
           style={[
             styles.tabButton,
             activeScreen === "ChatScreen" && styles.activeTabButton,
@@ -100,7 +104,7 @@ const BottomNavigation = () => {
           onPress={() => onPress("ChatScreen")}
         >
           <Icon
-            style={[{ color: isPressedProfile ? "blue" : "black" }]}
+            style={[{ color: isPressedChat ? "blue" : "black" }]}
             name={activeScreen === "ChatScreen" ? "ios-chatbox" : "ios-chatbox"}
             size={24}
           />
@@ -108,7 +112,7 @@ const BottomNavigation = () => {
             style={[
               styles.tabText,
               activeScreen === "ChatScreen" && {
-                color: isPressedProfile ? "blue" : "black",
+                color: isPressedChat ? "blue" : "black",
               },
             ]}
           >
@@ -127,7 +131,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     height: 60,
     backgroundColor: "white",
-    marginTop: normalize(80),
+    marginTop: normalize(180),
   },
   tabButton: {
     justifyContent: "center",
