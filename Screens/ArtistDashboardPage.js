@@ -21,7 +21,7 @@ const ArtistDashboardPage = () => {
   const [activeOrders, setActiveOrders] = useState(0);
   const [rating, setRating] = useState(0);
   const [name, setName] = useState("");
-  const [surname, setSurname] = useState("");
+  const [nameSurname, setNameSurname] = useState("");
   const navigation = useNavigation();
   const [data, setData] = useState([]);
 
@@ -32,27 +32,7 @@ const ArtistDashboardPage = () => {
   const seeListings = () => {
     navigation.navigate("AllListings");
   };
-
-  useEffect(() => {
-    // Here you can fetch data from your API or database
-    // and update the state variables accordingly
-    // For demonstration purposes, we will use dummy data:
-    const data = {
-      orderCount: 10,
-      orderType: "Musician",
-      activeOrders: 3,
-      rating: 4.5,
-      name: "John",
-      surname: "Doe",
-    };
-
-    setOrderCount(data.orderCount);
-    setOrderType(data.orderType);
-    setActiveOrders(data.activeOrders);
-    setRating(data.rating);
-    setName(data.name);
-    setSurname(data.surname);
-  }, []);
+  const [currentUser, setCurrentUser] = useState([]);
 
   useEffect(() => {
     const q = query(collection(database, "users"));
@@ -60,17 +40,29 @@ const ArtistDashboardPage = () => {
       const docs = [];
       querySnapshot.forEach((doc) => {
         docs.push({ id: doc.id, ...doc.data() });
+      
       });
+      const currentUser = docs.find(
+        (item) => item.id === auth.currentUser.uid
+      );
+      console.log("current name", currentUser);
       setData(docs);
+      setNameSurname(currentUser.nameSurname);
     });
-    return () => {
-      unsubscribe();
+
+    const databaseData = {
+      orderCount: 10,
+      orderType: "Musician",
+      activeOrders: 3,
+      rating: 4.5,
     };
+
+    setOrderCount(databaseData.orderCount);
+    setOrderType(databaseData.orderType);
+    setActiveOrders(databaseData.activeOrders);
+    setRating(databaseData.rating);
   }, []);
 
-  const currentUser = data.find((item) => item.id === auth.currentUser.uid);
-  //    <Text style={styles.name}>{currentUser.nameSurname}</Text>
-  console.log(currentUser);
   return (
     <ScrollView style={styles.container}>
       <View style={styles.sidebarContainer}>
@@ -80,7 +72,7 @@ const ArtistDashboardPage = () => {
       <View style={styles.header}>
         <View>
           <Text style={styles.greeting}>Hello,</Text>
-          <Text style={styles.name}>{currentUser.nameSurname}</Text>
+          <Text style={styles.name}>{nameSurname}</Text>
         </View>
       </View>
       <View style={styles.cardContainer}>
@@ -171,14 +163,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#fff",
     width: "100%",
-    paddingVertical: 20,
+    marginTop: 48,
     paddingLeft: 10,
-    marginTop: 20,
   },
   name: {
-    fontSize: 32,
+    fontSize: 26,
     fontWeight: "bold",
     color: "#fff",
+    padding: 10,
   },
   card: {
     width: "45%",
