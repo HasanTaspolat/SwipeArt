@@ -18,6 +18,8 @@ const SettingsScreen = ({ navigation }) => {
     signOut(auth)
       .then(() => {
         console.log("succss");
+        navigation.navigate("StartScreen");
+
       })
       .catch((error) => {
         console.log("failed");
