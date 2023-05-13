@@ -4,7 +4,16 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import BottomNavigationArtist from "./BottomNavigationArtist";
 import Sidebar from "./Sidebar-2";
 import ListingArtistCreator from "./ListingArtistCreator";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
+import {
+  collection,
+  query,
+  onSnapshot,
+  deleteDoc,
+  updateDoc,
+  doc,
+} from "firebase/firestore";
+import { auth, database } from "../firebase";
 
 const ArtistDashboardPage = () => {
   const [orderCount, setOrderCount] = useState(0);
@@ -14,13 +23,14 @@ const ArtistDashboardPage = () => {
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const navigation = useNavigation();
+  const [data, setData] = useState([]);
 
   const uploadListing = () => {
-    navigation.navigate('ListingArtistCreator');
+    navigation.navigate("ListingArtistCreator");
   };
 
   const seeListings = () => {
-    navigation.navigate('AllListings');
+    navigation.navigate("AllListings");
   };
 
   useEffect(() => {
@@ -44,17 +54,33 @@ const ArtistDashboardPage = () => {
     setSurname(data.surname);
   }, []);
 
+  useEffect(() => {
+    const q = query(collection(database, "users"));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const docs = [];
+      querySnapshot.forEach((doc) => {
+        docs.push({ id: doc.id, ...doc.data() });
+      });
+      setData(docs);
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  const currentUser = data.find((item) => item.id === auth.currentUser.uid);
+  //    <Text style={styles.name}>{currentUser.nameSurname}</Text>
+  console.log(currentUser);
   return (
     <ScrollView style={styles.container}>
       <View style={styles.sidebarContainer}>
         <Sidebar />
       </View>
+
       <View style={styles.header}>
         <View>
           <Text style={styles.greeting}>Hello,</Text>
-          <Text style={styles.name}>
-            {name} {surname}
-          </Text>
+          <Text style={styles.name}>{currentUser.nameSurname}</Text>
         </View>
       </View>
       <View style={styles.cardContainer}>
@@ -94,23 +120,34 @@ const ArtistDashboardPage = () => {
         </View>
       </View>
       <View style={styles.cardContainer}>
-        <View style={styles.card} >
-          <View style={styles.textContainer} >
-            <Icon name="upload" size={20} color="#fff" onPress={uploadListing} />
+        <View style={styles.card}>
+          <View style={styles.textContainer}>
+            <Icon
+              name="upload"
+              size={20}
+              color="#fff"
+              onPress={uploadListing}
+            />
           </View>
           <View style={styles.textContainer}>
             <Text style={styles.title}>Upload Listing</Text>
           </View>
         </View>
-        <View style={styles.card} >
-          <View style={styles.textContainer} >
-            <Icon name="tripadvisor" size={20} color="#fff" onPress={seeListings} />
+        <View style={styles.card}>
+          <View style={styles.textContainer}>
+            <Icon
+              name="tripadvisor"
+              size={20}
+              color="#fff"
+              onPress={seeListings}
+            />
           </View>
           <View style={styles.textContainer}>
             <Text style={styles.title}>Show Listings</Text>
           </View>
         </View>
       </View>
+
       <BottomNavigationArtist style={styles.bottomNavigation} />
     </ScrollView>
   );
