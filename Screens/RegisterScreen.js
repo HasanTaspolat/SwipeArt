@@ -163,7 +163,7 @@ const RegisterScreen = ({ navigation }) => {
         <Text style={[styles.header2, styles.passHead]}>Name & Surname</Text>
         <TextInput
           style={styles.input}
-          placeholder="Password"
+          placeholder="Name and Surname"
           value={nameSurname}
           placeholderTextColor="#ffff"
           onChangeText={setNameSurname}

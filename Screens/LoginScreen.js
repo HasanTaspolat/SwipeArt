@@ -13,7 +13,7 @@ import {
   GoogleAuthProvider,
   signInWithRedirect,
   setPersistence,
-  browserSessionPersistence 
+  browserSessionPersistence,
 } from "firebase/auth";
 import {
   collection,
@@ -45,7 +45,7 @@ import {
   TouchableOpacity,
   Button,
   LogBox,
-  Switch
+  Switch,
 } from "react-native";
 import * as Google from "expo-auth-session/providers/google";
 import * as WebBrowser from "expo-web-browser";
@@ -86,7 +86,7 @@ const LoginScreen = ({ navigation }) => {
     if (response?.type === "success") {
       const { idToken, accessToken } = response.authentication;
       const credential = GoogleAuthProvider.credential(idToken, accessToken);
-   
+
       signInWithCredential(auth, credential)
         .then((userCredential) => {
           const user = userCredential.user;
@@ -97,19 +97,18 @@ const LoginScreen = ({ navigation }) => {
         .catch((error) => {
           console.log(error);
         });
-
     }
   }, [response, token]);
 
   async function create(userUID, user) {
-    const isFunctionCalled = await AsyncStorage.getItem('isFunctionCalled');
+    const isFunctionCalled = await AsyncStorage.getItem("isFunctionCalled");
     if (isFunctionCalled === null) {
       await setDoc(doc(db, "users", userUID), {
         email: user.email,
         isArtist: 0,
         isCustomer: 0,
       });
-      await AsyncStorage.setItem('isFunctionCalled', 'true');
+      await AsyncStorage.setItem("isFunctionCalled", "true");
       console.log("data submitted");
     } else {
       console.log("function already called");
@@ -233,8 +232,8 @@ const LoginScreen = ({ navigation }) => {
         onPress={() => navigation.navigate(RegisterScreen)}
       >
         <Text style={styles.button2title}>
-          Don't Have an Account?{" "}
-          <Text style={styles.signUpTitle}> Sign Up </Text>{" "}
+          Don't Have an Account?
+          <Text style={styles.signUpTitle}> Sign Up </Text>
         </Text>
       </TouchableHighlight>
 
@@ -244,8 +243,8 @@ const LoginScreen = ({ navigation }) => {
         onPress={() => navigation.navigate(ResetPassword)}
       >
         <Text style={styles.button2title}>
-          Forgot your password?{" "}
-          <Text style={styles.signUpTitle}> Reset Password </Text>{" "}
+          Forgot your password?
+          <Text style={styles.signUpTitle}> Reset Password </Text>
         </Text>
       </TouchableHighlight>
     </View>
@@ -293,7 +292,7 @@ const styles = StyleSheet.create({
     borderRadius: normalize(10),
   },
   button2: {
-    marginTop: normalize(60),
+    marginTop: normalize(10),
     paddingBottom: normalize(30),
   },
   button2title: {

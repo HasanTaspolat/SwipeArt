@@ -11,7 +11,7 @@ import { View } from "../react-native-firebase/components/Themed";
 export default function StartScreen({ navigation }) {
   return (
     <Background>
-      <Image style={styles.image} source={require("../assets/swipeart.png")} />
+      <Image style={styles.image} source={require("../assets/logo2.png")} />
       <Paragraph style={styles.loginText2}>All is for you</Paragraph>
       <Paragraph style={styles.loginText3}>All is for artists.</Paragraph>
       <Paragraph style={styles.loginText}>swipeArt.</Paragraph>
@@ -68,8 +68,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   image: {
-    width: 80,
-    height: 80,
-    marginBottom: 50,
+    width: 340,
+    marginBottom: -20,
+    marginTop: -80,
   },
 });
