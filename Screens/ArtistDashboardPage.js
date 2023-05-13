@@ -13,6 +13,7 @@ import {
   updateDoc,
   doc,
 } from "firebase/firestore";
+import firestore from "@react-native-firebase/firestore";
 import { auth, database } from "../firebase";
 
 const ArtistDashboardPage = () => {
@@ -32,7 +33,6 @@ const ArtistDashboardPage = () => {
   const seeListings = () => {
     navigation.navigate("AllListings");
   };
-  const [currentUser, setCurrentUser] = useState([]);
 
   useEffect(() => {
     const q = query(collection(database, "users"));
@@ -40,27 +40,37 @@ const ArtistDashboardPage = () => {
       const docs = [];
       querySnapshot.forEach((doc) => {
         docs.push({ id: doc.id, ...doc.data() });
-      
       });
-      const currentUser = docs.find(
-        (item) => item.id === auth.currentUser.uid
-      );
+      const currentUser = docs.find((item) => item.id === auth.currentUser.uid);
       console.log("current name", currentUser);
       setData(docs);
       setNameSurname(currentUser.nameSurname);
     });
 
     const databaseData = {
-      orderCount: 10,
-      orderType: "Musician",
-      activeOrders: 3,
       rating: 4.5,
     };
-
-    setOrderCount(databaseData.orderCount);
-    setOrderType(databaseData.orderType);
-    setActiveOrders(databaseData.activeOrders);
     setRating(databaseData.rating);
+  }, []);
+
+  useEffect(() => {
+    const q = query(
+      collection(database, "users", auth.currentUser.uid, "artistPreference")
+    );
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const docs_pref = [];
+      querySnapshot.forEach((doc) => {
+        docs_pref.push({ id: doc.id, ...doc.data() });
+      });
+      const currentUser = docs_pref.find(
+        (item) => item.id === auth.currentUser.uid
+      );
+      console.log("artistPreference data", docs_pref);
+      console.log("sss:", docs_pref[0].id);
+      setOrderType(docs_pref[0].id);
+      setData(docs_pref);
+    });
+    return () => unsubscribe();
   }, []);
 
   return (
@@ -76,30 +86,20 @@ const ArtistDashboardPage = () => {
         </View>
       </View>
       <View style={styles.cardContainer}>
-        <View style={styles.card}>
+        {/* <View style={styles.card}>
           <View style={styles.textContainer}>
             <Icon name="shopping-cart" size={20} color="#fff" />
           </View>
           <View style={styles.textContainer}>
             <Text style={styles.title}>Order Count: {orderCount}</Text>
           </View>
-        </View>
+        </View> */}
         <View style={styles.card}>
           <View style={styles.textContainer}>
             <Icon name="utensils" size={20} color="#fff" />
           </View>
           <View style={styles.textContainer}>
             <Text style={styles.title}>Type: {orderType}</Text>
-          </View>
-        </View>
-      </View>
-      <View style={styles.cardContainer}>
-        <View style={styles.card}>
-          <View style={styles.textContainer}>
-            <Icon name="clock" size={20} color="#fff" />
-          </View>
-          <View style={styles.textContainer}>
-            <Text style={styles.title}>Active Orders : {activeOrders}</Text>
           </View>
         </View>
         <View style={styles.card}>
@@ -110,6 +110,24 @@ const ArtistDashboardPage = () => {
             <Text style={styles.title}>Rating: {rating}</Text>
           </View>
         </View>
+      </View>
+      <View style={styles.cardContainer}>
+        {/*   <View style={styles.card}>
+          <View style={styles.textContainer}>
+            <Icon name="clock" size={20} color="#fff" />
+          </View>
+          <View style={styles.textContainer}>
+            <Text style={styles.title}>Active Orders : {activeOrders}</Text>
+          </View>
+        </View> */}
+        {/*  <View style={styles.card}>
+          <View style={styles.textContainer}>
+            <Icon name="star" size={20} color="#fff" />
+          </View>
+          <View style={styles.textContainer}>
+            <Text style={styles.title}>Rating: {rating}</Text>
+          </View>
+        </View> */}
       </View>
       <View style={styles.cardContainer}>
         <View style={styles.card}>
@@ -152,7 +170,9 @@ const styles = StyleSheet.create({
   cardContainer: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "space-evenly",
+
+    padding: 0,
   },
   header: {
     marginTop: 22,

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -11,6 +11,16 @@ import { AntDesign } from "@expo/vector-icons";
 import MainPage from "./MainPage";
 import { getAuth, signOut, deleteUser } from "firebase/auth";
 import LoginScreen from "./LoginScreen";
+import {
+  collection,
+  query,
+  onSnapshot,
+  deleteDoc,
+  updateDoc,
+  doc,
+} from "firebase/firestore";
+import firestore from "@react-native-firebase/firestore";
+import { auth, database } from "../firebase";
 
 const SettingsScreen = ({ navigation }) => {
   const auth = getAuth();
@@ -19,14 +29,28 @@ const SettingsScreen = ({ navigation }) => {
       .then(() => {
         console.log("succss");
         navigation.navigate("StartScreen");
-
       })
       .catch((error) => {
         console.log("failed");
       });
   };
-
+  const [data, setData] = useState([]);
+  const [email, setEmail] = useState("");
   const user = auth.currentUser;
+
+  useEffect(() => {
+    const q = query(collection(database, "users"));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const docs = [];
+      querySnapshot.forEach((doc) => {
+        docs.push({ id: doc.id, ...doc.data() });
+      });
+      const currentUser = docs.find((item) => item.id === auth.currentUser.uid);
+      //console.log("current user", auth.currentUser);
+      setEmail(auth.currentUser.email);
+      setData(docs);
+    });
+  }, []);
 
   const deletAccount = () => {
     deleteUser(user)
@@ -80,11 +104,15 @@ const SettingsScreen = ({ navigation }) => {
         <Text style={styles.sectionTitle}>Account Information</Text>
         <View style={styles.row2}>
           <Text style={styles.label3}>E-mail</Text>
-          <Text style={styles.label2}>?e-mail?</Text>
+          <Text style={styles.label2}>{email}</Text>
         </View>
         <View style={styles.row2}>
-          <Text style={styles.label3}>Password</Text>
-          <Text style={styles.label2}>pas**wor**d</Text>
+          <Text style={styles.label3}>Forgot Password?</Text>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("ResetPasswordScreen")}
+          >
+            <Text style={styles.label2}>pas**wor**d</Text>
+          </TouchableOpacity>
         </View>
       </View>
 
