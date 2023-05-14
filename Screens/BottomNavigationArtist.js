@@ -126,12 +126,17 @@ const BottomNavigation = () => {
 
 const styles = StyleSheet.create({
   container: {
+    alignItems: "center",
+    borderTopWidth: 1,
+    borderTopColor: "gray",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
     flexDirection: "row",
     justifyContent: "space-around",
-    alignItems: "center",
     height: 60,
     backgroundColor: "white",
-    marginTop: normalize(180),
   },
   tabButton: {
     justifyContent: "center",

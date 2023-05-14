@@ -74,7 +74,7 @@ const ArtistDashboardPage = () => {
   }, []);
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.sidebarContainer}>
         <Sidebar />
       </View>
@@ -159,13 +159,15 @@ const ArtistDashboardPage = () => {
       </View>
 
       <BottomNavigationArtist style={styles.bottomNavigation} />
-    </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "black",
+    flex: 1,
+
   },
   cardContainer: {
     display: "flex",
