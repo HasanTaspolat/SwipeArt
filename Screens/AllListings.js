@@ -19,7 +19,6 @@ import {
 
 import { auth, database } from "../firebase";
 import { Ionicons } from "@expo/vector-icons";
-import { firestore } from "@react-native-firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
 
 const AllListings = () => {

@@ -19,7 +19,6 @@ import {
   updateDoc,
   doc,
 } from "firebase/firestore";
-import firestore from "@react-native-firebase/firestore";
 import { auth, database } from "../firebase";
 
 const SettingsScreen = ({ navigation }) => {
