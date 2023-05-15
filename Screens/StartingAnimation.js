@@ -4,32 +4,42 @@ import AnimatedLoader from "react-native-animated-loader";
 import LottieView from "lottie-react-native";
 
 export default function StartingAnimation({ navigation }) {
-  const [visible, setVisible] = useState(false);
+  const [animationProgress, setAnimationProgress] = useState(0);
+  const [showAnimation, setShowAnimation] = useState(true);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setVisible(true);
-    }, 2000);
+      setShowAnimation(false);
+      navigation.navigate('StartScreen');
+    }, 5000); // Set the duration in milliseconds here
 
-    const navigationTimer = setTimeout(() => {
-      navigation.navigate("StartScreen");
-    }, 6000);
-
-    return () => {
-      clearTimeout(timer);
-      clearTimeout(navigationTimer);
-    };
+    return () => clearTimeout(timer);
   }, [navigation]);
 
   return (
-    <AnimatedLoader
-      visible={visible}
-      overlayColor="black"
-      animationStyle={styles.lottie}
-      source={require("../assets/loading3.json")}
-      speed={1}
-    >
-    </AnimatedLoader>
+    <>
+      {showAnimation && (
+        <AnimatedLoader
+          visible={true}
+          overlayColor="black"
+          animationStyle={styles.lottie}
+          source={require("../assets/loading3.json")}
+          progress={animationProgress}
+        >
+        </AnimatedLoader>
+      )}
+
+      {!showAnimation && (
+        <Text style={styles.text}>Animation completed. Navigating to StartScreen...</Text>
+      )}
+
+      <LottieView
+        source={require("../assets/loading3.json")}
+        progress={animationProgress}
+        style={{ height: 0, width: 0 }}
+        onAnimationFinish={() => setShowAnimation(false)}
+      />
+    </>
   );
 }
 

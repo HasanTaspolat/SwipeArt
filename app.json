@@ -11,8 +11,7 @@
         {
           "iCloudContainerEnvironment": "Production"
         }
-      ],
-      ["@react-native-google-signin/google-signin"]
+      ]
     ],
     "android": {
       "package": "com.swipeart"
