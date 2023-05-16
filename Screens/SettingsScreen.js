@@ -36,7 +36,7 @@ const SettingsScreen = ({ navigation }) => {
   const [data, setData] = useState([]);
   const [email, setEmail] = useState("");
   const user = auth.currentUser;
-
+  const [currentUser, setCurrentUser] = useState([]);
   useEffect(() => {
     const q = query(collection(database, "users"));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -45,8 +45,10 @@ const SettingsScreen = ({ navigation }) => {
         docs.push({ id: doc.id, ...doc.data() });
       });
       const currentUser = docs.find((item) => item.id === auth.currentUser.uid);
-      //console.log("current user", auth.currentUser);
+      setCurrentUser(currentUser);
+      console.log("current user",currentUser.isArtist);
       setEmail(auth.currentUser.email);
+
       setData(docs);
     });
   }, []);
@@ -61,6 +63,18 @@ const SettingsScreen = ({ navigation }) => {
       });
   };
 
+  const navigationOnJob = () => {
+    console.log(currentUser);
+    if(currentUser.isArtist === 1)
+    {
+      navigation.navigate("ArtistDashboardPage")
+    }
+    else if(currentUser.isCustomer === 1)
+    {
+      navigation.navigate("MainPage")
+    }
+  }
+
   const handleEmailPress = () => {
     Linking.openURL("mailto:osmanyavuzolgun@gmail.com");
   };
@@ -73,7 +87,7 @@ const SettingsScreen = ({ navigation }) => {
     <View style={styles.container}>
       <TouchableOpacity
         style={styles.icon}
-        onPress={() => navigation.navigate(MainPage)}
+        onPress={() => navigationOnJob()}
       >
         <AntDesign name="left" size={16} color="white" />
       </TouchableOpacity>

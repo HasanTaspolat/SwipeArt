@@ -56,13 +56,27 @@ const RegisterScreen = ({ navigation }) => {
   const [checkBoxMessage, setcheckBoxMessage] = useState();
   const [userMessage, setUserMessage] = useState();
   const [nameSurname, setNameSurname] = useState("");
+  const [socialMedia, setSocialMedia] = useState({
+    twitter: "",
+    instagram: "",
+    linkedin: "",
+    behance: "",
+  });
 
   LogBox.ignoreAllLogs(); // to hide the warnings
+  
+  const handleSocialMediaChange = (platform, value) => {
+    setSocialMedia((prevState) => ({
+      ...prevState,
+      [platform]: value,
+    }));
+  };
 
   function create(userUID) {
     setDoc(doc(db, "users", userUID), {
       email: email,
       nameSurname: nameSurname,
+      socialMedia: socialMedia,
       isArtist: 0,
       isCustomer: 0,
     })
@@ -137,10 +151,8 @@ const RegisterScreen = ({ navigation }) => {
   };
 
   return (
-    <ScrollView>
+    <ScrollView style={styles.main2}>
       <View style={styles.main}>
-        <Text style={styles.bottomImage}>welcome to SwipeArt.</Text>
-
         <Text style={styles.header1}>Sign Up</Text>
         <Text style={styles.header2}>E-mail</Text>
         <TextInput
@@ -169,6 +181,71 @@ const RegisterScreen = ({ navigation }) => {
           onChangeText={setNameSurname}
         />
 
+        <Text style={[styles.header2, styles.passHead]}>Social Media</Text>
+
+        <View style={styles.socialMediaCont}>
+          <Icon
+            style={styles.socialMediaIcon}
+            name="twitter"
+            size={25}
+            color="#1DA1F2"
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Twitter"
+            placeholderTextColor="#ffff"
+            value={socialMedia.twitter}
+            onChangeText={(value) => handleSocialMediaChange("twitter", value)}
+          />
+        </View>
+        <View style={styles.socialMediaCont}>
+          <Icon
+            style={styles.socialMediaIcon}
+            name="instagram"
+            size={25}
+            color="#C13584"
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Instagram"
+            value={socialMedia.instagram}
+            placeholderTextColor="#ffff"
+            onChangeText={(value) =>
+              handleSocialMediaChange("instagram", value)
+            }
+          />
+        </View>
+        <View style={styles.socialMediaCont}>
+          <Icon
+            style={styles.socialMediaIcon}
+            name="linkedin"
+            size={25}
+            color="#0077B5"
+          />
+          <TextInput
+            style={styles.input}
+            placeholderTextColor="#ffff"
+            placeholder="LinkedIn"
+            value={socialMedia.linkedin}
+            onChangeText={(value) => handleSocialMediaChange("linkedin", value)}
+          />
+        </View>
+        <View style={styles.socialMediaCont}>
+          <Icon
+            style={styles.socialMediaIcon}
+            name="behance"
+            size={25}
+            color="#1769FF"
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Behance"
+            placeholderTextColor="#ffff"
+            value={socialMedia.behance}
+            onChangeText={(value) => handleSocialMediaChange("behance", value)}
+          />
+        </View>
+
         <TouchableHighlight
           style={styles.button}
           activeOpacity={0.6}
@@ -190,10 +267,26 @@ const styles = StyleSheet.create({
   main: {
     backgroundColor: "#000000",
     width: normalize(380, "width"),
-    height: normalize(620, "height"),
     alignItems: "center",
-    paddingTop: normalize(100),
+    paddingTop: normalize(50),
+    height: "100%",
   },
+  main2: {
+    backgroundColor: "#000000",
+  },
+  socialMediaCont: {
+    width: "100%",
+    marginTop: normalize(14),
+    color: "#fff",
+    justifyContent: "center",
+    display: "flex",
+    alignItems: "center",
+  },
+  socialMediaIcon: {
+    marginRight: "auto",
+    marginLeft: normalize(44),
+  },
+
   input: {
     width: "80%",
     height: normalize(50),

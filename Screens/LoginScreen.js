@@ -67,7 +67,7 @@ const LoginScreen = ({ navigation }) => {
   isLoading: false;
   const [userMessage, setUserMessage] = useState();
   let UserType;
-  let isFunctionCalled = false;
+  const [rememberMe, setRememberMe] = useState(false);
 
   const [token, setToken] = useState("");
   const [userInfo, setUserInfo] = useState(null);
@@ -97,6 +97,20 @@ const LoginScreen = ({ navigation }) => {
         });
     }
   }, [response, token]);
+
+  useEffect(() => {
+    AsyncStorage.getItem("email").then((value) => {
+      if (value !== null) {
+        setEmail(value);
+        setRememberMe(true);
+      }
+    });
+    AsyncStorage.getItem("password").then((value) => {
+      if (value !== null) {
+        setPassword(value);
+      }
+    });
+  }, []);
 
   async function create(userUID, user) {
     const isFunctionCalled = await AsyncStorage.getItem("isFunctionCalled");
@@ -161,6 +175,13 @@ const LoginScreen = ({ navigation }) => {
           if (user) {
             handleNavigation(user.email);
             setUserMessage("");
+            if (rememberMe) {
+              AsyncStorage.setItem("email", email);
+              AsyncStorage.setItem("password", password);
+            } else {
+              AsyncStorage.removeItem("email");
+              AsyncStorage.removeItem("password");
+            }
           } else {
             navigation.navigate(LoginScreen);
             setUserMessage("Wrong Password or Email! ");
@@ -223,7 +244,17 @@ const LoginScreen = ({ navigation }) => {
           }}
         />
       </TouchableOpacity>
-
+      <View style={styles.rememberMeContainer}>
+        <Text style={styles.button2title}>Remember me</Text>
+        <Switch
+          style={styles.switch}
+          value={rememberMe}
+          onValueChange={setRememberMe}
+          trackColor={{ false: "#767577", true: "#81b0ff" }}
+          thumbColor={rememberMe ? "#2E69FF" : "#f4f3f4"}
+          ios_backgroundColor="#3e3e3e"
+        />
+      </View>
       <TouchableHighlight
         activeOpacity={0.8}
         style={styles.button2}
@@ -259,6 +290,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  switch: {
+    transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }],
+  },
   input: {
     width: "80%",
     height: normalize(50),
@@ -268,6 +302,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: normalize(10),
     borderColor: "white",
     color: "white",
+  },
+  rememberMeContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
   },
   button: {
     borderRadius: normalize(10),
