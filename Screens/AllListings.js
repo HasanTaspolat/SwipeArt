@@ -16,10 +16,11 @@ import {
   updateDoc,
   doc,
 } from "firebase/firestore";
-
+import { AntDesign } from "@expo/vector-icons";
 import { auth, database } from "../firebase";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { getAuth } from "firebase/auth";
 
 const AllListings = () => {
   const [data, setData] = useState([]);
@@ -31,12 +32,19 @@ const AllListings = () => {
   };
 
   const deleteListing = async (id) => {
-    await deleteDoc(doc(database, "listings", id));
+    const docRef = doc(database, "users", uid, "listings", id);
+
+    try {
+      await deleteDoc(docRef);
+      console.log("Listing deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting listing:", error);
+    }
   };
 
   const archievedOrNot = async (id) => {
     const docIndex = data.findIndex((item) => item.id === id);
-    const ref = doc(database, "listings", id);
+    const ref = doc(database, "users", uid, "listings", id);
     const isArchived = data[docIndex].isArchived;
     await updateDoc(ref, { archieved: !isArchived });
     setData([
@@ -46,9 +54,12 @@ const AllListings = () => {
     ]);
     setIsArchived(!isArchived);
   };
+  const auth = getAuth();
+  const user = auth.currentUser;
+  const uid = user.uid;
 
   useEffect(() => {
-    const q = query(collection(database, "listings"));
+    const q = query(collection(database, "users", uid, "listings"));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const docs = [];
       querySnapshot.forEach((doc) => {
@@ -64,6 +75,9 @@ const AllListings = () => {
 
   return (
     <ScrollView style={styles.container}>
+      <TouchableOpacity style={styles.icon2} onPress={() => handlePress()}>
+        <AntDesign name="left" size={16} color="white" />
+      </TouchableOpacity>
       <Text style={styles.topTitle}> All Listings Information: </Text>
       {data.map((item) => (
         <View style={styles.container} key={item.id}>
@@ -141,6 +155,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderBottomColor: "white",
     borderWidth: 1,
+  },
+  icon2: {
+    marginTop: 20,
   },
   buttonContainer: {
     display: "flex",

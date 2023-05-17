@@ -15,14 +15,19 @@ import {
   orderBy,
   query,
   onSnapshot,
+  setDoc,
+  doc,
 } from "firebase/firestore";
+import "firebase/firestore";
+import { db } from "../components/config";
+
 import { auth, database } from "../firebase";
 import { Surface, IconButton } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
 import normalize from "react-native-normalize";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-
+import { getAuth } from "firebase/auth";
 const ListingArtistCreator = () => {
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
@@ -30,13 +35,17 @@ const ListingArtistCreator = () => {
   const [count, setCount] = useState();
 
   const navigation = useNavigation();
-
+  const auth = getAuth();
+  const user = auth.currentUser;
+  const uid = user.uid;
   const handlePress = () => {
     navigation.navigate("ArtistDashboardPage");
   };
 
   const addProduct = async () => {
-    addDoc(collection(database, "listings"), {
+    const collectionRef = collection(database, "users", uid, "listings");
+
+    await addDoc(collectionRef, {
       title,
       desc,
       image,

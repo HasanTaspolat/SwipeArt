@@ -13,6 +13,7 @@ import { database } from "../firebase";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
+import { getAuth } from "firebase/auth";
 
 const EditListing = () => {
   const navigation = useNavigation();
@@ -28,16 +29,25 @@ const EditListing = () => {
   const [error, setError] = useState("");
   const [visible, setVisible] = useState(route.params.visible);
 
+  const auth = getAuth();
+  const user = auth.currentUser;
+  const uid = user.uid;
+
   const handleEditListing = async () => {
     try {
       setError("");
       setLoading(true);
-      const listingRef = doc(database, "listings", route.params.id);
-      await setDoc(
-        listingRef,
-        { title, desc, image, visible },
-        { merge: true }
+      const listingRef = doc(
+        database,
+        "users",
+        uid,
+        "listings",
+        route.params.id
       );
+
+      await setDoc(listingRef, { title, desc, image }, { merge: true });
+      setTitle("");
+      setDesc("");
       if (image !== route.params.image) {
         // delete old image if it exists
         if (route.params.image) {
@@ -72,9 +82,9 @@ const EditListing = () => {
     }
   };
 
-  const toggleVisible = () => {
+  /*   const toggleVisible = () => {
     setVisible(!visible);
-  };
+  }; */
 
   return (
     <View style={styles.container}>
@@ -106,12 +116,12 @@ const EditListing = () => {
       >
         <Text style={styles.buttonText}>{loading ? "Loading..." : "Save"}</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.visibilityButton} onPress={toggleVisible}>
+      {/*   <TouchableOpacity style={styles.visibilityButton} onPress={toggleVisible}>
         <Ionicons name={visible ? "eye" : "eye-off"} size={24} color="white" />
         <Text style={styles.visibilityText}>
           {visible ? "Visible" : "Hidden"}
         </Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       {error ? <Text style={styles.error}>{error}</Text> : null}
     </View>
   );
