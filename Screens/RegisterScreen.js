@@ -56,6 +56,7 @@ const RegisterScreen = ({ navigation }) => {
   const [checkBoxMessage, setcheckBoxMessage] = useState();
   const [userMessage, setUserMessage] = useState();
   const [nameSurname, setNameSurname] = useState("");
+  const [bio, setBio] = useState("");
   const [socialMedia, setSocialMedia] = useState({
     twitter: "",
     instagram: "",
@@ -64,7 +65,7 @@ const RegisterScreen = ({ navigation }) => {
   });
 
   LogBox.ignoreAllLogs(); // to hide the warnings
-  
+
   const handleSocialMediaChange = (platform, value) => {
     setSocialMedia((prevState) => ({
       ...prevState,
@@ -76,6 +77,7 @@ const RegisterScreen = ({ navigation }) => {
     setDoc(doc(db, "users", userUID), {
       email: email,
       nameSurname: nameSurname,
+      bio: bio,
       socialMedia: socialMedia,
       isArtist: 0,
       isCustomer: 0,
@@ -245,6 +247,15 @@ const RegisterScreen = ({ navigation }) => {
             onChangeText={(value) => handleSocialMediaChange("behance", value)}
           />
         </View>
+
+        <Text style={[styles.header2, styles.passHead]}>Biography</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Biography"
+          value={bio}
+          placeholderTextColor="#ffff"
+          onChangeText={setBio}
+        />
 
         <TouchableHighlight
           style={styles.button}

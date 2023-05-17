@@ -10,14 +10,17 @@ import {
   Linking,
 } from "react-native";
 import { WebView } from "react-native-webview";
-
 import * as Font from "expo-font";
+import * as FileSystem from "expo-file-system";
+import * as Sharing from "expo-sharing";
 import { Feather } from "@expo/vector-icons";
 import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
 import BottomNavigationArtist from "./BottomNavigationArtist";
 import normalize from "react-native-normalize";
 import Icon from "react-native-vector-icons/FontAwesome";
+import storage from "../components/config";
+
 import {
   collection,
   query,
@@ -27,7 +30,15 @@ import {
   doc,
   setDoc,
 } from "firebase/firestore";
-import { auth, database } from "../firebase";
+import { auth, database, firebase } from "../firebase";
+import {
+  getStorage,
+  ref,
+  uploadString,
+  uploadBytes,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
 
 // for the font style
 const customFonts = {
@@ -44,7 +55,7 @@ loadFonts();
 const EditProfileScreen = ({ navigation }) => {
   const [editingMode, setEditingMode] = useState(false);
   const [name, setName] = useState("");
-  const [bio, setBio] = useState("bio will come with register");
+  const [bio, setBio] = useState("");
   const [imageUri, setImageUri] = useState(
     "https://i.stack.imgur.com/dr5qp.jpg"
   );
@@ -56,7 +67,6 @@ const EditProfileScreen = ({ navigation }) => {
   const [profession, setProfession] = useState("");
   const [selectedProfessions, setSelectedProfessions] = useState([]);
   const [selectedGenre, setSelectedGenre] = useState([]);
-
   const [behance, setBehance] = useState("");
   const [twitter, setTwitter] = useState("");
   const [instagram, setInstagram] = useState("");
@@ -67,19 +77,17 @@ const EditProfileScreen = ({ navigation }) => {
     linkedin: linkedin,
     behance: behance,
   });
+
   const handleSocialMediaChange = (platform, value) => {
     setSocialMedia((prevState) => ({
       ...prevState,
       [platform]: value,
     }));
   };
-
-  const string = selectedGenre.join(", ");
+  //const string = selectedGenre.join(", ");
   const handleSave = () => {
     setEditingMode(false);
-
     setDoc(doc(database, "users", auth.currentUser.uid, "profile", "bio"), {
-      bio: bio,
       socialMedia: socialMedia,
     })
       .then(() => {
@@ -88,6 +96,18 @@ const EditProfileScreen = ({ navigation }) => {
       .catch((error) => {
         // The write failed...
         console.log("error");
+      });
+
+    updateDoc(doc(database, "users", auth.currentUser.uid), {
+      bio: bio,
+    })
+      .then(() => {
+        // Data saved successfully!
+        console.log("data submitted");
+      })
+      .catch((error) => {
+        // The write failed...
+        console.log(error);
       });
   };
 
@@ -99,26 +119,23 @@ const EditProfileScreen = ({ navigation }) => {
         docs.push({ id: doc.id, ...doc.data() });
       });
       const currentUser = docs.find((item) => item.id === auth.currentUser.uid);
-      // console.log(currentUser.socialMedia.behance);
-
+      //console.log(currentUser.bio);
+      setBio(currentUser.bio);
       setBehance(currentUser.socialMedia.behance);
       setTwitter(currentUser.socialMedia.twitter);
       setInstagram(currentUser.socialMedia.instagram);
       setLinkedin(currentUser.socialMedia.linkedin);
 
       const handleSocialMediaChange = (platform, value) => {
-        console.log("yes");
+        //  console.log("yes");
         setSocialMedia((prevState) => ({
           ...prevState,
           [platform]: value,
-        }
-        ));
-        console.log(value);
+        }));
       };
 
       handleSocialMediaChange("twitter", twitter);
-
-      console.log(socialMedia);
+      // console.log(socialMedia);
       setData(docs);
       setName(currentUser.nameSurname);
 
@@ -148,7 +165,7 @@ const EditProfileScreen = ({ navigation }) => {
         (item) => item.id === auth.currentUser.uid
       );
       //console.log("artistPreference data", docs_pref);
-      //   console.log("sss:", docs_pref[0].id);
+      // console.log("sss:", docs_pref[0]);
       setData(docs_pref);
       setJob(docs_pref[0].id);
 
@@ -195,6 +212,18 @@ const EditProfileScreen = ({ navigation }) => {
           handleGenreSelect("Rock");
         }
       }
+
+      if (docs_pref[0].id === "Painter") {
+        if (docs_pref[0].digitalDesignScore === 1) {
+          handleProfessionSelect("Digital Design");
+        } else if (docs_pref[0].graffitiScore === 1) {
+          handleProfessionSelect("Graffiti");
+        } else if (docs_pref[0].industrialScore === 1) {
+          handleProfessionSelect("Industrial Design");
+        } else if (docs_pref[0].restorationScore === 1) {
+          handleProfessionSelect("Restoration");
+        }
+      }
     });
     return () => unsubscribe();
   }, []);
@@ -211,12 +240,37 @@ const EditProfileScreen = ({ navigation }) => {
       setImageUri(result.uri);
     }
   };
-
+  //console.log(storage);
   const handleDocumentUpload = async () => {
     let result = await DocumentPicker.getDocumentAsync({});
 
     if (result.type === "success") {
       setDocumentUri(result.uri);
+    }
+
+    const storageRef = ref(storage, `/files/${documentUri}`);
+    const uploadTask = uploadBytesResumable(storageRef, documentUri);
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {},
+      (err) => console.log(err),
+      () => {
+        // download url
+        getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+          console.log(url);
+        });
+      }
+    );
+  };
+
+  const handleDocumentView = async () => {
+    if (documentUri) {
+      try {
+        // Share the document using the Expo Sharing module
+        await Sharing.shareAsync(documentUri);
+      } catch (error) {
+        console.error("Error sharing document:", error);
+      }
     }
   };
   //console.log("social", socialMedia.behance);
@@ -238,156 +292,168 @@ const EditProfileScreen = ({ navigation }) => {
           <Image source={{ uri: imageUri }} style={styles.image} />
         </TouchableOpacity>
       </View>
-      {editingMode ? (
-        <ScrollView style={styles.form}>
-          <Text style={styles.label}>Bio</Text>
-          <TextInput style={styles.input} value={bio} onChangeText={setBio} />
-          <Text style={styles.label}>Document</Text>
-          <TouchableOpacity
-            style={styles.uploadButton}
-            onPress={handleDocumentUpload}
-          >
-            <Feather name="upload" size={24} color="white" />
-            <Text style={styles.uploadText}>Upload document</Text>
-          </TouchableOpacity>
-          {documentUri ? (
-            <Text style={styles.documentUri}>{documentUri}</Text>
-          ) : null}
-          {/*     {behance !== "" && ( */}
-          <TextInput
-            style={styles.input}
-            onChangeText={(value) => handleSocialMediaChange("behance", value)}
-            placeholder="Behance URL"
-            placeholderTextColor="#ffff"
-          />
-          {/*      )} */}
-
-          {/*  {twitter !== "" && ( */}
-          <TextInput
-            style={styles.input}
-            onChangeText={(value) => handleSocialMediaChange("twitter", value)}
-            placeholder="Twitter URL"
-            placeholderTextColor="#ffff"
-          />
-          {/*  )} */}
-
-          {/*    {instagram !== "" && ( */}
-          <TextInput
-            style={styles.input}
-            onChangeText={(value) =>
-              handleSocialMediaChange("instagram", value)
-            }
-            placeholder="Instagram URL"
-            placeholderTextColor="#ffff"
-          />
-          {/*    )} */}
-
-          {/* {linkedin !== "" && ( */}
-          <TextInput
-            style={styles.input}
-            onChangeText={(value) => handleSocialMediaChange("linkedin", value)}
-            placeholder="Linkedin URL"
-            placeholderTextColor="#ffff"
-          />
-          {/*    )} */}
-        </ScrollView>
-      ) : (
-        <View style={styles.profileInfo}>
-          <Text style={styles.name}>{name}</Text>
-          <Text style={styles.bio}>{bio}</Text>
-          <WebView
-            source={{ uri: documentUri }}
-            style={{ flex: 1, backgroundColor: "red", color: "white" }}
-          />
-
-          <View style={styles.socialLinks}>
-            {behance !== "" && (
-              <View style={styles.iconContainer}>
-                <TouchableOpacity onPress={() => Linking.openURL(behance)}>
-                  <Icon
-                    style={styles.socialMediaIcon}
-                    name="behance"
-                    size={25}
-                    color="#1769FF"
-                  />
-                </TouchableOpacity>
-              </View>
-            )}
-
-            {twitter !== "" && (
-              <View style={styles.iconContainer}>
-                <TouchableOpacity onPress={() => Linking.openURL(twitter)}>
-                  <Icon
-                    style={styles.socialMediaIcon}
-                    name="twitter"
-                    size={25}
-                    color="#1DA1F2"
-                  />
-                </TouchableOpacity>
-              </View>
-            )}
-
-            {instagram !== "" && (
-              <View style={styles.iconContainer}>
-                <TouchableOpacity onPress={() => Linking.openURL(instagram)}>
-                  <Icon
-                    style={styles.socialMediaIcon}
-                    name="instagram"
-                    size={25}
-                    color="#C13584"
-                  />
-                </TouchableOpacity>
-              </View>
-            )}
-
-            {linkedin !== "" && (
-              <View style={styles.iconContainer}>
-                <TouchableOpacity onPress={() => Linking.openURL(linkedin)}>
-                  <Icon
-                    style={styles.socialMediaIcon}
-                    name="linkedin"
-                    size={25}
-                    color="#0077B5"
-                  />
-                </TouchableOpacity>
-              </View>
-            )}
-          </View>
-
-          {job === "Musician" && (
-            <View style={styles.bottomTexts2}>
-              <View style={styles.bottomTexts}>
-                <Text style={styles.bottomText}>Job: </Text>
-                <Text style={styles.bottomText}>{job}</Text>
-              </View>
-              <View style={styles.bottomTexts}>
-                <Text style={styles.bottomText}> Profession: </Text>
-                {selectedProfessions.map((profession) => (
-                  <Text style={styles.bottomText}>{profession}</Text>
-                ))}
-              </View>
-              <View style={styles.bottomTexts}>
-                <Text style={styles.bottomText}>Genre:</Text>
-                <Text style={styles.bottomText}>{string}</Text>
-              </View>
-            </View>
-          )}
-
-          {job === "Painter" && (
-            <View style={styles.bottomTexts}>
-              <Text style={styles.bottomText}>Job: {job}</Text>
-              <Text style={styles.bottomText}>Profession: {profession}</Text>
-              <Text style={styles.bottomText}>Genre: {genre}</Text>
-            </View>
-          )}
-
-          {/*   {documentUri ? (
-            <TouchableOpacity onPress={() => displayDocument()}>
-              <Text style={styles.documentLink}>View Document</Text>
+      <View style={styles.contentContainer}>
+        {editingMode ? (
+          <ScrollView style={styles.form}>
+            <Text style={styles.label}>Bio</Text>
+            <TextInput style={styles.input} value={bio} onChangeText={setBio} />
+            <Text style={styles.label}>Document</Text>
+            <TouchableOpacity
+              style={styles.uploadButton}
+              onPress={handleDocumentUpload}
+            >
+              <Feather name="upload" size={24} color="white" />
+              <Text style={styles.uploadText}>Upload document</Text>
             </TouchableOpacity>
-          ) : null} */}
-        </View>
-      )}
+
+            {/*     {behance !== "" && ( */}
+            <TextInput
+              style={styles.input}
+              onChangeText={(value) =>
+                handleSocialMediaChange("behance", value)
+              }
+              placeholder="Behance URL"
+              placeholderTextColor="#ffff"
+            />
+            {/*      )} */}
+
+            {/*  {twitter !== "" && ( */}
+            <TextInput
+              style={styles.input}
+              onChangeText={(value) =>
+                handleSocialMediaChange("twitter", value)
+              }
+              placeholder="Twitter URL"
+              placeholderTextColor="#ffff"
+            />
+            {/*  )} */}
+
+            {/*    {instagram !== "" && ( */}
+            <TextInput
+              style={styles.input}
+              onChangeText={(value) =>
+                handleSocialMediaChange("instagram", value)
+              }
+              placeholder="Instagram URL"
+              placeholderTextColor="#ffff"
+            />
+            {/*    )} */}
+
+            {/* {linkedin !== "" && ( */}
+            <TextInput
+              style={styles.input}
+              onChangeText={(value) =>
+                handleSocialMediaChange("linkedin", value)
+              }
+              placeholder="Linkedin URL"
+              placeholderTextColor="#ffff"
+            />
+            {/*    )} */}
+          </ScrollView>
+        ) : (
+          <ScrollView style={styles.profileInfo}>
+            <Text style={styles.name}>{name}</Text>
+            <Text style={styles.bio}>{bio}</Text>
+
+            {documentUri ? (
+              <TouchableOpacity
+                style={styles.uploadButton2}
+                onPress={handleDocumentView}
+              >
+                <Feather name="download" size={24} color="white" />
+                <Text style={styles.uploadText}>Download document</Text>
+              </TouchableOpacity>
+            ) : (
+              <Text style={styles.noText}>There is no CV right now</Text>
+            )}
+            <View style={styles.socialLinks}>
+              {behance !== "" && (
+                <View style={styles.iconContainer}>
+                  <TouchableOpacity onPress={() => Linking.openURL(behance)}>
+                    <Icon
+                      style={styles.socialMediaIcon}
+                      name="behance"
+                      size={25}
+                      color="#1769FF"
+                    />
+                  </TouchableOpacity>
+                </View>
+              )}
+
+              {twitter !== "" && (
+                <View style={styles.iconContainer}>
+                  <TouchableOpacity onPress={() => Linking.openURL(twitter)}>
+                    <Icon
+                      style={styles.socialMediaIcon}
+                      name="twitter"
+                      size={25}
+                      color="#1DA1F2"
+                    />
+                  </TouchableOpacity>
+                </View>
+              )}
+
+              {instagram !== "" && (
+                <View style={styles.iconContainer}>
+                  <TouchableOpacity onPress={() => Linking.openURL(instagram)}>
+                    <Icon
+                      style={styles.socialMediaIcon}
+                      name="instagram"
+                      size={25}
+                      color="#C13584"
+                    />
+                  </TouchableOpacity>
+                </View>
+              )}
+
+              {linkedin !== "" && (
+                <View style={styles.iconContainer}>
+                  <TouchableOpacity onPress={() => Linking.openURL(linkedin)}>
+                    <Icon
+                      style={styles.socialMediaIcon}
+                      name="linkedin"
+                      size={25}
+                      color="#0077B5"
+                    />
+                  </TouchableOpacity>
+                </View>
+              )}
+            </View>
+            {job === "Musician" && (
+              <View style={styles.bottomTexts2}>
+                <View style={styles.bottomTexts}>
+                  <Text style={styles.bottomText}>Job: </Text>
+                  <Text style={styles.bottomText}>{job}</Text>
+                </View>
+                <View style={styles.bottomTexts}>
+                  <Text style={styles.bottomText}> Profession: </Text>
+                  {selectedProfessions.map((profession) => (
+                    <Text style={styles.bottomText}>{profession}</Text>
+                  ))}
+                </View>
+                <View style={styles.bottomTexts}>
+                  <Text style={styles.bottomText}>Genre:</Text>
+                  <Text style={styles.bottomText}>{selectedGenre}</Text>
+                </View>
+              </View>
+            )}
+            {job === "Painter" && (
+              <View style={styles.bottomTexts2}>
+                <View style={styles.bottomTexts}>
+                  <Text style={styles.bottomText}>Job: </Text>
+                  <Text style={styles.bottomText}>{job}</Text>
+                </View>
+                <View style={styles.bottomTexts}>
+                  <Text style={styles.bottomText}> Profession: </Text>
+                  {selectedProfessions.map((profession) => (
+                    <Text style={styles.bottomText}>{profession}</Text>
+                  ))}
+                </View>
+              </View>
+            )}
+          </ScrollView>
+        )}
+      </View>
       <BottomNavigationArtist
         style={styles.BottomNavigationArtistContainer}
       ></BottomNavigationArtist>
@@ -399,6 +465,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "black",
+  },
+  contentContainer: {
+    flex: 1, // Take up remaining vertical space
   },
   iconContainer: {
     marginHorizontal: 10,
@@ -427,16 +496,17 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     alignItems: "center",
-    paddingVertical: 20,
+    paddingTop: 20,
   },
   image: {
-    width: 150,
-    height: 150,
+    width: 120,
+    height: 120,
     borderRadius: 75,
     borderWidth: 1,
     borderColor: "white",
   },
   form: {
+    flex: 1, // Take up available space within the content container
     padding: 16,
   },
   label: {
@@ -463,19 +533,35 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: "#5769FA",
   },
+  uploadButton2: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    margin: 10,
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: "#5769FA",
+  },
   uploadText: {
     marginLeft: 10,
     color: "white",
     fontFamily: "circular",
+  },
+  noText: {
+    color: "white",
+    fontFamily: "circular",
+    textAlign: "center",
+    margin: 10,
+    fontWeight: "bold",
+    fontStyle: "italic",
   },
   documentUri: {
     color: "white",
     marginTop: 10,
   },
   profileInfo: {
-    alignItems: "center",
     padding: 16,
-    fontFamily: "circular",
+    flex: 1,
   },
   name: {
     fontSize: 24,
@@ -507,32 +593,26 @@ const styles = StyleSheet.create({
     marginTop: 10,
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-evenly",
+    justifyContent: "space-between",
     backgroundColor: "rgba(36, 36, 36, 0.62)",
     width: "100%",
-    marginLeft: "auto",
-    marginRight: "auto",
     borderColor: "rgba(197, 197, 197, 0.62)",
     borderWidth: 1,
     fontFamily: "circular",
+    paddingHorizontal: 40,
   },
   bottomTexts2: {
     marginTop: 10,
     display: "flex",
     flexDirection: "column",
-    justifyContent: "space-between",
     fontFamily: "circular",
   },
   bottomText: {
     fontSize: 16,
     color: "white",
     marginVertical: 5,
-    paddingHorizontal: 65,
     paddingVertical: 10,
     fontFamily: "circular",
-  },
-  BottomNavigationArtistContainer: {
-    paddingTop: normalize(150),
   },
 });
 

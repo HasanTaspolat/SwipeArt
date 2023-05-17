@@ -10,7 +10,7 @@ export default function StartingAnimation({ navigation }) {
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowAnimation(false);
-      navigation.navigate('StartScreen');
+      navigation.navigate("StartScreen");
     }, 5000); // Set the duration in milliseconds here
 
     return () => clearTimeout(timer);
@@ -25,13 +25,10 @@ export default function StartingAnimation({ navigation }) {
           animationStyle={styles.lottie}
           source={require("../assets/loading3.json")}
           progress={animationProgress}
-        >
-        </AnimatedLoader>
+        ></AnimatedLoader>
       )}
 
-      {!showAnimation && (
-        <Text style={styles.text}>Animation completed. Navigating to StartScreen...</Text>
-      )}
+      {!showAnimation && navigation.navigate("StartScreen")}
 
       <LottieView
         source={require("../assets/loading3.json")}
