@@ -4,6 +4,7 @@
 // android 810827365534-8kedvth5h83vlurup31e9j40q73c1k7l.apps.googleusercontent.com
 // web 810827365534-lim5le842bacbnr4pa0csp8urfdmjl1k.apps.googleusercontent.com
 import React, { useEffect, useState } from "react";
+import MainPage from "./MainPage.js";
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -67,6 +68,7 @@ const LoginScreen = ({ navigation }) => {
   isLoading: false;
   const [userMessage, setUserMessage] = useState();
   let UserType;
+  let UserTypeCustomer;
   const [rememberMe, setRememberMe] = useState(false);
 
   const [token, setToken] = useState("");
@@ -153,6 +155,7 @@ const LoginScreen = ({ navigation }) => {
       });
     });
     UserType = users[0].isArtist;
+    UserTypeCustomer = users[0].isCustomer;
     console.log("Artist : " + users[0].isArtist);
     console.log("User Type : " + UserType);
   }
@@ -161,7 +164,11 @@ const LoginScreen = ({ navigation }) => {
     console.log("User Type Before Check : " + UserType);
     if (UserType === 1) {
       navigation.navigate(ArtistDashboardPage);
-    } else {
+    } 
+    else if (UserTypeCustomer === 1) {
+      navigation.navigate(MainPage);
+    }
+    else {
       navigation.navigate(ArtistOrCustomer);
     }
   }
