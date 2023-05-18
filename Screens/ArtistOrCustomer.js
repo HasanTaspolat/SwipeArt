@@ -18,21 +18,20 @@ export default function ArtistOrCustomer({ navigation }) {
     const user = auth.currentUser;
     const uid = user.uid;
 
-    async function getUserType() {
-        let users = [];
-        await getDocs(collection(db, "users", uid)).then(docSnap => {
+    function getUserType() {
+        getDocs(query(collection(db, "users"), where('useruid', '==', uid))).then(docSnap => {
             let users = [];
             docSnap.forEach((doc)=> {
                 users.push({ ...doc.data(), id:doc.id })
             });
             setComplete(users[0].completed);
+            console.log("log is here: " + isCompleted);
+            setComplete(users[0].completed);
         })
-
-        console.log("log is here: " + isCompleted);
     }
-    async function handlePreCreate() {
+   function handlePreCreate() {
         console.log("log is here: " + isCompleted);
-        await getUserType();
+        getUserType();
         if(isCompleted) {
             navigation.navigate(MainPage);
         }
