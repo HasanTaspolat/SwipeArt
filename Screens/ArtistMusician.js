@@ -40,11 +40,11 @@ export default function ArtistMusician({ navigation }) {
   const [composer, setComposer] = useState(false);
 
   function setMusicianJob() {
-    updateDoc(doc(db, "users", uid, "artistPreference", "Musician"), {
-      vocalistScore: vocalist === true ? 1 : 0,
-      producerScore: producer === true ? 1 : 0,
-      engineerScore: engineer === true ? 1 : 0,
-      composerScore: composer === true ? 1 : 0,
+    setDoc(doc(db, "users", uid, "artistPreference", "MusicianProfession"), {
+      vocalist: vocalist === true ? 1 : 0,
+      producer: producer === true ? 1 : 0,
+      engineer: engineer === true ? 1 : 0,
+      composer: composer === true ? 1 : 0,
     })
       .then(() => {
         // Data saved successfully!
@@ -56,7 +56,7 @@ export default function ArtistMusician({ navigation }) {
       })
       .catch((error) => {
         // The write failed...
-        console.log("error");
+        console.log("error burdaaa");
       });
   }
 

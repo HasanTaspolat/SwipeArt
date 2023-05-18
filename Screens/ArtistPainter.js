@@ -43,10 +43,10 @@ export default function ArtistPainter({ navigation }) {
 
   function setPainterJob() {
     updateDoc(doc(db, "users", uid, "artistPreference", "Painter"), {
-      digitalDesignScore: digitalDesign === true ? 1 : 0,
-      restorationScore: restoration === true ? 1 : 0,
-      graffitiScore: graffiti === true ? 1 : 0,
-      industrialScore: industrial === true ? 1 : 0,
+      digitalDesign: digitalDesign === true ? 1 : 0,
+      restoration: restoration === true ? 1 : 0,
+      graffiti: graffiti === true ? 1 : 0,
+      industrial: industrial === true ? 1 : 0,
     })
       .then(() => {
         // Data saved successfully!

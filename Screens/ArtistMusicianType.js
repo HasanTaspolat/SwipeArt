@@ -41,12 +41,12 @@ export default function ArtistMusicianType({ navigation }) {
   const [edm, setedm] = useState(false);
 
   function setMusicianProfession() {
-    updateDoc(doc(db, "users", uid, "artistPreference", "Musician"), {
-      rapProfessionScore: rap === true ? 1 : 0,
-      rockProfessionScore: rock === true ? 1 : 0,
-      popProfessionScore: pop === true ? 1 : 0,
-      edmProfessionScore: edm === true ? 1 : 0,
-      bluesProfessionScore: blues === true ? 1 : 0,
+    setDoc(doc(db, "users", uid, "artistPreference", "MusicianType"), {
+      rap: rap === true ? 1 : 0,
+      rock: rock === true ? 1 : 0,
+      pop: pop === true ? 1 : 0,
+      edm: edm === true ? 1 : 0,
+      blues: blues === true ? 1 : 0,
     })
       .then(() => {
         // Data saved successfully!

@@ -25,10 +25,10 @@ export default function CustomerChoosePainter({ navigation }) {
  // REST WILL CHANGE ON ALGORITHM
     function setMusicianPreference() {
             updateDoc(doc(db, "users", uid , "userPreference", "PainterTypes"), {  
-                designScore: design === true ? 1 : 0,
-                restScore: restoration === true ? 1 : 0,
-                grafScore: graf === true ? 1 : 0,
-                indScore: industrial === true ? 1 : 0,
+                design: design === true ? 1 : 0,
+                restoration: restoration === true ? 1 : 0,
+                graffiti: graf === true ? 1 : 0,
+                indistury: industrial === true ? 1 : 0,
             }).then(() => { 
             // Data saved successfully!
             console.log('data submitted');

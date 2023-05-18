@@ -40,7 +40,7 @@ export default function ChooseScreenFirst({ navigation }) {
     function setCustomerPreference(preference) {
         if (preference === 1) {
           setDoc(doc(db, "users", uid, "artistPreference", "Musician"), {
-            startingScore: 1,
+            artist: "yes",
           })
             .then(() => {
               // Data saved successfully!
@@ -53,7 +53,7 @@ export default function ChooseScreenFirst({ navigation }) {
             });
         } else {
           setDoc(doc(db, "users", uid, "artistPreference", "Painter"), {
-            startingScore: 1,
+            painter: "yes",
           })
             .then(() => {
               // Data saved successfully!

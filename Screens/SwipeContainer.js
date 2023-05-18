@@ -12,18 +12,111 @@ import SwipeCard from "./SwipeCard";
 import data from "../person.json";
 import { AntDesign } from "@expo/vector-icons";
 import BottomNavigationCustomer from "./BottomNavigationCustomer";
+import { getAuth } from "firebase/auth";
+import { collection, doc, setDoc, addDoc, updateDoc, deleteDoc, getDoc, getDocs, where, query } from "firebase/firestore";
+import { db } from '../components/config';
+
 
 export default function SwipeContainer() {
   const [cards, setCards] = useState(data);
   const [gestureDy, setGestureDy] = useState(0);
   const [selectedCard, setSelectedCard] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [highestPreference, setHigh] = useState();
+  const [highestPreference2, setHigh2] = useState();
+  const [prefferedType, setType] = useState();
+  const [userData, setUser] = useState();
+  const [artists, setArtists] = useState();
+  const auth = getAuth();
+  const user = auth.currentUser;
+  const uid = user.uid;
+
+  function ResetCards() {
+    // Function resets the cards when the algorithm gives new recomandations to customer and changes the set of data.
+    cardIndex = 0;
+
+    //setCards()
+  }
+  async function getUserType() {
+    let users = [];
+    await getDocs(collection(db, "users", uid , "userPreference")).then(docSnap => {
+        let users = [];
+        docSnap.forEach((doc)=> {
+            users.push({ ...doc.data(), id:doc.id })
+        });
+        setUser(users);
+    })
+  }
+  async function handlePreCreate() {
+      await getUserType();
+      let max = 0;
+      let maxindex = 0;
+      let max2 = 0;
+      let max2index = 0; 
+      userData.forEach((product, key) => {
+        setType(product.id);
+        Object.values(product).map((key, value) => {
+          console.log(key,value);
+          if(key > max) {
+            max = key;
+            maxindex = value;
+            console.log("max is: " + max + " index is: " + maxindex);
+
+          }
+          else if(key > max2 && key <= max) {
+            max2 = key;
+            max2index = value;
+            console.log("max 2 is: " + max + " index 2 is: " + max2index);
+          }
+      });
+      Object.keys(product).map((key, value) => {
+        console.log(key,value);
+        if( maxindex === value ) {
+          setHigh(key);
+        }
+        else if ( max2index === value) {
+          setHigh2(key);
+        }
+      });
+    });
+    console.log("Highest scores:\n");
+    console.log(highestPreference);
+    console.log(highestPreference2);
+  }
+
+  
+
+
+  async function FormArtists() {
+      await getDocs(query(collection(db, "users"), where('isArtist','==', 1 ))).then(docSnap => {
+         let artists = [];
+         let artiststemp = [];
+          docSnap.forEach((doc)=> {
+          artists.push({ ...doc.data(), id:doc.id })
+      });
+          console.log(artists);
+          artists.map((artist, key) => {
+            if(String(prefferedType).includes(String(artist.artistType))) {
+              artiststemp.push(artist);
+            }
+          });
+          setArtists(artiststemp);         
+      });
+  }
+
+  async function setPrefferedArtists() {
+    await handlePreCreate();
+    await FormArtists();
+    console.log(artists);
+  }
+
 
   const onSwipeLeft = (cardIndex) => {
     const newCards = [...cards];
     newCards.splice(cardIndex, 1);
     setCards(newCards);
     console.log("Swiped left on card at index", cardIndex);
+    setPrefferedArtists();
   };
 
   const onSwipeRight = (cardIndex) => {
@@ -31,6 +124,7 @@ export default function SwipeContainer() {
     newCards.splice(cardIndex, 1);
     setCards(newCards);
     console.log("Swiped right on card at index", cardIndex);
+    setPrefferedArtists();
   };
 
 

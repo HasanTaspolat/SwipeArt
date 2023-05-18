@@ -40,15 +40,15 @@ export default function CustomerChooseMusician({ navigation }) {
   const [pop, setpop] = useState(false);
   const [edm, setedm] = useState(false);
 
-  // THIS SECTION ONLY SETS INITIAL SCORES
+  // THIS SECTION ONLY SETS INITIAL S
   // REST WILL CHANGE ON ALGORITHM
   function setMusicianPreference() {
     updateDoc(doc(db, "users", uid, "userPreference", "MusicianTypes"), {
-      rapScore: rap === true ? 1 : 0,
-      rockScore: rock === true ? 1 : 0,
-      popScore: pop === true ? 1 : 0,
-      edmScore: edm === true ? 1 : 0,
-      bluesScore: blues === true ? 1 : 0,
+      rap: rap === true ? 1 : 0,
+      rock: rock === true ? 1 : 0,
+      pop: pop === true ? 1 : 0,
+      edm: edm === true ? 1 : 0,
+      blues: blues === true ? 1 : 0,
     })
       .then(() => {
         // Data saved successfully!
