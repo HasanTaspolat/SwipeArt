@@ -86,12 +86,12 @@ const styles = StyleSheet.create({
   },
   icon: {
     position: 'absolute', // add if dont work with above
-    top: 300,
-    left: 10,
+    top: 50,
+    left: 20,
   },
   sidebar: {
     position: 'absolute',
-    top: 125,
+    top: 5,
     left: 0,
     height:windowHeight,
     width: '50%',
@@ -131,4 +131,3 @@ const styles = StyleSheet.create({
 });
 
 export default Sidebar;
-

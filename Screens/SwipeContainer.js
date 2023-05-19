@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -13,9 +13,19 @@ import data from "../person.json";
 import { AntDesign } from "@expo/vector-icons";
 import BottomNavigationCustomer from "./BottomNavigationCustomer";
 import { getAuth } from "firebase/auth";
-import { collection, doc, setDoc, addDoc, updateDoc, deleteDoc, getDoc, getDocs, where, query } from "firebase/firestore";
-import { db } from '../components/config';
-
+import {
+  collection,
+  doc,
+  setDoc,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  getDoc,
+  getDocs,
+  where,
+  query,
+} from "firebase/firestore";
+import { db } from "../components/config";
 
 export default function SwipeContainer() {
   const [cards, setCards] = useState(data);
@@ -27,96 +37,135 @@ export default function SwipeContainer() {
   const [prefferedType, setType] = useState();
   const [userData, setUser] = useState();
   const [artists, setArtists] = useState();
+  const [dataLoaded, setDataLoaded] = useState(false); // changed initial value to false
+  const [counter, setCounter] = useState(0);
   const auth = getAuth();
   const user = auth.currentUser;
   const uid = user.uid;
 
-  function ResetCards() {
-    // Function resets the cards when the algorithm gives new recomandations to customer and changes the set of data.
-    cardIndex = 0;
+  useEffect(() => {
+    if (counter < 10) {
+      const fetchData = async () => {
+        try {
+          await handlePreCreate();
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      };
+      console.log(counter);
+      const timer = setTimeout(() => {
+        fetchData();
+        setCounter((prevCounter) => prevCounter + 1);
+      }, 500);
 
-    //setCards()
-  }
+      return () => clearTimeout(timer);
+    }
+    setCards(artists);
+    setDataLoaded(true);
+  }, [counter]);
+
   async function getUserType() {
     let users = [];
-    await getDocs(collection(db, "users", uid , "userPreference")).then(docSnap => {
+    await getDocs(collection(db, "users", uid, "userPreference")).then(
+      (docSnap) => {
         let users = [];
-        docSnap.forEach((doc)=> {
-            users.push({ ...doc.data(), id:doc.id })
+        docSnap.forEach((doc) => {
+          users.push({ ...doc.data(), id: doc.id });
         });
         setUser(users);
-    })
+      }
+    );
   }
-  async function handlePreCreate() {
-      await getUserType();
-      let max = 0;
-      let maxindex = 0;
-      let max2 = 0;
-      let max2index = 0; 
-      userData.forEach((product, key) => {
-        setType(product.id);
-        Object.values(product).map((key, value) => {
-          console.log(key,value);
-          if(key > max) {
-            max = key;
-            maxindex = value;
-            console.log("max is: " + max + " index is: " + maxindex);
 
-          }
-          else if(key > max2 && key <= max) {
-            max2 = key;
-            max2index = value;
-            console.log("max 2 is: " + max + " index 2 is: " + max2index);
-          }
+  async function handlePreCreate() {
+    await getUserType();
+    let max = 0;
+    let maxindex = 0;
+    let max2 = 0;
+    let max2index = 0;
+    let highKey1;
+    let highKey2;
+    userData.forEach((product, key) => {
+      setType(product.id);
+      Object.values(product).map((key, value) => {
+        if (key > max) {
+          max = key;
+          maxindex = value;
+        } else if (key > max2 && key <= max) {
+          max2 = key;
+          max2index = value;
+        }
       });
       Object.keys(product).map((key, value) => {
-        console.log(key,value);
-        if( maxindex === value ) {
-          setHigh(key);
-        }
-        else if ( max2index === value) {
-          setHigh2(key);
+        console.log(key, value);
+        if (maxindex === value) {
+          highKey1 = key;
+        } 
+        if (max2index === value) {
+          highKey2 = key;
         }
       });
     });
-    console.log("Highest scores:\n");
+    setHigh(highKey1);
+    setHigh2(highKey2);
     console.log(highestPreference);
     console.log(highestPreference2);
+    await FormArtists();
   }
 
-  
-
-
   async function FormArtists() {
-      await getDocs(query(collection(db, "users"), where('isArtist','==', 1 ))).then(docSnap => {
-         let artists = [];
-         let artiststemp = [];
-          docSnap.forEach((doc)=> {
-          artists.push({ ...doc.data(), id:doc.id })
+    console.log(highestPreference);
+    console.log(highestPreference2);
+    await getDocs(
+      query(collection(db, "users"), where("isArtist", "==", 1))
+    ).then((docSnap) => {
+      let artists = [];
+      docSnap.forEach((doc) => {
+        artists.push({ ...doc.data(), id: doc.id });
       });
-          console.log(artists);
-          artists.map((artist, key) => {
-            if(String(prefferedType).includes(String(artist.artistType))) {
-              artiststemp.push(artist);
-            }
-          });
-          setArtists(artiststemp);         
+      var listedArtists = [];
+      artists.map((artist, key) => {
+        getDocs(collection(db, "users", artist.id, "artistPreference")).then(
+          (docSnap) => {
+            docSnap.forEach((doc) => {
+              let artiststemp = [];
+              artiststemp.push({ ...doc.data(), id: doc.id });
+              if (artiststemp[0][highestPreference] === 1) {
+                listedArtists.push({
+                  artistid: artist.id,
+                  nameSurname: artist.nameSurname,
+                  profession: highestPreference,
+                });
+              }
+              if (artiststemp[0][highestPreference2] === 1) {
+                listedArtists.push({
+                  artistid: artist.id,
+                  nameSurname: artist.nameSurname,
+                  profession: highestPreference,
+                });
+              }
+            });
+          }
+        );
       });
+      setArtists(listedArtists);
+
+    });
+    console.log(artists);
   }
 
   async function setPrefferedArtists() {
     await handlePreCreate();
     await FormArtists();
+    console.log("bura");
     console.log(artists);
   }
-
 
   const onSwipeLeft = (cardIndex) => {
     const newCards = [...cards];
     newCards.splice(cardIndex, 1);
     setCards(newCards);
     console.log("Swiped left on card at index", cardIndex);
-    setPrefferedArtists();
   };
 
   const onSwipeRight = (cardIndex) => {
@@ -124,63 +173,52 @@ export default function SwipeContainer() {
     newCards.splice(cardIndex, 1);
     setCards(newCards);
     console.log("Swiped right on card at index", cardIndex);
-    setPrefferedArtists();
   };
-
 
   const hideModal = () => {
     setSelectedCard(null);
   };
 
+  if (!dataLoaded) {
+    // Render a loading state or return null until data is loaded
+    return null;
+  }
+
+
   return (
-    <View style={styles.cardContainer}>
-      {cards.map((card, cardIndex) => (
-        <TouchableWithoutFeedback
-          key={cardIndex}
-        >
-          <SwipeCard
-            data={data}
-            gestureDy={gestureDy}
-            onSwipeLeft={() => onSwipeLeft(cardIndex)}
-            onSwipeRight={() => onSwipeRight(cardIndex)}
-          >
-            <View style={styles.card}>
-              <Image source={{ uri: card.image }} style={styles.cardImage} />
-              <View style={styles.textContainer}>
-                <Text style={styles.name}>
-                  {card.name} {card.surname}
-                </Text>
-                <Text style={styles.profession}>{card.profession}</Text>
+<View style={styles.cardContainer}>
+      {dataLoaded ? (
+        cards.map((card, cardIndex) => (
+          <TouchableWithoutFeedback key={cardIndex}>
+            <SwipeCard
+              data={data}
+              gestureDy={gestureDy}
+              onSwipeLeft={() => onSwipeLeft(cardIndex)}
+              onSwipeRight={() => onSwipeRight(cardIndex)}
+            >
+              <View style={styles.card}>
+                <Image
+                  source={{
+                    uri:
+                      'https://media.istockphoto.com/id/1377592015/photo/determined-for-any-challenge.jpg?b=1&s=170667a&w=0&k=20&c=Rzd6WLDTH8IqYRF6F2Ro25Gae2_KuVSSegFPms4xMJk=',
+                  }}
+                  style={styles.cardImage}
+                />
+                <View style={styles.textContainer}>
+                  <Text style={styles.name}>{card.nameSurname}</Text>
+                  <Text style={styles.profession}>{card.profession}</Text>
+                </View>
               </View>
-            </View>
-          </SwipeCard>
-        </TouchableWithoutFeedback>
-      ))}
-      <BottomNavigationCustomer />
-      {selectedCard && (
-        <Modal
-          animationType="slide"
-          visible={!!selectedCard}
-          onRequestClose={hideModal}
-        >
-          <View style={styles.modalContainer}>
-            <Text>
-              {selectedCard.name} {selectedCard.surname}
-            </Text>
-            <Text>{selectedCard.profession}</Text>
-            <Image
-              source={{ uri: selectedCard.image }}
-              style={styles.modalImage}
-            />
-            <TouchableOpacity style={styles.modalButton} onPress={hideModal}>
-              <Text style={styles.modalButtonText}>Close</Text>
-            </TouchableOpacity>
-          </View>
-        </Modal>
+            </SwipeCard>
+          </TouchableWithoutFeedback>
+        ))
+      ) : (
+        <Text style={styles.card2}>Loading... PLEASE WAIT WHILE WE ARE CHOOSING BEST ARTISTS FOR YOU</Text>
       )}
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   cardContainer: {
     width: "100%",
@@ -196,6 +234,14 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     paddingHorizontal: 55,
     width: 400,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  card2: {
+    flexDirection: "column",
+    paddingHorizontal: 55,
+    width: 400,
+    height: 500,
     alignItems: "center",
     justifyContent: "center",
   },

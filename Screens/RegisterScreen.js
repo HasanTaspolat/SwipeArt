@@ -81,6 +81,7 @@ const RegisterScreen = ({ navigation }) => {
       socialMedia: socialMedia,
       isArtist: 0,
       isCustomer: 0,
+      useruid:userUID,
     })
       .then(() => {
         // Data saved successfully!
