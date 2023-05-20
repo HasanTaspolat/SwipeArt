@@ -7,14 +7,15 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Modal,
+  TextInput,
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import SwipeCard from "./SwipeCard";
 import data from "../person.json";
 import { AntDesign } from "@expo/vector-icons";
 import BottomNavigationCustomer from "./BottomNavigationCustomer";
 import { getAuth } from "firebase/auth";
 import OpenSwipeAnimation from "./OpenSwipeAnimation";
-
 import {
   collection,
   doc,
@@ -28,8 +29,10 @@ import {
   query,
 } from "firebase/firestore";
 import { db } from "../components/config";
+import { useNavigation } from "@react-navigation/native";
 
 export default function SwipeContainer() {
+  const navigation = useNavigation();
   const [cards, setCards] = useState();
   const [gestureDy, setGestureDy] = useState(0);
   const [selectedCard, setSelectedCard] = useState(null);
@@ -42,12 +45,15 @@ export default function SwipeContainer() {
   const [cardNumber, setCardNumber] = useState([]);
   const [dataLoaded, setDataLoaded] = useState(false); // changed initial value to false
   const [counter, setCounter] = useState(0);
-  const [artistJob,setArtistJob] = useState();
-  const [refresh,refffff] = useState();
+  const [artistJob, setArtistJob] = useState();
+  const [refresh, refffff] = useState();
   const auth = getAuth();
   const user = auth.currentUser;
   const uid = user.uid;
-
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [filterArr, setFilterArr] = useState([]);
+  const [isPopupVisible, setPopupVisible] = useState(false);
 
   useEffect(() => {
     if (counter < 12 && artists.length < 1) {
@@ -126,61 +132,160 @@ export default function SwipeContainer() {
     console.log(highestPreference);
     console.log(highestPreference2);
     const listedArtists = [];
-  
-    await getDocs(query(collection(db, "users"), where("isArtist", "==", 1))).then((docSnap) => {
+
+    await getDocs(
+      query(collection(db, "users"), where("isArtist", "==", 1))
+    ).then((docSnap) => {
       let artists = [];
       docSnap.forEach((doc) => {
         artists.push({ ...doc.data(), id: doc.id });
       });
-  
+
       artists.map((artist) => {
-        getDocs(collection(db, "users", artist.id, "artistPreference")).then((docSnap) => {
-          docSnap.forEach((doc) => {
-            let temp = "";
-            let artiststemp = [];
-            artiststemp.push({ ...doc.data(), id: doc.id });
-            if (artiststemp[0].id.includes("Profession")) {
-              const keys = Object.keys(artiststemp[0]);
-              Object.values(artiststemp[0]).map((key, value) => {
-                if (key === 1) {
-                  let tempkey = keys[value];
-                  temp += "" + tempkey + " ";
-                  setArtistJob(temp);
-                }
-              });
-            }
-            console.log(artistJob);
-            if (artiststemp[0][highestPreference] === 1) {
-              listedArtists.push({
-                artistid: artist.id,
-                bio: artist.bio,
-                socialMedia: artist.socialMedia,
-                nameSurname: artist.nameSurname,
-                profession: highestPreference,
-                photoURL: artist.photoURL,
-                artistjob: temp 
-              });
-            }
-            if (artiststemp[0][highestPreference2] === 1) {
-              listedArtists.push({
-                artistid: artist.id,
-                bio: artist.bio,
-                socialMedia: artist.socialMedia,
-                nameSurname: artist.nameSurname,
-                profession: highestPreference2,
-                photoURL: artist.photoURL,
-                artistjob: temp 
-              });
-            }
-          });
-        });
+        getDocs(collection(db, "users", artist.id, "artistPreference")).then(
+          (docSnap) => {
+            docSnap.forEach((doc) => {
+              let temp = "";
+              let artiststemp = [];
+              artiststemp.push({ ...doc.data(), id: doc.id });
+              if (artiststemp[0].id.includes("Profession")) {
+                const keys = Object.keys(artiststemp[0]);
+                Object.values(artiststemp[0]).map((key, value) => {
+                  if (key === 1) {
+                    let tempkey = keys[value];
+                    temp += "" + tempkey + " ";
+                    setArtistJob(temp);
+                  }
+                });
+              }
+              console.log(artistJob);
+              if (artiststemp[0][highestPreference] === 1) {
+                listedArtists.push({
+                  artistid: artist.id,
+                  bio: artist.bio,
+                  socialMedia: artist.socialMedia,
+                  nameSurname: artist.nameSurname,
+                  profession: highestPreference,
+                  photoURL: artist.photoURL,
+                  artistjob: temp,
+                });
+              }
+              if (artiststemp[0][highestPreference2] === 1) {
+                listedArtists.push({
+                  artistid: artist.id,
+                  bio: artist.bio,
+                  socialMedia: artist.socialMedia,
+                  nameSurname: artist.nameSurname,
+                  profession: highestPreference2,
+                  photoURL: artist.photoURL,
+                  artistjob: temp,
+                });
+              }
+            });
+          }
+        );
       });
-  
+
       setArtists(listedArtists);
     });
-  
+
     console.log(artists);
   }
+
+  async function fetchSearchResults() {
+    await getDocs(
+      query(collection(db, "users"), where("userName", "==", searchTerm))
+    ).then((docSnap) => {
+      let searchedUser = [];
+      docSnap.forEach((doc) => {
+        searchedUser.push({ ...doc.data(), id: doc.id });
+      });
+
+      setSearchResults(searchedUser);
+      console.log("searchResults", searchedUser);
+
+      setFilterArr(searchedUser);
+      console.log("filterArr", searchedUser);
+
+      if (filterArr[0].isCustomer === "1") {
+        setSearchResults = [];
+        setFilterArr = [];
+      } else {
+        //console.log("");
+      }
+    });
+  }
+  const sendFriendRequest = async () => {
+    try {
+      const senderRef = doc(db, "users", uid);
+      const receiverRef = doc(db, "users", filterArr[0].id); // Replace with the actual receiver's user ID
+      const senderSnap = await getDoc(senderRef);
+      const receiverSnap = await getDoc(receiverRef);
+      console.log(senderRef);
+      console.log(receiverRef);
+      if (senderSnap.exists() && receiverSnap.exists()) {
+        const sender = senderSnap.data();
+        const receiver = receiverSnap.data();
+        // Check if the friend request already exists
+        const requestQuery = query(
+          collection(db, "friendRequests"),
+          where("senderId", "==", uid),
+          where("receiverId", "==", filterArr[0].id) // Replace with the actual receiver's user ID
+        );
+        const requestSnap = await getDocs(requestQuery);
+
+        if (requestSnap.empty) {
+          // Create a new friend request
+          await addDoc(collection(db, "friendRequests"), {
+            senderId: uid,
+            receiverId: filterArr[0].id, // Replace with the actual receiver's user ID
+          });
+          console.log("Friend request sent.");
+        } else {
+          console.log("Friend request already sent.");
+        }
+      } else {
+        console.log("Sender or receiver does not exist.");
+      }
+    } catch (error) {
+      console.error("Error sending friend request:", error);
+    }
+  };
+
+  const addToFavorites = async () => {
+    try {
+      const userRef = doc(db, "users", uid);
+      const favoriteRef = doc(db, "favorites", filterArr[0].id);
+      const userSnap = await getDoc(userRef);
+      const favoriteSnap = await getDoc(favoriteRef);
+
+      if (userSnap.exists() && favoriteSnap.exists()) {
+        const user = userSnap.data();
+        const favorite = favoriteSnap.data();
+        // Check if the user is already in the favorite list
+        if (!favorite.users.includes(uid)) {
+          // Add the user to the favorite list
+          await updateDoc(favoriteRef, {
+            users: [...favorite.users, uid],
+          });
+          console.log("User added to favorites.");
+        } else {
+          console.log("User is already in favorites.");
+        }
+      } else if (userSnap.exists() && !favoriteSnap.exists()) {
+        // Create a new favorite list with the user
+        await setDoc(favoriteRef, {
+          users: [uid],
+        });
+        console.log("Favorite list created with user added.");
+      } else {
+        console.log("User or favorite list does not exist.");
+      }
+    } catch (error) {
+      console.error("Error adding user to favorites:", error);
+    }
+  };
+
   async function setPrefferedArtists() {
     await handlePreCreate();
     await FormArtists();
@@ -206,16 +311,59 @@ export default function SwipeContainer() {
     setSelectedCard(null);
   };
 
+  const handleSearch = () => {
+    fetchSearchResults(searchTerm);
+  };
+
   if (!dataLoaded) {
     return <OpenSwipeAnimation />;
   } else {
     return (
       <View style={styles.cardContainer}>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            paddingHorizontal: 10,
+            paddingVertical: 20,
+          }}
+        >
+          <Ionicons
+            name="search"
+            size={24}
+            color="gray"
+            style={{ marginRight: 5 }}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Search Artist"
+            placeholderTextColor="#ffff"
+            value={searchTerm}
+            onChangeText={(text) => setSearchTerm(text)}
+            onSubmitEditing={handleSearch}
+          />
+        </View>
+
+        {searchResults.length > 0 && ( // Conditionally render the FlatList
+          <FlatList
+            style={styles.flatlist}
+            data={searchResults}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => addToFavorites()}>
+                <View>
+                  <Text style={styles.name}>{item.userName}</Text>
+                  {/* Update to the appropriate property */}
+                </View>
+              </TouchableOpacity>
+            )}
+          />
+        )}
         {cards.length > 0 ? (
           cards.map((card, cardIndex) => (
             <TouchableWithoutFeedback key={cardIndex}>
               <SwipeCard
-                data={artist}
+                data={data}
                 gestureDy={gestureDy}
                 onSwipeLeft={() => onSwipeLeft(cardIndex)}
                 onSwipeRight={() => onSwipeRight(cardIndex)}
@@ -325,5 +473,20 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     justifyContent: "center",
     alignItems: "center",
+  },
+  input: {
+    flex: 1,
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    padding: 5,
+    color: "white",
+  },
+  flatlist: {
+    height: 10,
+    borderColor: "gray",
+    borderWidth: 1,
+    padding: 5,
+    color: "white",
   },
 });
