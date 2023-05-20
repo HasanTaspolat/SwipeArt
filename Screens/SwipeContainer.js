@@ -42,10 +42,11 @@ export default function SwipeContainer() {
   const [cardNumber, setCardNumber] = useState([]);
   const [dataLoaded, setDataLoaded] = useState(false); // changed initial value to false
   const [counter, setCounter] = useState(0);
+  const [artistJob,setArtistJob] = useState("");
   const auth = getAuth();
   const user = auth.currentUser;
   const uid = user.uid;
-  const [artistJob, setArtistJob] = useState();
+
 
   useEffect(() => {
     if (counter < 10) {
@@ -78,10 +79,6 @@ export default function SwipeContainer() {
           users.push({ ...doc.data(), id: doc.id });
         });
         setUser(users);
-        console.log(
-          "usersusersusersusersusersusersusersusersusersusersusers",
-          users
-        );
       }
     );
   }
@@ -134,46 +131,45 @@ export default function SwipeContainer() {
       });
       var listedArtists = [];
       artists.map((artist, key) => {
-        console.log("artistartistartistartistartistartistartist", artist);
         getDocs(collection(db, "users", artist.id, "artistPreference")).then(
           (docSnap) => {
             docSnap.forEach((doc) => {
               let artiststemp = [];
               artiststemp.push({ ...doc.data(), id: doc.id });
-              console.log("doc.data()doc.data()", doc.data());
-              console.log("doc.data()doc.data()", doc.data().vocalist);
-              // console.log("ARTIST TEMP", artiststemp);
+              if(artiststemp[0].id.includes("Profession")) {
+                artiststemp.forEach((doc) => {
+                  let temp = "";
+                  Object.values(doc).map((key, value) => {
+                    const keys = Object.keys(doc); 
+                    if(key === 1) {
+                      let tempkey = keys[value]
+                      temp += String(tempkey) + " ";
+                    }
+                  });
+                  setArtistJob(temp); 
+                });
+              }
+
               if (artiststemp[0][highestPreference] === 1) {
-                /*       if (doc.data().composer === 1) {
-                  console.log("girdi mi");
-                  setArtistJob("Composer");
-                } else if (doc.data().engineer === 1) {
-                  console.log("girdi mi");
-
-                  setArtistJob("Sound Engineer");
-                } else if (doc.data().producer === 1) {
-                  console.log("girdi mi");
-
-                  setArtistJob("Producer");
-                } else if (doc.data().vocalist === 1) {
-                  console.log("girdi mi");
-
-                  setArtistJob("Vocalist");
-                } */
                 listedArtists.push({
                   artistid: artist.id,
+                  bio: artist.bio,
+                  socialMedia: artist.socialMedia,
                   nameSurname: artist.nameSurname,
                   profession: highestPreference,
                   photoURL: artist.photoURL,
-                  artistJob: artistJob,
+                  artistjob: artistJob
                 });
               }
               if (artiststemp[0][highestPreference2] === 1) {
                 listedArtists.push({
                   artistid: artist.id,
+                  bio: artist.bio,
+                  socialMedia: artist.socialMedia,
                   nameSurname: artist.nameSurname,
                   profession: highestPreference,
                   photoURL: artist.photoURL,
+                  artistjob: artistJob
                 });
               }
             });
@@ -188,7 +184,6 @@ export default function SwipeContainer() {
   async function setPrefferedArtists() {
     await handlePreCreate();
     await FormArtists();
-    console.log("bura");
     console.log(artists);
   }
 
@@ -196,9 +191,7 @@ export default function SwipeContainer() {
     const newCards = [...cards];
     newCards.splice(cardIndex, 1);
     setCards(newCards);
-    //console.log("sııı", newCards);
     setCardNumber(newCards);
-
     console.log("Swiped left on card at index", cardIndex);
   };
 
@@ -206,19 +199,13 @@ export default function SwipeContainer() {
     const newCards = [...cards];
     newCards.splice(cardIndex, 1);
     setCards(newCards);
-    console.log("sııı", newCards);
-
     console.log("Swiped right on card at index", cardIndex);
   };
 
   const hideModal = () => {
     setSelectedCard(null);
   };
-  /*   console.log("cardssssssssssssssssssssssssssss", cards);
-  console.log(
-    "artistJobartistJobartistJobartistJobartistJobartistJobartistJobartistJobartistJobartistJob",
-    artistJob
-  ); */
+
   if (!dataLoaded) {
     return <OpenSwipeAnimation />;
   } else {
