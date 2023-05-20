@@ -136,8 +136,26 @@ const SwipeCard = ({ data, onSwipe, onSwipeLeft, onSwipeRight, children }) => {
           >
             <AntDesign name="close" size={24} color="white" />
           </TouchableOpacity>
-          {/* Add your modal content */}
-          <Text style={styles.name}>selam</Text>
+          <Text style={styles.name}>User Name</Text>
+          <Text style={styles.name}>
+            if artist profession and genre will be shown
+          </Text>
+          <Text style={styles.name}>if painter, genre will not be shown</Text>
+
+          <View style={styles.bottomTexts2}>
+            <View style={styles.bottomTexts}>
+              <Text style={styles.bottomText}>Job: </Text>
+              <Text style={styles.bottomText}>{}</Text>
+            </View>
+            <View style={styles.bottomTexts}>
+              <Text style={styles.bottomText}> Profession: </Text>
+              <Text style={styles.bottomText}>{}</Text>
+            </View>
+            <View style={styles.bottomTexts}>
+              <Text style={styles.bottomText}>Genre:</Text>
+              <Text style={styles.bottomText}>{}</Text>
+            </View>
+          </View>
         </View>
       </Modal>
 
@@ -202,6 +220,31 @@ const styles = StyleSheet.create({
     borderColor: "white",
     left: "25%",
   },
+  bottomTexts: {
+    marginTop: 10,
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    backgroundColor: "rgba(36, 36, 36, 0.62)",
+    width: 370,
+    borderColor: "rgba(197, 197, 197, 0.62)",
+    borderWidth: 1,
+    fontFamily: "circular",
+    paddingHorizontal: 20,
+  },
+  bottomTexts2: {
+    marginTop: 10,
+    display: "flex",
+    flexDirection: "column",
+    fontFamily: "circular",
+  },
+  bottomText: {
+    fontSize: 16,
+    color: "white",
+    marginVertical: 5,
+    paddingVertical: 10,
+    fontFamily: "circular",
+  },
   button2: {
     position: "absolute",
     top: 500,
@@ -219,6 +262,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    paddingHorizontal: 50,
     backgroundColor: "black",
   },
   closeButton: {

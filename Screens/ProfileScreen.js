@@ -71,6 +71,7 @@ const EditProfileScreen = ({ navigation }) => {
   const [twitter, setTwitter] = useState("");
   const [instagram, setInstagram] = useState("");
   const [linkedin, setLinkedin] = useState("");
+  const [ImageURI, setImageURI] = useState("");
   const [socialMedia, setSocialMedia] = useState({
     twitter: twitter,
     instagram: instagram,
@@ -87,7 +88,7 @@ const EditProfileScreen = ({ navigation }) => {
   //const string = selectedGenre.join(", ");
   const handleSave = () => {
     setEditingMode(false);
-    setDoc(doc(database, "users", auth.currentUser.uid, "profile", "bio"), {
+    /*    setDoc(doc(database, "users", auth.currentUser.uid, "profile", "bio"), {
       socialMedia: socialMedia,
     })
       .then(() => {
@@ -96,7 +97,7 @@ const EditProfileScreen = ({ navigation }) => {
       .catch((error) => {
         // The write failed...
         console.log("error");
-      });
+      }); */
 
     updateDoc(doc(database, "users", auth.currentUser.uid), {
       bio: bio,
@@ -120,6 +121,7 @@ const EditProfileScreen = ({ navigation }) => {
       });
       const currentUser = docs.find((item) => item.id === auth.currentUser.uid);
       //console.log(currentUser.bio);
+      setImageURI(currentUser.photoURL);
       setBio(currentUser.bio);
       setBehance(currentUser.socialMedia.behance);
       setTwitter(currentUser.socialMedia.twitter);
@@ -168,14 +170,13 @@ const EditProfileScreen = ({ navigation }) => {
       // console.log("sss:", docs_pref[0]);
       setData(docs_pref);
       setJob(docs_pref[0].id);
-
+      console.log("docs_pref_pref", docs_pref[2]);
       const handleProfessionSelect = (profession) => {
         if (selectedProfessions.includes(profession)) {
         } else {
           setSelectedProfessions([...selectedProfessions, profession]);
         }
       };
-
       const handleGenreSelect = (genre) => {
         if (selectedGenre.includes(genre)) {
         } else {
@@ -184,31 +185,31 @@ const EditProfileScreen = ({ navigation }) => {
       };
 
       if (docs_pref[0].id === "Musician") {
-        if (docs_pref[0].composerScore === 1) {
+        if (docs_pref[1].composer === 1) {
           handleProfessionSelect("Composer");
         }
-        if (docs_pref[0].engineerScore === 1) {
+        if (docs_pref[1].engineer === 1) {
           handleProfessionSelect("Sound Engineer");
         }
-        if (docs_pref[0].producerScore === 1) {
+        if (docs_pref[1].producer === 1) {
           handleProfessionSelect("Producer");
         }
-        if (docs_pref[0].vocalistScore === 1) {
+        if (docs_pref[1].vocalist === 1) {
           handleProfessionSelect("Vocalist");
         }
-        if (docs_pref[0].bluesProfessionScore === 1) {
+        if (docs_pref[2].blues === 1) {
           handleGenreSelect("Blues");
         }
-        if (docs_pref[0].edmProfessionScore === 1) {
+        if (docs_pref[2].edm === 1) {
           handleGenreSelect("EDM");
         }
-        if (docs_pref[0].popProfessionScore === 1) {
+        if (docs_pref[2].pop === 1) {
           handleGenreSelect("Pop");
         }
-        if (docs_pref[0].rapProfessionScore === 1) {
+        if (docs_pref[2].rap === 1) {
           handleGenreSelect("Rap");
         }
-        if (docs_pref[0].rockProfessionScore === 1) {
+        if (docs_pref[2].rock === 1) {
           handleGenreSelect("Rock");
         }
       }
@@ -236,10 +237,19 @@ const EditProfileScreen = ({ navigation }) => {
       quality: 1,
     });
 
-    if (!result.cancelled) {
-      setImageUri(result.uri);
-    }
+    updateDoc(doc(database, "users", auth.currentUser.uid), {
+      photoURL: result.assets[0].uri,
+    })
+      .then(() => {
+        // Data saved successfully!
+        console.log("data submitted");
+      })
+      .catch((error) => {
+        // The write failed...
+        console.log(error);
+      });
   };
+
   //console.log(storage);
   const handleDocumentUpload = async () => {
     let result = await DocumentPicker.getDocumentAsync({});
@@ -289,7 +299,14 @@ const EditProfileScreen = ({ navigation }) => {
       </View>
       <View style={styles.imageContainer}>
         <TouchableOpacity onPress={handleImageUpload}>
-          <Image source={{ uri: imageUri }} style={styles.image} />
+          <Image
+            source={
+              ImageURI
+                ? { uri: ImageURI }
+                : { uri: "https://i.stack.imgur.com/dr5qp.jpg" }
+            }
+            style={styles.image}
+          />
         </TouchableOpacity>
       </View>
       <View style={styles.contentContainer}>

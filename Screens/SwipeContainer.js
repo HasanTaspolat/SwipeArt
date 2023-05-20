@@ -13,6 +13,8 @@ import data from "../person.json";
 import { AntDesign } from "@expo/vector-icons";
 import BottomNavigationCustomer from "./BottomNavigationCustomer";
 import { getAuth } from "firebase/auth";
+import OpenSwipeAnimation from "./OpenSwipeAnimation";
+
 import {
   collection,
   doc,
@@ -28,7 +30,7 @@ import {
 import { db } from "../components/config";
 
 export default function SwipeContainer() {
-  const [cards, setCards] = useState(data);
+  const [cards, setCards] = useState();
   const [gestureDy, setGestureDy] = useState(0);
   const [selectedCard, setSelectedCard] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -37,11 +39,13 @@ export default function SwipeContainer() {
   const [prefferedType, setType] = useState();
   const [userData, setUser] = useState();
   const [artists, setArtists] = useState();
+  const [cardNumber, setCardNumber] = useState([]);
   const [dataLoaded, setDataLoaded] = useState(false); // changed initial value to false
   const [counter, setCounter] = useState(0);
   const auth = getAuth();
   const user = auth.currentUser;
   const uid = user.uid;
+  const [artistJob, setArtistJob] = useState();
 
   useEffect(() => {
     if (counter < 10) {
@@ -49,7 +53,7 @@ export default function SwipeContainer() {
         try {
           await handlePreCreate();
         } catch (error) {
-          console.error('Error:', error);
+          console.error("Error:", error);
         }
       };
       console.log(counter);
@@ -61,6 +65,7 @@ export default function SwipeContainer() {
       return () => clearTimeout(timer);
     }
     setCards(artists);
+    //console.log("cards cards cards", cards);
     setDataLoaded(true);
   }, [counter]);
 
@@ -73,6 +78,10 @@ export default function SwipeContainer() {
           users.push({ ...doc.data(), id: doc.id });
         });
         setUser(users);
+        console.log(
+          "usersusersusersusersusersusersusersusersusersusersusers",
+          users
+        );
       }
     );
   }
@@ -100,7 +109,7 @@ export default function SwipeContainer() {
         console.log(key, value);
         if (maxindex === value) {
           highKey1 = key;
-        } 
+        }
         if (max2index === value) {
           highKey2 = key;
         }
@@ -125,16 +134,38 @@ export default function SwipeContainer() {
       });
       var listedArtists = [];
       artists.map((artist, key) => {
+        console.log("artistartistartistartistartistartistartist", artist);
         getDocs(collection(db, "users", artist.id, "artistPreference")).then(
           (docSnap) => {
             docSnap.forEach((doc) => {
               let artiststemp = [];
               artiststemp.push({ ...doc.data(), id: doc.id });
+              console.log("doc.data()doc.data()", doc.data());
+              console.log("doc.data()doc.data()", doc.data().vocalist);
+              // console.log("ARTIST TEMP", artiststemp);
               if (artiststemp[0][highestPreference] === 1) {
+                /*       if (doc.data().composer === 1) {
+                  console.log("girdi mi");
+                  setArtistJob("Composer");
+                } else if (doc.data().engineer === 1) {
+                  console.log("girdi mi");
+
+                  setArtistJob("Sound Engineer");
+                } else if (doc.data().producer === 1) {
+                  console.log("girdi mi");
+
+                  setArtistJob("Producer");
+                } else if (doc.data().vocalist === 1) {
+                  console.log("girdi mi");
+
+                  setArtistJob("Vocalist");
+                } */
                 listedArtists.push({
                   artistid: artist.id,
                   nameSurname: artist.nameSurname,
                   profession: highestPreference,
+                  photoURL: artist.photoURL,
+                  artistJob: artistJob,
                 });
               }
               if (artiststemp[0][highestPreference2] === 1) {
@@ -142,6 +173,7 @@ export default function SwipeContainer() {
                   artistid: artist.id,
                   nameSurname: artist.nameSurname,
                   profession: highestPreference,
+                  photoURL: artist.photoURL,
                 });
               }
             });
@@ -149,7 +181,6 @@ export default function SwipeContainer() {
         );
       });
       setArtists(listedArtists);
-
     });
     console.log(artists);
   }
@@ -165,6 +196,9 @@ export default function SwipeContainer() {
     const newCards = [...cards];
     newCards.splice(cardIndex, 1);
     setCards(newCards);
+    //console.log("sııı", newCards);
+    setCardNumber(newCards);
+
     console.log("Swiped left on card at index", cardIndex);
   };
 
@@ -172,51 +206,57 @@ export default function SwipeContainer() {
     const newCards = [...cards];
     newCards.splice(cardIndex, 1);
     setCards(newCards);
+    console.log("sııı", newCards);
+
     console.log("Swiped right on card at index", cardIndex);
   };
 
   const hideModal = () => {
     setSelectedCard(null);
   };
-
+  /*   console.log("cardssssssssssssssssssssssssssss", cards);
+  console.log(
+    "artistJobartistJobartistJobartistJobartistJobartistJobartistJobartistJobartistJobartistJob",
+    artistJob
+  ); */
   if (!dataLoaded) {
-    // Render a loading state or return null until data is loaded
-    return null;
-  }
-
-
-  return (
-<View style={styles.cardContainer}>
-      {dataLoaded ? (
-        cards.map((card, cardIndex) => (
-          <TouchableWithoutFeedback key={cardIndex}>
-            <SwipeCard
-              data={data}
-              gestureDy={gestureDy}
-              onSwipeLeft={() => onSwipeLeft(cardIndex)}
-              onSwipeRight={() => onSwipeRight(cardIndex)}
-            >
-              <View style={styles.card}>
-                <Image
-                  source={{
-                    uri:
-                      'https://media.istockphoto.com/id/1377592015/photo/determined-for-any-challenge.jpg?b=1&s=170667a&w=0&k=20&c=Rzd6WLDTH8IqYRF6F2Ro25Gae2_KuVSSegFPms4xMJk=',
-                  }}
-                  style={styles.cardImage}
-                />
-                <View style={styles.textContainer}>
-                  <Text style={styles.name}>{card.nameSurname}</Text>
-                  <Text style={styles.profession}>{card.profession}</Text>
+    return <OpenSwipeAnimation />;
+  } else {
+    return (
+      <View style={styles.cardContainer}>
+        {cards.length > 0 ? (
+          cards.map((card, cardIndex) => (
+            <TouchableWithoutFeedback key={cardIndex}>
+              <SwipeCard
+                data={data}
+                gestureDy={gestureDy}
+                onSwipeLeft={() => onSwipeLeft(cardIndex)}
+                onSwipeRight={() => onSwipeRight(cardIndex)}
+              >
+                <View style={styles.card}>
+                  <Image
+                    source={
+                      card.photoURL
+                        ? { uri: card.photoURL }
+                        : { uri: "https://i.stack.imgur.com/dr5qp.jpg" }
+                    }
+                    style={styles.cardImage}
+                  />
+                  <View style={styles.textContainer}>
+                    <Text style={styles.name}>{card.nameSurname}</Text>
+                    <Text style={styles.profession}>{artistJob}</Text>
+                    <Text style={styles.profession}>{card.profession}</Text>
+                  </View>
                 </View>
-              </View>
-            </SwipeCard>
-          </TouchableWithoutFeedback>
-        ))
-      ) : (
-        <Text style={styles.card2}>Loading... PLEASE WAIT WHILE WE ARE CHOOSING BEST ARTISTS FOR YOU</Text>
-      )}
-    </View>
-  );
+              </SwipeCard>
+            </TouchableWithoutFeedback>
+          ))
+        ) : (
+          <Text style={styles.shown}>All cards have been shown!</Text>
+        )}
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -224,11 +264,12 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
-
   cardImage: {
     width: "80%",
     height: "80%",
     borderRadius: 10,
+    borderWidth: 2,
+    borderColor: "white",
   },
   card: {
     flexDirection: "column",
@@ -261,6 +302,17 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
     color: "white",
+  },
+  shown: {
+    fontSize: 16,
+    fontWeight: "thin",
+    color: "white",
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    top: 300,
+    marginRight: "auto",
+    marginLeft: "auto",
   },
   profession: {
     fontSize: 16,

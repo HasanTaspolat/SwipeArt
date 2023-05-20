@@ -39,7 +39,7 @@ export default function MainPage({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     justifyContent: "flex-end",
-    backgroundColor: "black",
+    backgroundColor: "rgba(2, 4, 14, 1)",
     display: "flex",
     flexDirection: "column",
   },

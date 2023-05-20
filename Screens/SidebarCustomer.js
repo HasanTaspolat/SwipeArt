@@ -1,13 +1,19 @@
-import React, { useState, useRef } from 'react';
-import { StyleSheet, View, Text, Animated, TouchableOpacity, Dimensions } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
-import LoginScreen from './LoginScreen';
-import SettingsScreen from './SettingsScreen';
-import { useNavigation } from '@react-navigation/native';
+import React, { useState, useRef } from "react";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Animated,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
+import { AntDesign } from "@expo/vector-icons";
+import LoginScreen from "./LoginScreen";
+import SettingsScreen from "./SettingsScreen";
+import { useNavigation } from "@react-navigation/native";
 
-
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
 
 const Sidebar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -51,19 +57,36 @@ const Sidebar = () => {
     <View style={styles.container}>
       {isSidebarOpen && (
         <View style={styles.sidebar}>
-          <Animated.View style={[styles.sidebar, { width: sidebarWidth }, {
-            transform: [
-              { translateX: opacity },
-            ],
-          }]}>
-            <TouchableOpacity style={styles.closeIcon} onPress={handleSidebarClose}>
+          <Animated.View
+            style={[
+              styles.sidebar,
+              { width: sidebarWidth },
+              {
+                transform: [{ translateX: opacity }],
+              },
+            ]}
+          >
+            <TouchableOpacity
+              style={styles.closeIcon}
+              onPress={handleSidebarClose}
+            >
               <AntDesign name="close" size={24} color="white" />
               <Text style={styles.settingsText}> Close </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.settingsIcon}   onPress={multiplePresses}>
+            <TouchableOpacity
+              style={styles.closeIcon}
+              onPress={multiplePresses}
+            >
               <AntDesign name="setting" size={24} color="white" />
               <Text style={styles.settingsText}> Settings </Text>
             </TouchableOpacity>
+          {/*   <TouchableOpacity
+              style={styles.settingsIcon}
+              onPress={multiplePresses}
+            >
+              <AntDesign name="folder1" size={24} color="white" />
+              <Text style={styles.settingsText}> All Listings </Text>
+            </TouchableOpacity> */}
           </Animated.View>
         </View>
       )}
@@ -77,33 +100,32 @@ const Sidebar = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'flex-start',
-    justifyContent: 'center',
+    alignItems: "flex-start",
+    justifyContent: "center",
     paddingHorizontal: 120,
     zIndex: 222,
-    marginTop:150,
-    backgroundColor:"red",
+    marginTop: 150,
+    backgroundColor: "red",
   },
   icon: {
-    position: 'absolute', // add if dont work with above
+    position: "absolute", // add if dont work with above
     top: 50,
     left: 20,
   },
   sidebar: {
-    position: 'absolute',
-    top: 5,
+    position: "absolute",
+    top: 0,
     left: 0,
-    height:windowHeight,
-    width: '50%',
-    backgroundColor: 'black',
+    height: windowHeight,
+    width: "50%",
+    backgroundColor: "black",
     zIndex: 22,
     paddingHorizontal: 20,
-    paddingVertical: 40,
-
+    paddingVertical: 30,
   },
   sidebarText: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
 
     color: "white",
   },
@@ -125,9 +147,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-
   },
-
 });
 
 export default Sidebar;

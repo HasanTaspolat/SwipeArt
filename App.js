@@ -25,6 +25,7 @@ import ChatScreen from "./Screens/ChatScreen";
 import ListingArtistCreator from "./Screens/ListingArtistCreator";
 import AllListings from "./Screens/AllListings";
 import EditListing from "./Screens/EditListing";
+import ProfilePhotoUpload from "./Screens/ProfilePhotoUpload";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import normalize from "react-native-normalize";
 import { Ionicons } from "@expo/vector-icons";
@@ -76,7 +77,6 @@ export default function App() {
             name="StartScreen"
             component={StartScreen}
           />
-
           <Tab.Screen
             options={{
               tabBarStyle: {
@@ -108,6 +108,23 @@ export default function App() {
             }}
             name="RegisterScreen"
             component={RegisterScreen}
+            style="display:none;"
+          />
+          <Tab.Screen
+            options={{
+              tabBarStyle: {
+                backgroundColor: "#000",
+                height: normalize(55, "height"),
+                borderTopColor: "#000",
+              },
+              headerShown: false,
+              tabBarActiveTintColor: "#000",
+              tabBarInactiveTintColor: "#000",
+              tabBarLabelStyle: {},
+              tabBarButton: (props) => null,
+            }}
+            name="ProfilePhotoUpload"
+            component={ProfilePhotoUpload}
             style="display:none;"
           />
           <Tab.Screen
