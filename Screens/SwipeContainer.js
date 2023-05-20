@@ -38,18 +38,19 @@ export default function SwipeContainer() {
   const [highestPreference2, setHigh2] = useState();
   const [prefferedType, setType] = useState();
   const [userData, setUser] = useState();
-  const [artists, setArtists] = useState();
+  const [artists, setArtists] = useState([]);
   const [cardNumber, setCardNumber] = useState([]);
   const [dataLoaded, setDataLoaded] = useState(false); // changed initial value to false
   const [counter, setCounter] = useState(0);
-  const [artistJob,setArtistJob] = useState("");
+  const [artistJob,setArtistJob] = useState();
+  const [refresh,refffff] = useState();
   const auth = getAuth();
   const user = auth.currentUser;
   const uid = user.uid;
 
 
   useEffect(() => {
-    if (counter < 10) {
+    if (counter < 12 && artists.length < 1) {
       const fetchData = async () => {
         try {
           await handlePreCreate();
@@ -59,14 +60,16 @@ export default function SwipeContainer() {
       };
       console.log(counter);
       const timer = setTimeout(() => {
-        fetchData();
+        if (counter <= 6) {
+          fetchData();
+        }
         setCounter((prevCounter) => prevCounter + 1);
       }, 500);
 
       return () => clearTimeout(timer);
     }
     setCards(artists);
-    //console.log("cards cards cards", cards);
+    console.log(artists);
     setDataLoaded(true);
   }, [counter]);
 
@@ -122,65 +125,62 @@ export default function SwipeContainer() {
   async function FormArtists() {
     console.log(highestPreference);
     console.log(highestPreference2);
-    await getDocs(
-      query(collection(db, "users"), where("isArtist", "==", 1))
-    ).then((docSnap) => {
+    const listedArtists = [];
+  
+    await getDocs(query(collection(db, "users"), where("isArtist", "==", 1))).then((docSnap) => {
       let artists = [];
       docSnap.forEach((doc) => {
         artists.push({ ...doc.data(), id: doc.id });
       });
-      var listedArtists = [];
-      artists.map((artist, key) => {
-        getDocs(collection(db, "users", artist.id, "artistPreference")).then(
-          (docSnap) => {
-            docSnap.forEach((doc) => {
-              let artiststemp = [];
-              artiststemp.push({ ...doc.data(), id: doc.id });
-              if(artiststemp[0].id.includes("Profession")) {
-                artiststemp.forEach((doc) => {
-                  let temp = "";
-                  Object.values(doc).map((key, value) => {
-                    const keys = Object.keys(doc); 
-                    if(key === 1) {
-                      let tempkey = keys[value]
-                      temp += String(tempkey) + " ";
-                    }
-                  });
-                  setArtistJob(temp); 
-                });
-              }
-
-              if (artiststemp[0][highestPreference] === 1) {
-                listedArtists.push({
-                  artistid: artist.id,
-                  bio: artist.bio,
-                  socialMedia: artist.socialMedia,
-                  nameSurname: artist.nameSurname,
-                  profession: highestPreference,
-                  photoURL: artist.photoURL,
-                  artistjob: artistJob
-                });
-              }
-              if (artiststemp[0][highestPreference2] === 1) {
-                listedArtists.push({
-                  artistid: artist.id,
-                  bio: artist.bio,
-                  socialMedia: artist.socialMedia,
-                  nameSurname: artist.nameSurname,
-                  profession: highestPreference,
-                  photoURL: artist.photoURL,
-                  artistjob: artistJob
-                });
-              }
-            });
-          }
-        );
+  
+      artists.map((artist) => {
+        getDocs(collection(db, "users", artist.id, "artistPreference")).then((docSnap) => {
+          docSnap.forEach((doc) => {
+            let temp = "";
+            let artiststemp = [];
+            artiststemp.push({ ...doc.data(), id: doc.id });
+            if (artiststemp[0].id.includes("Profession")) {
+              const keys = Object.keys(artiststemp[0]);
+              Object.values(artiststemp[0]).map((key, value) => {
+                if (key === 1) {
+                  let tempkey = keys[value];
+                  temp += "" + tempkey + " ";
+                  setArtistJob(temp);
+                }
+              });
+            }
+            console.log(artistJob);
+            if (artiststemp[0][highestPreference] === 1) {
+              listedArtists.push({
+                artistid: artist.id,
+                bio: artist.bio,
+                socialMedia: artist.socialMedia,
+                nameSurname: artist.nameSurname,
+                profession: highestPreference,
+                photoURL: artist.photoURL,
+                artistjob: temp 
+              });
+            }
+            if (artiststemp[0][highestPreference2] === 1) {
+              listedArtists.push({
+                artistid: artist.id,
+                bio: artist.bio,
+                socialMedia: artist.socialMedia,
+                nameSurname: artist.nameSurname,
+                profession: highestPreference2,
+                photoURL: artist.photoURL,
+                artistjob: temp 
+              });
+            }
+          });
+        });
       });
+  
       setArtists(listedArtists);
     });
+  
     console.log(artists);
   }
-
   async function setPrefferedArtists() {
     await handlePreCreate();
     await FormArtists();
@@ -215,7 +215,7 @@ export default function SwipeContainer() {
           cards.map((card, cardIndex) => (
             <TouchableWithoutFeedback key={cardIndex}>
               <SwipeCard
-                data={data}
+                data={artist}
                 gestureDy={gestureDy}
                 onSwipeLeft={() => onSwipeLeft(cardIndex)}
                 onSwipeRight={() => onSwipeRight(cardIndex)}
@@ -231,7 +231,7 @@ export default function SwipeContainer() {
                   />
                   <View style={styles.textContainer}>
                     <Text style={styles.name}>{card.nameSurname}</Text>
-                    <Text style={styles.profession}>{artistJob}</Text>
+                    <Text style={styles.profession}>{card.artistjob}</Text>
                     <Text style={styles.profession}>{card.profession}</Text>
                   </View>
                 </View>
