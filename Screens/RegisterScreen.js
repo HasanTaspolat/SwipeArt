@@ -18,12 +18,14 @@ import {
   TouchableOpacity,
   Button,
 } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
 import normalize from "react-native-normalize";
 import LoginScreen from "./LoginScreen";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import * as Google from "expo-auth-session/providers/google";
 import * as WebBrowser from "expo-web-browser";
 import { LogBox } from "react-native";
+import * as ImagePicker from "expo-image-picker";
 
 import {
   getAuth,
@@ -47,6 +49,9 @@ import {
 import { db } from "../components/config";
 import ChooseScreenFirst from "./ChooseScreenFirst";
 import "@react-navigation/native-stack";
+import * as DocumentPicker from "expo-document-picker";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { firebaseConfig } from "../components/config"; // Modify the path to your Firebase config
 
 WebBrowser.maybeCompleteAuthSession();
 const RegisterScreen = ({ navigation }) => {
@@ -63,6 +68,11 @@ const RegisterScreen = ({ navigation }) => {
     linkedin: "",
     behance: "",
   });
+  const storage = getStorage(firebaseConfig);
+  const [photoURL, setPhotoURL] = useState("");
+
+  const auth = getAuth();
+  const user = auth.currentUser;
 
   LogBox.ignoreAllLogs(); // to hide the warnings
 
@@ -73,6 +83,22 @@ const RegisterScreen = ({ navigation }) => {
     }));
   };
 
+  const handleChoosePhoto = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setPhotoURL(result.assets[0].uri);
+    }
+  };
+
   function create(userUID) {
     setDoc(doc(db, "users", userUID), {
       email: email,
@@ -81,7 +107,8 @@ const RegisterScreen = ({ navigation }) => {
       socialMedia: socialMedia,
       isArtist: 0,
       isCustomer: 0,
-      useruid:userUID,
+      photoURL: photoURL,
+      useruid: userUID,
     })
       .then(() => {
         // Data saved successfully!
@@ -94,7 +121,6 @@ const RegisterScreen = ({ navigation }) => {
   }
 
   const handleSignUp = () => {
-    const auth = getAuth();
     const emailReg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     const passwordRegex = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[^0-9a-zA-Z]).{8,12}$/;
 
@@ -138,7 +164,7 @@ const RegisterScreen = ({ navigation }) => {
         .then((userCredential) => {
           var user = userCredential.user;
           create(user.uid);
-          navigation.navigate(LoginScreen);
+          navigation.navigate("LoginScreen");
           setUserMessage(<Text> </Text>);
         })
         .catch((error) => {
@@ -155,9 +181,16 @@ const RegisterScreen = ({ navigation }) => {
 
   return (
     <ScrollView style={styles.main2}>
+      <TouchableOpacity onPress={() => handlePress()}>
+        <AntDesign name="left" style={styles.icon2} size={16} color="white" />
+      </TouchableOpacity>
       <View style={styles.main}>
         <Text style={styles.header1}>Sign Up</Text>
-        <Text style={styles.header2}>E-mail</Text>
+        <Text style={styles.header4}>
+          Fields marked with (*) are required to be filled.
+        </Text>
+
+        <Text style={styles.header2}>E-mail*</Text>
         <TextInput
           style={styles.input}
           placeholder="E-mail"
@@ -165,7 +198,7 @@ const RegisterScreen = ({ navigation }) => {
           value={email}
           onChangeText={setEmail}
         />
-        <Text style={[styles.header2, styles.passHead]}>Password</Text>
+        <Text style={[styles.header2, styles.passHead]}>Password*</Text>
         <TextInput
           style={styles.input}
           placeholder="Password"
@@ -175,7 +208,7 @@ const RegisterScreen = ({ navigation }) => {
           secureTextEntry={true}
         />
 
-        <Text style={[styles.header2, styles.passHead]}>Name & Surname</Text>
+        <Text style={[styles.header2, styles.passHead]}>Name & Surname*</Text>
         <TextInput
           style={styles.input}
           placeholder="Name and Surname"
@@ -249,7 +282,7 @@ const RegisterScreen = ({ navigation }) => {
           />
         </View>
 
-        <Text style={[styles.header2, styles.passHead]}>Biography</Text>
+        <Text style={[styles.header2, styles.passHead]}>Biography*</Text>
         <TextInput
           style={styles.input}
           placeholder="Biography"
@@ -257,6 +290,17 @@ const RegisterScreen = ({ navigation }) => {
           placeholderTextColor="#ffff"
           onChangeText={setBio}
         />
+
+        <TouchableHighlight
+          style={styles.buttonPhoto}
+          activeOpacity={0.6}
+          underlayColor="#DDDDDD"
+          onPress={() => {
+            handleChoosePhoto();
+          }}
+        >
+          <Text style={styles.button3title}>Choose Profile Image*</Text>
+        </TouchableHighlight>
 
         <TouchableHighlight
           style={styles.button}
@@ -280,8 +324,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#000000",
     width: normalize(380, "width"),
     alignItems: "center",
-    paddingTop: normalize(50),
     height: "100%",
+  },
+  icon2: {
+    padding: 20,
   },
   main2: {
     backgroundColor: "#000000",
@@ -338,12 +384,33 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
   },
+  buttonPhoto: {
+    borderRadius: normalize(6),
+    borderColor: "white",
+    borderWidth: 1,
+    backgroundColor: "black",
+    width: "70%",
+    height: normalize(50),
+    marginTop: normalize(20),
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+  },
   button1title: {
     textAlign: "center",
     color: "#000",
     fontWeight: "bold",
     fontSize: normalize(18),
     paddingTop: normalize(13),
+  },
+  button3title: {
+    textAlign: "center",
+    color: "white",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: "auto",
+    marginBottom: "auto",
+    fontSize: normalize(14),
   },
   button2: {
     paddingTop: normalize(25),
@@ -369,6 +436,14 @@ const styles = StyleSheet.create({
   header2: {
     marginTop: normalize(18),
     fontSize: normalize(17),
+    marginLeft: normalize(40),
+    color: "#FFFFFF",
+    fontWeight: "600",
+    marginRight: "auto",
+  },
+  header4: {
+    marginTop: normalize(18),
+    fontSize: normalize(14),
     marginLeft: normalize(40),
     color: "#FFFFFF",
     fontWeight: "600",
