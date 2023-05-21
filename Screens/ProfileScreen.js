@@ -59,6 +59,7 @@ const EditProfileScreen = ({ navigation }) => {
   const [imageUri, setImageUri] = useState(
     "https://i.stack.imgur.com/dr5qp.jpg"
   );
+  const [cv, setCV] = useState("");
   const [documentUri, setDocumentUri] = useState("");
   const [base64Src, setBase64Src] = useState(null);
   const [data, setData] = useState([]);
@@ -72,6 +73,7 @@ const EditProfileScreen = ({ navigation }) => {
   const [instagram, setInstagram] = useState("");
   const [linkedin, setLinkedin] = useState("");
   const [ImageURI, setImageURI] = useState("");
+  const [username, setUsername] = useState("");
   const [socialMedia, setSocialMedia] = useState({
     twitter: twitter,
     instagram: instagram,
@@ -120,14 +122,15 @@ const EditProfileScreen = ({ navigation }) => {
         docs.push({ id: doc.id, ...doc.data() });
       });
       const currentUser = docs.find((item) => item.id === auth.currentUser.uid);
-      //console.log(currentUser.bio);
+      //console.log(currentUser);
       setImageURI(currentUser.photoURL);
       setBio(currentUser.bio);
       setBehance(currentUser.socialMedia.behance);
       setTwitter(currentUser.socialMedia.twitter);
       setInstagram(currentUser.socialMedia.instagram);
       setLinkedin(currentUser.socialMedia.linkedin);
-
+      setUsername(currentUser.username);
+      setCV(currentUser.cv);
       const handleSocialMediaChange = (platform, value) => {
         //  console.log("yes");
         setSocialMedia((prevState) => ({
@@ -255,29 +258,44 @@ const EditProfileScreen = ({ navigation }) => {
     let result = await DocumentPicker.getDocumentAsync({});
 
     if (result.type === "success") {
-      setDocumentUri(result.uri);
-    }
+      documentUri = result.uri;
 
-    const storageRef = ref(storage, `/files/${documentUri}`);
-    const uploadTask = uploadBytesResumable(storageRef, documentUri);
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {},
-      (err) => console.log(err),
-      () => {
-        // download url
-        getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-          console.log(url);
-        });
-      }
-    );
+      // Upload the document to Firebase Storage
+      const storageRef = ref(getStorage(), `/files/${documentUri}`);
+      const uploadTask = uploadBytesResumable(storageRef, documentUri);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {},
+        (error) => {
+          console.log(error);
+        },
+        async () => {
+          try {
+            // Get the download URL of the uploaded document
+            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+
+            // Update the CV information in the Firestore document
+            await updateDoc(doc(database, "users", auth.currentUser.uid), {
+              cv: downloadURL,
+            });
+            setCV(cv);
+
+            console.log("CV document uploaded and updated successfully");
+          } catch (error) {
+            console.log("Error uploading CV document:", error);
+          }
+        }
+      );
+    }
   };
 
   const handleDocumentView = async () => {
-    if (documentUri) {
+    console.log(cv);
+    if (cv) {
       try {
         // Share the document using the Expo Sharing module
-        await Sharing.shareAsync(documentUri);
+        await Sharing.shareAsync(cv);
       } catch (error) {
         console.error("Error sharing document:", error);
       }
@@ -370,19 +388,8 @@ const EditProfileScreen = ({ navigation }) => {
         ) : (
           <ScrollView style={styles.profileInfo}>
             <Text style={styles.name}>{name}</Text>
+            <Text style={styles.bio}>@{username}</Text>
             <Text style={styles.bio}>{bio}</Text>
-
-            {documentUri ? (
-              <TouchableOpacity
-                style={styles.uploadButton2}
-                onPress={handleDocumentView}
-              >
-                <Feather name="download" size={24} color="white" />
-                <Text style={styles.uploadText}>Download document</Text>
-              </TouchableOpacity>
-            ) : (
-              <Text style={styles.noText}>There is no CV right now</Text>
-            )}
             <View style={styles.socialLinks}>
               {behance !== "" && (
                 <View style={styles.iconContainer}>
@@ -436,6 +443,15 @@ const EditProfileScreen = ({ navigation }) => {
                 </View>
               )}
             </View>
+
+            {/*    <TouchableOpacity
+              style={styles.uploadButton2}
+              onPress={handleDocumentView}
+            >
+              <Feather name="download" size={24} color="white" />
+              <Text style={styles.uploadText}>Download document</Text>
+            </TouchableOpacity> */}
+            <Text style={styles.noText}></Text>
             {job === "Musician" && (
               <View style={styles.bottomTexts2}>
                 <View style={styles.bottomTexts}>

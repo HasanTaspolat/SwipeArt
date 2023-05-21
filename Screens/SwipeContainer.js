@@ -8,6 +8,7 @@ import {
   TouchableWithoutFeedback,
   Modal,
   TextInput,
+  FlatList,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import SwipeCard from "./SwipeCard";
@@ -64,7 +65,7 @@ export default function SwipeContainer() {
           console.error("Error:", error);
         }
       };
-      console.log(counter);
+      //console.log(counter);
       const timer = setTimeout(() => {
         if (counter <= 6) {
           fetchData();
@@ -75,7 +76,7 @@ export default function SwipeContainer() {
       return () => clearTimeout(timer);
     }
     setCards(artists);
-    console.log(artists);
+    // console.log(artists);
     setDataLoaded(true);
   }, [counter]);
 
@@ -112,7 +113,7 @@ export default function SwipeContainer() {
         }
       });
       Object.keys(product).map((key, value) => {
-        console.log(key, value);
+        //  console.log(key, value);
         if (maxindex === value) {
           highKey1 = key;
         }
@@ -123,14 +124,14 @@ export default function SwipeContainer() {
     });
     setHigh(highKey1);
     setHigh2(highKey2);
-    console.log(highestPreference);
-    console.log(highestPreference2);
+    /*   console.log(highestPreference);
+    console.log(highestPreference2); */
     await FormArtists();
   }
 
   async function FormArtists() {
-    console.log(highestPreference);
-    console.log(highestPreference2);
+    /*    console.log(highestPreference);
+    console.log(highestPreference2); */
     const listedArtists = [];
 
     await getDocs(
@@ -140,6 +141,7 @@ export default function SwipeContainer() {
       docSnap.forEach((doc) => {
         artists.push({ ...doc.data(), id: doc.id });
       });
+      //console.log("artists",artists);
 
       artists.map((artist) => {
         getDocs(collection(db, "users", artist.id, "artistPreference")).then(
@@ -158,7 +160,7 @@ export default function SwipeContainer() {
                   }
                 });
               }
-              console.log(artistJob);
+              /*    console.log(artistJob); */
               if (artiststemp[0][highestPreference] === 1) {
                 listedArtists.push({
                   artistid: artist.id,
@@ -168,6 +170,7 @@ export default function SwipeContainer() {
                   profession: highestPreference,
                   photoURL: artist.photoURL,
                   artistjob: temp,
+                  username: artist.username,
                 });
               }
               if (artiststemp[0][highestPreference2] === 1) {
@@ -179,6 +182,7 @@ export default function SwipeContainer() {
                   profession: highestPreference2,
                   photoURL: artist.photoURL,
                   artistjob: temp,
+                  username: artist.username,
                 });
               }
             });
@@ -189,10 +193,10 @@ export default function SwipeContainer() {
       setArtists(listedArtists);
     });
 
-    console.log(artists);
+    /*   console.log(artists); */
   }
 
-  async function fetchSearchResults() {
+  /*   async function fetchSearchResults() {
     await getDocs(
       query(collection(db, "users"), where("userName", "==", searchTerm))
     ).then((docSnap) => {
@@ -202,27 +206,25 @@ export default function SwipeContainer() {
       });
 
       setSearchResults(searchedUser);
-      console.log("searchResults", searchedUser);
+   console.log("searchResults", searchedUser); 
 
       setFilterArr(searchedUser);
-      console.log("filterArr", searchedUser);
+     console.log("filterArr", searchedUser);
 
       if (filterArr[0].isCustomer === "1") {
         setSearchResults = [];
         setFilterArr = [];
       } else {
-        //console.log("");
+
       }
     });
-  }
-  const sendFriendRequest = async () => {
+  } */
+  /*   const sendFriendRequest = async () => {
     try {
       const senderRef = doc(db, "users", uid);
       const receiverRef = doc(db, "users", filterArr[0].id); // Replace with the actual receiver's user ID
       const senderSnap = await getDoc(senderRef);
       const receiverSnap = await getDoc(receiverRef);
-      console.log(senderRef);
-      console.log(receiverRef);
       if (senderSnap.exists() && receiverSnap.exists()) {
         const sender = senderSnap.data();
         const receiver = receiverSnap.data();
@@ -240,19 +242,15 @@ export default function SwipeContainer() {
             senderId: uid,
             receiverId: filterArr[0].id, // Replace with the actual receiver's user ID
           });
-          console.log("Friend request sent.");
         } else {
-          console.log("Friend request already sent.");
         }
       } else {
-        console.log("Sender or receiver does not exist.");
       }
     } catch (error) {
-      console.error("Error sending friend request:", error);
     }
-  };
+  }; */
 
-  const addToFavorites = async () => {
+  /*   const addToFavorites = async () => {
     try {
       const userRef = doc(db, "users", uid);
       const favoriteRef = doc(db, "favorites", filterArr[0].id);
@@ -268,28 +266,28 @@ export default function SwipeContainer() {
           await updateDoc(favoriteRef, {
             users: [...favorite.users, uid],
           });
-          console.log("User added to favorites.");
+          //console.log("User added to favorites.");
         } else {
-          console.log("User is already in favorites.");
+      //    console.log("User is already in favorites.");
         }
       } else if (userSnap.exists() && !favoriteSnap.exists()) {
         // Create a new favorite list with the user
         await setDoc(favoriteRef, {
           users: [uid],
         });
-        console.log("Favorite list created with user added.");
+       // console.log("Favorite list created with user added.");
       } else {
-        console.log("User or favorite list does not exist.");
+       // console.log("User or favorite list does not exist.");
       }
     } catch (error) {
-      console.error("Error adding user to favorites:", error);
+    //  console.error("Error adding user to favorites:", error);
     }
-  };
+  }; */
 
   async function setPrefferedArtists() {
     await handlePreCreate();
     await FormArtists();
-    console.log(artists);
+    // console.log(artists);
   }
 
   const onSwipeLeft = (cardIndex) => {
@@ -320,50 +318,12 @@ export default function SwipeContainer() {
   } else {
     return (
       <View style={styles.cardContainer}>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            paddingHorizontal: 10,
-            paddingVertical: 20,
-          }}
-        >
-          <Ionicons
-            name="search"
-            size={24}
-            color="gray"
-            style={{ marginRight: 5 }}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Search Artist"
-            placeholderTextColor="#ffff"
-            value={searchTerm}
-            onChangeText={(text) => setSearchTerm(text)}
-            onSubmitEditing={handleSearch}
-          />
-        </View>
-
-        {searchResults.length > 0 && ( // Conditionally render the FlatList
-          <FlatList
-            style={styles.flatlist}
-            data={searchResults}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => addToFavorites()}>
-                <View>
-                  <Text style={styles.name}>{item.userName}</Text>
-                  {/* Update to the appropriate property */}
-                </View>
-              </TouchableOpacity>
-            )}
-          />
-        )}
+        <Text style={styles.loginText}>swipeArt.</Text>
         {cards.length > 0 ? (
           cards.map((card, cardIndex) => (
             <TouchableWithoutFeedback key={cardIndex}>
               <SwipeCard
-                data={data}
+                data={card}
                 gestureDy={gestureDy}
                 onSwipeLeft={() => onSwipeLeft(cardIndex)}
                 onSwipeRight={() => onSwipeRight(cardIndex)}
@@ -379,7 +339,7 @@ export default function SwipeContainer() {
                   />
                   <View style={styles.textContainer}>
                     <Text style={styles.name}>{card.nameSurname}</Text>
-                    <Text style={styles.profession}>{card.artistjob}</Text>
+                    <Text style={styles.profession}>@{card.username}</Text>
                     <Text style={styles.profession}>{card.profession}</Text>
                   </View>
                 </View>
@@ -427,6 +387,14 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     marginRight: 16,
   },
+  loginText: {
+    color: "#fff",
+    fontSize: 25,
+    top: 30,
+    fontWeight: "bold",
+    textAlign: "center",
+    right:10,
+  },
   textContainer: {
     flex: 1,
     justifyContent: "center",
@@ -435,7 +403,7 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 10,
+    marginTop: 14,
     color: "white",
   },
   shown: {

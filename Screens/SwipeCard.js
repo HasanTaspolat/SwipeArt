@@ -9,11 +9,11 @@ import {
   Dimensions,
   TouchableOpacity,
   Modal,
+  Linking,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
-
+import Icon from "react-native-vector-icons/FontAwesome";
 const { width, height } = Dimensions.get("window");
-
 const SwipeCard = ({ data, onSwipe, onSwipeLeft, onSwipeRight, children }) => {
   const [color, setColor] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
@@ -40,7 +40,6 @@ const SwipeCard = ({ data, onSwipe, onSwipeLeft, onSwipeRight, children }) => {
       },
     })
   );
-
   useEffect(() => {
     setColor(null);
     setIsLiked(false);
@@ -97,6 +96,8 @@ const SwipeCard = ({ data, onSwipe, onSwipeLeft, onSwipeRight, children }) => {
       onSwipeRight();
     });
   };
+
+  //console.log(data);
   return (
     <View style={styles.container}>
       {/* Swipe card */}
@@ -128,7 +129,6 @@ const SwipeCard = ({ data, onSwipe, onSwipeLeft, onSwipeRight, children }) => {
         animationType="slide"
         onRequestClose={() => setModalVisible(false)}
       >
-        {/* Add the content of your modal here */}
         <View style={styles.modalContainer}>
           <TouchableOpacity
             style={styles.closeButton}
@@ -136,26 +136,100 @@ const SwipeCard = ({ data, onSwipe, onSwipeLeft, onSwipeRight, children }) => {
           >
             <AntDesign name="close" size={24} color="white" />
           </TouchableOpacity>
-          <Text style={styles.name}>User Name</Text>
-          <Text style={styles.name}>
-            if artist profession and genre will be shown
-          </Text>
-          <Text style={styles.name}>if painter, genre will not be shown</Text>
+          <Text style={styles.name}>{data.nameSurname}</Text>
+          <Text style={styles.name}>{data.bio}</Text>
+          <Text style={styles.name}>{data.profession}</Text>
+          <Text style={styles.name}>{data.username}</Text>
 
-          <View style={styles.bottomTexts2}>
-            <View style={styles.bottomTexts}>
-              <Text style={styles.bottomText}>Job: </Text>
-              <Text style={styles.bottomText}>{}</Text>
-            </View>
-            <View style={styles.bottomTexts}>
-              <Text style={styles.bottomText}> Profession: </Text>
-              <Text style={styles.bottomText}>{}</Text>
-            </View>
-            <View style={styles.bottomTexts}>
-              <Text style={styles.bottomText}>Genre:</Text>
-              <Text style={styles.bottomText}>{}</Text>
-            </View>
+          <View style={styles.socialLinks}>
+            {data.socialMedia && data.socialMedia.behance !== "" && (
+              <View style={styles.iconContainer}>
+                <TouchableOpacity
+                  onPress={() => Linking.openURL(data.socialMedia.behance)}
+                >
+                  <Icon
+                    style={styles.socialMediaIcon}
+                    name="behance"
+                    size={25}
+                    color="#1769FF"
+                  />
+                </TouchableOpacity>
+              </View>
+            )}
+
+            {data.socialMedia && data.socialMedia.twitter !== "" && (
+              <View style={styles.iconContainer}>
+                <TouchableOpacity
+                  onPress={() => Linking.openURL(data.socialMedia.twitter)}
+                >
+                  <Icon
+                    style={styles.socialMediaIcon}
+                    name="twitter"
+                    size={25}
+                    color="#1DA1F2"
+                  />
+                </TouchableOpacity>
+              </View>
+            )}
+
+            {data.socialMedia && data.socialMedia.instagram !== "" && (
+              <View style={styles.iconContainer}>
+                <TouchableOpacity
+                  onPress={() => Linking.openURL(data.socialMedia.instagram)}
+                >
+                  <Icon
+                    style={styles.socialMediaIcon}
+                    name="instagram"
+                    size={25}
+                    color="#C13584"
+                  />
+                </TouchableOpacity>
+              </View>
+            )}
+
+            {data.socialMedia && data.socialMedia.linkedin !== "" && (
+              <View style={styles.iconContainer}>
+                <TouchableOpacity
+                  onPress={() => Linking.openURL(data.socialMedia.linkedin)}
+                >
+                  <Icon
+                    style={styles.socialMediaIcon}
+                    name="linkedin"
+                    size={25}
+                    color="#0077B5"
+                  />
+                </TouchableOpacity>
+              </View>
+            )}
           </View>
+
+          {/*     {data.socialMedia.behance && (
+            <Text style={styles.name}>
+              Instagram: {data.socialMedia.behance}
+            </Text>
+          )}
+          {data.socialMedia.instagram && (
+            <Text style={styles.name}>
+              Instagram: {data.socialMedia.instagram}
+            </Text>
+          )}
+          {data.socialMedia.twitter && (
+            <Text style={styles.name}>
+              Instagram: {data.socialMedia.twitter}
+            </Text>
+          )}
+          {data.socialMedia.linkedin && (
+            <Text style={styles.name}>
+              Instagram: {data.socialMedia.linkedin}
+            </Text>
+          )} */}
+
+          {/*  {data.socialMedia.behance && (
+            <Text style={styles.name}>Behance: {data.socialMedia.behance}</Text>
+          )} */}
+
+          {/* Add more social media accounts as needed */}
+          {/* Render additional artist information here */}
         </View>
       </Modal>
 
@@ -271,6 +345,22 @@ const styles = StyleSheet.create({
     right: 20,
     zIndex: 1,
   },
+  socialLinks: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 10,
+    justifyContent: "center",
+  },
+  socialLinks2: {
+    marginLeft: 10,
+    fontFamily: "circular",
+  },
+  iconContainer: {
+    marginHorizontal: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  
 });
 
 export default SwipeCard;

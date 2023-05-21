@@ -61,6 +61,7 @@ const RegisterScreen = ({ navigation }) => {
   const [checkBoxMessage, setcheckBoxMessage] = useState();
   const [userMessage, setUserMessage] = useState();
   const [nameSurname, setNameSurname] = useState("");
+  const [username, setUsername] = useState("");
   const [bio, setBio] = useState("");
   const [socialMedia, setSocialMedia] = useState({
     twitter: "",
@@ -103,6 +104,7 @@ const RegisterScreen = ({ navigation }) => {
     setDoc(doc(db, "users", userUID), {
       email: email,
       nameSurname: nameSurname,
+      username: username,
       bio: bio,
       socialMedia: socialMedia,
       isArtist: 0,
@@ -217,7 +219,17 @@ const RegisterScreen = ({ navigation }) => {
           onChangeText={setNameSurname}
         />
 
-        <Text style={[styles.header2, styles.passHead]}>Social Media</Text>
+        <Text style={[styles.header2, styles.passHead]}>Username*</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Username"
+          value={username}
+          placeholderTextColor="#ffff"
+          onChangeText={setUsername}
+        />
+
+        <Text style={[styles.header2, styles.passHead]}>Social Media </Text>
+        <Text style={[styles.header5, styles]}>(please fill the blanks with full link)</Text>
 
         <View style={styles.socialMediaCont}>
           <Icon
@@ -436,6 +448,14 @@ const styles = StyleSheet.create({
   header2: {
     marginTop: normalize(18),
     fontSize: normalize(17),
+    marginLeft: normalize(40),
+    color: "#FFFFFF",
+    fontWeight: "600",
+    marginRight: "auto",
+  },
+  header5: {
+    marginTop: normalize(4),
+    fontSize: normalize(14),
     marginLeft: normalize(40),
     color: "#FFFFFF",
     fontWeight: "600",

@@ -4,6 +4,7 @@ import {
     Text, StyleSheet, View, 
     TouchableHighlight} from 'react-native';
 import ChooseScreenFirst from './ChooseScreenFirst';
+import UploadCV from './UploadCV';
 import CustomerChooseScreenFirst from './CustomerChooseScreenFirst';
 import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 import { collection, doc, setDoc, addDoc, updateDoc, deleteDoc, getDoc, getDocs, where, query } from "firebase/firestore";
@@ -76,7 +77,7 @@ export default function ArtistOrCustomer({ navigation }) {
         }
         else {
             updateUserType(navigatorNum);
-            navigation.navigate(ChooseScreenFirst);
+            navigation.navigate(UploadCV);
         }
 
     }
