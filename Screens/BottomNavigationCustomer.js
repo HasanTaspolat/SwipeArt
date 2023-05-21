@@ -17,6 +17,10 @@ const BottomNavigationCustomer = () => {
   const handlePressIn = () => setIsPressed(true);
   const handlePressOut = () => setIsPressed(false);
 
+  const [isPressedFilter, setisPressedFilter] = useState(false);
+  const handlePressInFilter = () => setisPressedFilter(true);
+  const handlePressOutFilter = () => setisPressedFilter(false);
+
   const [isPressedProfile, setisPressedProfile] = useState(false);
   const handlePressInProfile = () => setisPressedProfile(true);
   const handlePressOutProfile = () => setisPressedProfile(false);
@@ -54,6 +58,34 @@ const BottomNavigationCustomer = () => {
             ]}
           >
             Swipe
+          </Text>
+        </TouchableOpacity>
+      </TouchableWithoutFeedback>
+
+      <TouchableWithoutFeedback>
+        <TouchableOpacity
+          onPressIn={handlePressInFilter}
+          onPressOut={handlePressOutFilter}
+          style={[
+            styles.tabButton,
+            activeScreen === "FilterScreen" && styles.activeTabButton,
+          ]}
+          onPress={() => onPress("FilterScreen")}
+        >
+          <Icon
+            style={[{ color: isPressedFilter ? "blue" : "black" }]}
+            name={activeScreen === "FilterScreen" ? "ios-search" : "ios-search"}
+            size={24}
+          />
+          <Text
+            style={[
+              styles.tabText,
+              activeScreen === "FilterScreen" && {
+                color: isPressedFilter ? "blue" : "black",
+              },
+            ]}
+          >
+            Filter
           </Text>
         </TouchableOpacity>
       </TouchableWithoutFeedback>
