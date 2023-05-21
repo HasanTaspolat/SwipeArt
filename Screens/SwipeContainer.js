@@ -283,6 +283,43 @@ export default function SwipeContainer() {
     //  console.error("Error adding user to favorites:", error);
     }
   }; */
+  async function notifyUser(userId, targetUserId, db) {
+    try {
+      // Check if the 'notifications' collection exists
+      let notificationsSnapshot = await getDocs(collection(db, "notifications"));
+
+      // If the 'notifications' collection doesn't exist, create it
+      if (notificationsSnapshot.empty) {
+        await setDoc(doc(db, "notifications", userId), {
+          [targetUserId]: true
+        });
+      } 
+      // If the 'notifications' collection does exist, update it
+      else {
+        const notificationRef = doc(db, "notifications", userId);
+
+        // Check if the document for the user exists
+        const docSnap = await getDocs(collection(db, "notifications", userId));
+
+        // If the document for the user doesn't exist, create it
+        if (!docSnap.exists()) {
+          await setDoc(notificationRef, {
+            [targetUserId]: true
+          });
+        } 
+        // If the document for the user does exist, update it
+        else {
+          await setDoc(notificationRef, {
+            [targetUserId]: true
+          }, { merge: true });
+        }
+      }
+
+      console.log("Notification added successfully");
+    } catch (error) {
+      console.error("Error adding notification: ", error);
+    }
+  }
 
   async function setPrefferedArtists() {
     await handlePreCreate();
@@ -292,14 +329,17 @@ export default function SwipeContainer() {
 
   const onSwipeLeft = (cardIndex) => {
     const newCards = [...cards];
+
     newCards.splice(cardIndex, 1);
     setCards(newCards);
     setCardNumber(newCards);
     console.log("Swiped left on card at index", cardIndex);
+
   };
 
   const onSwipeRight = (cardIndex) => {
     const newCards = [...cards];
+    notifyUser(newCards[cardIndex].artistid, uid, db);
     newCards.splice(cardIndex, 1);
     setCards(newCards);
     console.log("Swiped right on card at index", cardIndex);

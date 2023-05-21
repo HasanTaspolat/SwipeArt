@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
+  Image,
   StyleSheet,
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import { doc, onSnapshot, setDoc } from "firebase/firestore";
+import { doc, onSnapshot, setDoc, getDoc } from "firebase/firestore";
 import { db } from "../components/config";
 import { getAuth, signOut, deleteUser } from "firebase/auth";
 import BottomNavigationArtist from "./BottomNavigationArtist";
@@ -23,30 +24,41 @@ function ChatStart() {
     { id: "3", name: "Mike", message: "Long time no see!", unreadCount: 1 },
   ]);
 
-  const openChat = (chatId) => {
+ /* const openChat = (chatId) => {
     // Implement your navigation logic here to open a specific chat
     console.log("Opening chat with ID:", chatId);
-  };
+  }; */
 
-  /*   useEffect(() => {
-    const unsubscribe = onSnapshot(doc(db, "notifications", userId), (doc) => {
+  useEffect(() => {
+    const unsubscribe = onSnapshot(doc(db, "notifications", uid), async (doc) => {
       if (doc.exists()) {
         const data = doc.data();
         let notificationList = [];
-
+  
         for (let user in data) {
-          notificationList.push({ userId: user, viewed: data[user].viewed });
+          // Fetch user data from the 'users' collection
+          const userDoc = await getDoc(doc(db, "users", user));
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            notificationList.push({
+              userId: user, 
+              viewed: data[user].viewed,
+              nameSurname: userData.nameSurname,
+              avatar: photoURL
+            });
+          }
         }
-
+  
         setNotifications(notificationList);
+        console.log(notificationList)
       }
     });
-
+  
     // Cleanup function to unsubscribe from the listener when the component is unmounted
     return () => unsubscribe();
-  }, [db, userId]); // Dependencies */
+  }, [db, uid]); // Dependencies
 
-  /*   const handleNotificationClick = async (notificationUserId) => {
+  const handleNotificationClick = async (notificationUserId) => {
     try {
       // Update the clicked notification's 'viewed' property to true
       const notificationRef = doc(db, "notifications", notificationUserId);
@@ -57,7 +69,7 @@ function ChatStart() {
       console.error("Error updating notification: ", error);
     }
   };
- */
+ 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Notifications:</Text>
@@ -68,31 +80,30 @@ function ChatStart() {
         >
           <Text style={styles.text}>
             {notification.userId}:
-            {notification.viewed ? "Viewed" : "Not Viewed"}
+            {notification.viewed ? "Go to chat." : "These users have swiped you right!"}
           </Text>
         </TouchableOpacity>
       ))}
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.chatList}>
-          {chats.map((chat) => (
-            <TouchableOpacity
-              key={chat.id}
-              style={styles.chatItem}
-              onPress={() => openChat(chat.id)}
+          {notifications.map((notification) => (
+              <TouchableOpacity
+              key={notification.userId}
+              onPress={() => handleNotificationClick(notification.userId)}
             >
               <View style={styles.avatarContainer}>
-                <Text style={styles.avatar}>{chat.name[0]}</Text>
+  
               </View>
               <View style={styles.chatDetails}>
-                <Text style={styles.chatName}>{chat.name}</Text>
-                <Text style={styles.lastMessage}>{chat.message}</Text>
-                {chat.unreadCount > 0 && (
+                <Text style={styles.chatName}>{notifications.nameSurname}</Text>
+                <Text style={styles.lastMessage}>
+            {notification.viewed ? "Go to chat." : "These users have swiped you right!"}
+            </Text>
+
                   <View style={styles.unreadBadge}>
                     <Text style={styles.unreadBadgeText}>
-                      {chat.unreadCount}
                     </Text>
                   </View>
-                )}
               </View>
             </TouchableOpacity>
           ))}
