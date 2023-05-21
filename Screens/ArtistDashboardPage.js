@@ -101,14 +101,14 @@ const ArtistDashboardPage = () => {
             <Text style={styles.title}>Type: {orderType}</Text>
           </View>
         </View>
-        <View style={styles.card}>
+       {/*  <View style={styles.card}>
           <View style={styles.textContainer}>
             <Icon name="star" size={20} color="#fff" />
           </View>
           <View style={styles.textContainer}>
             <Text style={styles.title}>Rating: {rating}</Text>
           </View>
-        </View>
+        </View> */}
       </View>
       <View style={styles.cardContainer}>
         {/*   <View style={styles.card}>

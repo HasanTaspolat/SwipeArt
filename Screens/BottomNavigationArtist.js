@@ -99,19 +99,19 @@ const BottomNavigation = () => {
           onPressOut={handlePressOutChat}
           style={[
             styles.tabButton,
-            activeScreen === "ChatScreen" && styles.activeTabButton,
+            activeScreen === "ChatStart" && styles.activeTabButton,
           ]}
-          onPress={() => onPress("ChatScreen")}
+          onPress={() => onPress("ChatStart")}
         >
           <Icon
             style={[{ color: isPressedChat ? "blue" : "black" }]}
-            name={activeScreen === "ChatScreen" ? "ios-chatbox" : "ios-chatbox"}
+            name={activeScreen === "ChatStart" ? "ios-chatbox" : "ios-chatbox"}
             size={24}
           />
           <Text
             style={[
               styles.tabText,
-              activeScreen === "ChatScreen" && {
+              activeScreen === "ChatStart" && {
                 color: isPressedChat ? "blue" : "black",
               },
             ]}

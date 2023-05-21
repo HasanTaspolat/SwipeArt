@@ -22,6 +22,7 @@ import ArtistOrCustomer from "./Screens/ArtistOrCustomer";
 import CustomerChooseScreenFirst from "./Screens/CustomerChooseScreenFirst";
 import SettingsScreen from "./Screens/SettingsScreen";
 import ChatScreen from "./Screens/ChatScreen";
+import ChatStart from "./Screens/ChatStart";
 import ListingArtistCreator from "./Screens/ListingArtistCreator";
 import AllListings from "./Screens/AllListings";
 import EditListing from "./Screens/EditListing";
@@ -395,6 +396,26 @@ export default function App() {
             }}
             name="ChatScreen"
             component={ChatScreen}
+          />
+          <Tab.Screen
+            options={{
+              headerShown: false,
+              tabBarIcon: ({ color, size }) => (
+                <Ionicons name="swap-horizontal" color={color} size={30} />
+              ),
+              tabBarStyle: {
+                backgroundColor: "#000",
+                height: normalize(0, "height"),
+                borderTopColor: "#000",
+              },
+              headerShown: false,
+
+              tabBarLabel: "ArtistDashboardPage",
+
+              tabBarActiveTintColor: "blue",
+            }}
+            name="ChatStart"
+            component={ChatStart}
           />
           <Tab.Screen
             options={{
