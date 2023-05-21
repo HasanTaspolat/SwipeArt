@@ -173,7 +173,7 @@ export default function SwipeContainer() {
                   username: artist.username,
                 });
               }
-              if (artiststemp[0][highestPreference2] === 1) {
+              else if (artiststemp[0][highestPreference2] === 1) {
                 listedArtists.push({
                   artistid: artist.id,
                   bio: artist.bio,
@@ -285,41 +285,19 @@ export default function SwipeContainer() {
   }; */
   async function notifyUser(userId, targetUserId, db) {
     try {
-      // Check if the 'notifications' collection exists
-      let notificationsSnapshot = await getDocs(collection(db, "notifications"));
+      // Create or update the notification for the user
+      const notificationRef = doc(db, "notifications", userId);
 
-      // If the 'notifications' collection doesn't exist, create it
-      if (notificationsSnapshot.empty) {
-        await setDoc(doc(db, "notifications", userId), {
-          [targetUserId]: true
-        });
-      } 
-      // If the 'notifications' collection does exist, update it
-      else {
-        const notificationRef = doc(db, "notifications", userId);
-
-        // Check if the document for the user exists
-        const docSnap = await getDocs(collection(db, "notifications", userId));
-
-        // If the document for the user doesn't exist, create it
-        if (!docSnap.exists()) {
-          await setDoc(notificationRef, {
-            [targetUserId]: true
-          });
-        } 
-        // If the document for the user does exist, update it
-        else {
-          await setDoc(notificationRef, {
-            [targetUserId]: true
-          }, { merge: true });
-        }
-      }
+      // Set or update the 'viewed' property for the target user
+      await setDoc(notificationRef, {
+        [targetUserId]: { viewed: false }
+      }, { merge: true });
 
       console.log("Notification added successfully");
     } catch (error) {
       console.error("Error adding notification: ", error);
     }
-  }
+}
 
   async function setPrefferedArtists() {
     await handlePreCreate();
@@ -329,7 +307,6 @@ export default function SwipeContainer() {
 
   const onSwipeLeft = (cardIndex) => {
     const newCards = [...cards];
-
     newCards.splice(cardIndex, 1);
     setCards(newCards);
     setCardNumber(newCards);
@@ -339,6 +316,7 @@ export default function SwipeContainer() {
 
   const onSwipeRight = (cardIndex) => {
     const newCards = [...cards];
+
     notifyUser(newCards[cardIndex].artistid, uid, db);
     newCards.splice(cardIndex, 1);
     setCards(newCards);
