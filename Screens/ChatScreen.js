@@ -89,32 +89,43 @@ export default function Chat() {
     const q = query(collectionRef, orderBy("createdAt", "desc"));
 
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      console.log("querySnapshot unsusbscribe");
       setMessages(
-        querySnapshot.docs.map((doc) => ({
-          _id: doc.data()._id,
-          createdAt: doc.data().createdAt.toDate(),
-          text: doc.data().text,
-          user: doc.data().user,
-          image: doc.data().uri,
-        }))
+        querySnapshot.docs
+          .map((doc) => ({
+            _id: doc.data()._id,
+            createdAt: doc.data().createdAt.toDate(),
+            text: doc.data().text,
+            user: doc.data().user,
+            image: doc.data().uri,
+          }))
+          // Filter messages only from the specific users
+          .filter(
+            (message) =>
+              message.user._id === userID1 || message.user._id === userID2
+          )
       );
     });
     return unsubscribe;
   }, []);
 
   const onSend = useCallback((messages = []) => {
-    setMessages((previousMessages) =>
-      GiftedChat.append(previousMessages, messages)
-    );
-    // setMessages([...messages, ...messages]);
-    const { _id, createdAt, text, user } = messages[0];
-    addDoc(collection(database, "chats"), {
-      _id,
-      createdAt,
-      text,
-      user,
-    });
+    if (
+      auth?.currentUser?.email === userID1 ||
+      auth?.currentUser?.email === userID2
+    ) {
+      setMessages((previousMessages) =>
+        GiftedChat.append(previousMessages, messages)
+      );
+      const { _id, createdAt, text, user } = messages[0];
+      addDoc(collection(database, "chats"), {
+        _id,
+        createdAt,
+        text,
+        user,
+      });
+    } else {
+      console.log("User is not allowed to send messages in this chat");
+    }
   }, []);
 
   return (

@@ -25,6 +25,10 @@ const BottomNavigationCustomer = () => {
   const handlePressInProfile = () => setisPressedProfile(true);
   const handlePressOutProfile = () => setisPressedProfile(false);
 
+  const [isPressedChat, setisPressedChat] = useState(false);
+  const handlePressInChat = () => setisPressedChat(true);
+  const handlePressOutChat = () => setisPressedChat(false);
+
   const [activeScreen, setActiveScreen] = useState("MainPage");
 
   const onPress = (screenName) => {
@@ -117,6 +121,33 @@ const BottomNavigationCustomer = () => {
             ]}
           >
             Profile
+          </Text>
+        </TouchableOpacity>
+      </TouchableWithoutFeedback>
+      <TouchableWithoutFeedback>
+        <TouchableOpacity
+          onPressIn={handlePressInChat}
+          onPressOut={handlePressOutChat}
+          style={[
+            styles.tabButton,
+            activeScreen === "ChatStart" && styles.activeTabButton,
+          ]}
+          onPress={() => onPress("ChatStart")}
+        >
+          <Icon
+            style={[{ color: isPressedChat ? "blue" : "black" }]}
+            name={activeScreen === "ChatStart" ? "ios-chatbox" : "ios-chatbox"}
+            size={24}
+          />
+          <Text
+            style={[
+              styles.tabText,
+              activeScreen === "ChatStart" && {
+                color: isPressedChat ? "blue" : "black",
+              },
+            ]}
+          >
+            Chat
           </Text>
         </TouchableOpacity>
       </TouchableWithoutFeedback>
