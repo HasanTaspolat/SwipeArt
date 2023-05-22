@@ -610,7 +610,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     textAlign: "center",
     fontFamily: "circular",
-    marginVertical: 10,
+    marginVertical: 8,
   },
   socialLinks: {
     flexDirection: "row",

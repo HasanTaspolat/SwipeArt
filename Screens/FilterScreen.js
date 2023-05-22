@@ -156,52 +156,54 @@ export default function FilterScreen() {
             senderId: uid,
             receiverId: filterArr[0].id, // Replace with the actual receiver's user ID
           });
-          //console.log("Friend request sent.");
+          console.log("Friend request sent.");
         } else {
-          //  console.log("Friend request already sent.");
+          console.log("Friend request already sent.");
         }
       } else {
-        //  console.log("Sender or receiver does not exist.");
+        console.log("Sender or receiver does not exist.");
       }
     } catch (error) {
-      //  console.error("Error sending friend request:", error);
+      console.error("Error sending friend request:", error);
     }
   };
 
   const addToFavorites = async () => {
     try {
       const userRef = doc(db, "users", uid);
-      const favoriteRef = doc(db, "favorites", filterArr[0].id);
+      const favoriteRef = doc(db, "favorites", uid);
       const userSnap = await getDoc(userRef);
       const favoriteSnap = await getDoc(favoriteRef);
-
-      if (userSnap.exists() && favoriteSnap.exists()) {
+  
+      if (userSnap.exists()) {
         const user = userSnap.data();
-        const favorite = favoriteSnap.data();
-        // Check if the user is already in the favorite list
-        if (!favorite.users.includes(uid)) {
-          // Add the user to the favorite list
-          await updateDoc(favoriteRef, {
-            users: [...favorite.users, uid],
-          });
-          //console.log("User added to favorites.");
+        const artistId = filterArr[0].id;
+        if (favoriteSnap.exists()) {
+          const favorite = favoriteSnap.data();
+          // Check if the artist is already in the user's favorites
+          if (!favorite.artists.includes(artistId)) {
+            // Add the artist to the user's favorites
+            await updateDoc(favoriteRef, {
+              artists: [...favorite.artists, artistId],
+            });
+            console.log("Artist added to user's favorites.");
+          } else {
+            console.log("Artist is already in user's favorites.");
+          }
         } else {
-          //    console.log("User is already in favorites.");
+          // Create a new favorites document for the user with the artist
+          await setDoc(favoriteRef, {
+            artists: [artistId],
+          });
+          console.log("Favorites document created with artist added.");
         }
-      } else if (userSnap.exists() && !favoriteSnap.exists()) {
-        // Create a new favorite list with the user
-        await setDoc(favoriteRef, {
-          users: [uid],
-        });
-        // console.log("Favorite list created with user added.");
       } else {
-        // console.log("User or favorite list does not exist.");
+        console.log("User does not exist.");
       }
     } catch (error) {
-      //  console.error("Error adding user to favorites:", error);
+      console.error("Error adding artist to user's favorites:", error);
     }
   };
-
   async function handleSearch() {
     const userId = await fetchSearchResults(searchTerm);
     if (userId) {
@@ -263,26 +265,49 @@ export default function FilterScreen() {
             data={searchResults}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => addToFavorites(item.id)}>
-                <View style={styles.listItem}>
-                  <Image
-                    source={
-                      item.photoURL
-                        ? { uri: item.photoURL }
-                        : { uri: "https://i.stack.imgur.com/dr5qp.jpg" }
-                    }
-                    style={styles.cardImage}
-                  />
-                 {/*   <TouchableOpacity onPress={() => viewImage(item.cv)}>
+              <View style={styles.listItem}>
+                <Image
+                  source={
+                    item.photoURL
+                      ? { uri: item.photoURL }
+                      : { uri: "https://i.stack.imgur.com/dr5qp.jpg" }
+                  }
+                  style={styles.cardImage}
+                />
+                {/*   <TouchableOpacity onPress={() => viewImage(item.cv)}>
                     <Text style={styles.bio}>View CV</Text>
                   </TouchableOpacity> */}
-                  <Text style={styles.name}>{item.nameSurname}</Text>
+                <Text style={styles.name}>{item.nameSurname}</Text>
 
-                  <Text style={styles.bio}>{item.bio}</Text>
-                  <Text style={styles.info}>@{item.username}</Text>
-                  <Text style={styles.info}>{item.email}</Text>
-                  <Text style={styles.info}>{musicianJob}</Text>
-                 
+                <Text style={styles.bio}>{item.bio}</Text>
+                <Text style={styles.info}>@{item.username}</Text>
+                <Text style={styles.info}>{item.email}</Text>
+                <Text style={styles.info}>{musicianJob}</Text>
+                <View style={styles.icont}>
+                  <TouchableOpacity
+                    style={styles.iconticons}
+                    onPress={() => sendFriendRequest(item.id)}
+                  >
+                    <Icon
+                      style={styles.socialMediaIcon}
+                      name="user-plus"
+                      size={25}
+                      color="#ffff"
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.iconticons}
+                    onPress={() => addToFavorites(item.id)}
+                  >
+                    <Icon
+                      style={styles.socialMediaIcon}
+                      name="star"
+                      size={25}
+                      color="#ffff"
+                    />
+                  </TouchableOpacity>
+                </View>
+
                 {/*   <TouchableWithoutFeedback
                     onPress={() => setSelectedImage(null)}
                   >
@@ -294,102 +319,97 @@ export default function FilterScreen() {
                       />
                     </View>
                   </TouchableWithoutFeedback> */}
-                  {/*       {item.cv && (
+                {/*       {item.cv && (
                     <Button
                       title="View CV"
                       onPress={() => Linking.openURL(item.cv)}
                     />
                   )} */}
-                  <View style={styles.startFilter}>
-                    {item.behance !== "" && (
-                      <View style={styles.iconContainer}>
-                        <TouchableOpacity
-                          onPress={() => Linking.openURL(item.behance)}
-                        >
-                          <Icon
-                            style={styles.socialMediaIcon}
-                            name="behance"
-                            size={25}
-                            color="#1769FF"
-                          />
-                        </TouchableOpacity>
-                      </View>
-                    )}
-                    {item.twitter !== "" && (
-                      <View style={styles.iconContainer}>
-                        <TouchableOpacity
-                          onPress={() => Linking.openURL(item.twitter)}
-                        >
-                          <Icon
-                            style={styles.socialMediaIcon}
-                            name="twitter"
-                            size={25}
-                            color="#1DA1F2"
-                          />
-                        </TouchableOpacity>
-                      </View>
-                    )}
-                    {item.instagram !== "" && (
-                      <View style={styles.iconContainer}>
-                        <TouchableOpacity
-                          onPress={() => Linking.openURL(item.instagram)}
-                        >
-                          <Icon
-                            style={styles.socialMediaIcon}
-                            name="instagram"
-                            size={25}
-                            color="#C13584"
-                          />
-                        </TouchableOpacity>
-                      </View>
-                    )}
-                    {item.linkedin !== "" && (
-                      <View style={styles.iconContainer}>
-                        <TouchableOpacity
-                          onPress={() => Linking.openURL(item.linkedin)}
-                        >
-                          <Icon
-                            style={styles.socialMediaIcon}
-                            name="linkedin"
-                            size={25}
-                            color="#0077B5"
-                          />
-                        </TouchableOpacity>
-                      </View>
-                    )}
-                  </View>
-                  <Text style={styles.listingName}>
-                    {nameListing}'s listings
-                  </Text>
-                  {data.map((item) => (
-                    <View style={styles.listingcontainer} key={item.id}>
-                      <View style={styles.titleContainer}>
-                        <Text style={styles.bio}>
-                          Listing Title: {item.title}
-                        </Text>
-                        <View style={styles.iconsContainer}></View>
-                        <Text style={styles.bio}>
-                          Listing Desc: {item.desc}
-                        </Text>
+                <View style={styles.startFilter}>
+                  {item.behance !== "" && (
+                    <View style={styles.iconContainer}>
+                      <TouchableOpacity
+                        onPress={() => Linking.openURL(item.behance)}
+                      >
+                        <Icon
+                          style={styles.socialMediaIcon}
+                          name="behance"
+                          size={25}
+                          color="#1769FF"
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                  {item.twitter !== "" && (
+                    <View style={styles.iconContainer}>
+                      <TouchableOpacity
+                        onPress={() => Linking.openURL(item.twitter)}
+                      >
+                        <Icon
+                          style={styles.socialMediaIcon}
+                          name="twitter"
+                          size={25}
+                          color="#1DA1F2"
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                  {item.instagram !== "" && (
+                    <View style={styles.iconContainer}>
+                      <TouchableOpacity
+                        onPress={() => Linking.openURL(item.instagram)}
+                      >
+                        <Icon
+                          style={styles.socialMediaIcon}
+                          name="instagram"
+                          size={25}
+                          color="#C13584"
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                  {item.linkedin !== "" && (
+                    <View style={styles.iconContainer}>
+                      <TouchableOpacity
+                        onPress={() => Linking.openURL(item.linkedin)}
+                      >
+                        <Icon
+                          style={styles.socialMediaIcon}
+                          name="linkedin"
+                          size={25}
+                          color="#0077B5"
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                </View>
+                <Text style={styles.listingName}>{nameListing}'s listings</Text>
+                {data.map((item) => (
+                  <View style={styles.listingcontainer} key={item.id}>
+                    <View style={styles.titleContainer}>
+                      <Text style={styles.bio}>
+                        Listing Title: {item.title}
+                      </Text>
+                      <View style={styles.iconsContainer}></View>
+                      <Text style={styles.bio}>Listing Desc: {item.desc}</Text>
 
-                        <View style={styles.allImage}>
-                          <Text style={styles.bio}>Image Preview:</Text>
-                          <Image
-                            source={{ uri: item.image }}
-                            style={{
-                              width: 100,
-                              height: 100,
-                              marginLeft: "auto",
-                              marginRight: "auto",
-                              marginBottom: 30,
-                            }}
-                          />
-                        </View>
+                      <View style={styles.allImage}>
+                        <Text style={styles.bio}>Image Preview:</Text>
+                        <Image
+                          source={{ uri: item.image }}
+                          style={{
+                            width: 100,
+                            height: 100,
+                            marginLeft: "auto",
+                            marginRight: "auto",
+                            marginBottom: 30,
+                          }}
+                        />
                       </View>
                     </View>
-                  ))}
-                </View>
-              </TouchableOpacity>
+                  </View>
+                ))}
+              </View>
             )}
           />
         </View>
@@ -574,6 +594,14 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     margin: 10,
+  },
+  icont: {
+    margin: 10,
+    display: "flex",
+    flexDirection: "row",
+  },
+  iconticons: {
+    marginHorizontal: 10,
   },
   socialMediaIcon: {
     width: 30,

@@ -27,8 +27,11 @@ import {
   onSnapshot,
   deleteDoc,
   updateDoc,
+  getDoc,
   doc,
   setDoc,
+  getDocs,
+  where,
 } from "firebase/firestore";
 import { auth, database, firebase } from "../firebase";
 import {
@@ -55,6 +58,7 @@ loadFonts();
 const ProfileScreenCustomer = ({ navigation }) => {
   const [editingMode, setEditingMode] = useState(false);
   const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
   const [bio, setBio] = useState("");
   const [imageUri, setImageUri] = useState("");
   const [documentUri, setDocumentUri] = useState("");
@@ -71,12 +75,49 @@ const ProfileScreenCustomer = ({ navigation }) => {
   const [twitter, setTwitter] = useState("");
   const [instagram, setInstagram] = useState("");
   const [linkedin, setLinkedin] = useState("");
+  const [favorites, setFavorites] = useState([]);
+
   const [socialMedia, setSocialMedia] = useState({
     twitter: twitter,
     instagram: instagram,
     linkedin: linkedin,
     behance: behance,
   });
+
+  //console.log(favorites);
+  useEffect(() => {
+    const fetchFavorites = async () => {
+      try {
+        const userUid = auth.currentUser.uid;
+        const favoriteRef = doc(database, "favorites", userUid);
+        const favoriteSnap = await getDoc(favoriteRef);
+        let favoritesNames = [];
+        if (favoriteSnap.exists()) {
+          const favorite = favoriteSnap.data();
+          // console.log("favoriteSnap",favorite.artists[0]);
+
+          for (let i = 0; i < favorite.artists.length; i++) {
+            const artistRef = doc(database, "users", favorite.artists[i]);
+            const artistSnap = await getDoc(artistRef);
+            console.log("artistRef", artistSnap.data());
+
+            if (artistSnap.exists() && artistSnap.data().isArtist === 1) {
+              favoritesNames.push(artistSnap.data().nameSurname);
+              favoritesNames.push(artistSnap.data().username);
+              favoritesNames.push(artistSnap.data().email);
+            }
+          }
+        }
+
+        setFavorites(favoritesNames);
+      } catch (error) {
+        console.error("Error getting documents: ", error);
+      }
+    };
+    fetchFavorites();
+  }, [auth.currentUser.uid]);
+
+  console.log(favorites[0]);
 
   const handleSocialMediaChange = (platform, value) => {
     setSocialMedia((prevState) => ({
@@ -119,7 +160,8 @@ const ProfileScreenCustomer = ({ navigation }) => {
         docs.push({ id: doc.id, ...doc.data() });
       });
       const currentUser = docs.find((item) => item.id === auth.currentUser.uid);
-      //console.log(currentUser.bio);
+      //console.log(currentUser);
+
       setImageURI(currentUser.photoURL);
       setBio(currentUser.bio);
       setBehance(currentUser.socialMedia.behance);
@@ -139,7 +181,7 @@ const ProfileScreenCustomer = ({ navigation }) => {
       // console.log(socialMedia);
       setData(docs);
       setName(currentUser.nameSurname);
-
+      setUsername(currentUser.username);
       setDoc(doc(database, "users", auth.currentUser.uid, "profile", "bio"), {
         bio: bio,
       })
@@ -151,6 +193,25 @@ const ProfileScreenCustomer = ({ navigation }) => {
           console.log("error");
         });
     });
+  }, []);
+
+  useEffect(() => {
+    const q = query(
+      collection(database, "favorites", auth.currentUser.uid, "userPreference")
+    );
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const docs_pref = [];
+      querySnapshot.forEach((doc) => {
+        docs_pref.push({ id: doc.id, ...doc.data() });
+      });
+      const currentUser = docs_pref.find(
+        (item) => item.id === auth.currentUser.uid
+      );
+      //console.log("artistPreference data", docs_pref);
+      //console.log("sss:", docs_pref[0]);
+      setData(docs_pref);
+    });
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => {
@@ -241,7 +302,7 @@ const ProfileScreenCustomer = ({ navigation }) => {
         )}
       </View>
       <View style={styles.imageContainer}>
-        <TouchableOpacity onPress={handleImageUpload}>
+      {/*   <TouchableOpacity onPress={handleImageUpload}>
           <Image
             source={
               ImageURI
@@ -250,7 +311,7 @@ const ProfileScreenCustomer = ({ navigation }) => {
             }
             style={styles.image}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       <View style={styles.contentContainer}>
         {editingMode ? (
@@ -293,7 +354,18 @@ const ProfileScreenCustomer = ({ navigation }) => {
           </ScrollView>
         ) : (
           <ScrollView style={styles.profileInfo}>
+            <TouchableOpacity style={styles.imageContainer} onPress={handleImageUpload}>
+              <Image
+                source={
+                  ImageURI
+                    ? { uri: ImageURI }
+                    : { uri: "https://i.stack.imgur.com/dr5qp.jpg" }
+                }
+                style={styles.image}
+              />
+            </TouchableOpacity>
             <Text style={styles.name}>{name}</Text>
+            <Text style={styles.bio}>@{username}</Text>
             <Text style={styles.bio}>{bio}</Text>
 
             <View style={styles.socialLinks}>
@@ -355,6 +427,23 @@ const ProfileScreenCustomer = ({ navigation }) => {
                 <Text style={styles.bottomText}>Genre:</Text>
                 <Text style={styles.bottomText}>{selectedGenre}</Text>
               </View>
+              <View style={styles.favorCont}>
+                <Icon
+                  style={styles.starIcon}
+                  name="star"
+                  size={25}
+                  color="yellow"
+                />
+                <Text style={styles.favTitle}>Favorites:</Text>
+              </View>
+
+              <View>
+                {favorites.map((favorite, index) => (
+                  <View key={index} style={styles.favoriteContainer}>
+                    <Text style={styles.favoriteText}>{favorite}</Text>
+                  </View>
+                ))}
+              </View>
               {/*  <View style={styles.bottomTexts}>
                   <Text style={styles.bottomText}>Genre:</Text>
                   <Text style={styles.bottomText}>{selectedGenre}</Text>
@@ -405,7 +494,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     alignItems: "center",
-    paddingTop: 20,
+    paddingBottom: 12,
   },
   image: {
     width: 120,
@@ -483,10 +572,10 @@ const styles = StyleSheet.create({
   bio: {
     fontSize: 16,
     color: "white",
-    marginTop: 10,
+    marginTop: 8,
     textAlign: "center",
     fontFamily: "circular",
-    marginVertical: 10,
+
   },
   socialLinks: {
     flexDirection: "row",
@@ -522,6 +611,34 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     paddingVertical: 10,
     fontFamily: "circular",
+  },
+  favTitle: {
+    fontSize: 16,
+    color: "white",
+    paddingVertical: 10,
+    fontFamily: "circular",
+  },
+  favoriteText: {
+    fontSize: 16,
+    color: "white",
+    fontFamily: "circular",
+  },
+  favoriteContainer: {
+    margin: 4,
+    marginLeft: 15,
+  },
+  favorCont: {
+    display: "flex",
+    flexDirection: "row",
+    fontFamily: "circular",
+    alignItems: "center",
+    margin: 15,
+    borderBottomColor: "white",
+    borderWidth: 1,
+    width: 112,
+  },
+  starIcon: {
+    marginRight: 15,
   },
 });
 
