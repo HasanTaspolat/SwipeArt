@@ -114,8 +114,8 @@ export default function Chat(user) {
 
   const onSend = useCallback((messages = []) => {
     if (
-      auth?.currentUser?.useruid === userID1 ||
-      auth?.currentUser?.useruid === userID2
+      auth?.currentUser?.uid === userID1 ||
+      auth?.currentUser?.uid === userID2
     ) {
       console.log(auth?.currentUser?.uid) 
       console.log(userID1)
@@ -141,7 +141,7 @@ export default function Chat(user) {
         <Ionicons
           name="arrow-back"
           size={34}
-          color="black"
+          color="white"
           onPress={handlePress}
         />
       </TouchableOpacity>
@@ -151,11 +151,12 @@ export default function Chat(user) {
         showUserAvatar={false}
         onSend={(messages) => onSend(messages)}
         messagesContainerStyle={{
-          backgroundColor: "#fff",
+          backgroundColor: "#222",
         }}
         textInputStyle={{
-          backgroundColor: "#fff",
+          backgroundColor: "#333",
           borderRadius: 20,
+          color: "#fff",
         }}
         user={{
           _id: auth?.currentUser?.uid,
@@ -163,54 +164,53 @@ export default function Chat(user) {
         }}
         renderMessageImage={renderMessageImage}
       ></GiftedChat>
-      <Button title="Pick an image" onPress={pickImage} />
+      <Button title="Pick an image" onPress={pickImage} color="#fff" />
     </View>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "black",
-    borderBottomColor: "white",
-    borderWidth: 1,
-    position: "relative",
-  },
-  title: {
-    color: "white",
-    fontSize: 14,
-    fontWeight: "bold",
-    marginBottom: 5,
-  },
-  allImage: {
-    marginBottom: 10,
-  },
-  goBack: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    marginLeft: 10,
-    marginTop: 30,
-    zIndex: 221,
-  },
-  topTitle: {
-    color: "white",
-    fontSize: 18,
-    fontWeight: "bold",
-    paddingVertical: 20,
-    marginTop: 40,
-    borderBottomColor: "white",
-    borderWidth: 1,
-  },
-  desc: {
-    fontSize: 14,
-    fontWeight: "bold",
-    marginBottom: 5,
-    color: "white",
-  },
-  image: {
-    fontSize: 14,
-    color: "white",
-    marginBottom: 5,
-  },
-});
+}  
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: "black",
+      borderBottomColor: "#444",
+      borderWidth: 1,
+      position: "relative",
+    },
+    title: {
+      color: "#ddd",
+      fontSize: 14,
+      fontWeight: "bold",
+      marginBottom: 5,
+    },
+    allImage: {
+      marginBottom: 10,
+    },
+    goBack: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      marginLeft: 10,
+      marginTop: 30,
+      zIndex: 221,
+    },
+    topTitle: {
+      color: "#ddd",
+      fontSize: 18,
+      fontWeight: "bold",
+      paddingVertical: 20,
+      marginTop: 40,
+      borderBottomColor: "#444",
+      borderWidth: 1,
+    },
+    desc: {
+      fontSize: 14,
+      fontWeight: "bold",
+      marginBottom: 5,
+      color: "#ddd",
+    },
+    image: {
+      fontSize: 14,
+      color: "#ddd",
+      marginBottom: 5,
+    },
+  });

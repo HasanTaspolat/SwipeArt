@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import { onSnapshot, getDoc, doc as docRef, setDoc, updateDoc } from "firebase/firestore";
+import { onSnapshot, getDoc, doc as docRef, setDoc, updateDoc, deleteField } from "firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
 import { useRoute } from "@react-navigation/native"
 import { doc } from '@firebase/firestore';
@@ -22,11 +22,7 @@ function ChatStart() {
   const user = auth.currentUser;
   const uid = user.uid;
 
-  const [chats, setChats] = useState([
-    { id: "1", name: "John", message: "Hey there!", unreadCount: 2 },
-    { id: "2", name: "Emily", message: "How are you?", unreadCount: 0 },
-    { id: "3", name: "Mike", message: "Long time no see!", unreadCount: 1 },
-  ]);
+
 
   const openChat = (user1, user2) => {
     // Implement your navigation logic here to open a specific chat
@@ -106,126 +102,142 @@ function ChatStart() {
 
     openChat(uid,notificationUserId);
   }
+  const handleCrossPress = async (notificationUserId) => {
+    try {
+      // Update the 'notifications' collection to remove the senderId
+      const notificationsRef = doc(db, "notifications", uid);
+      await updateDoc(notificationsRef, {
+        [notificationUserId]: deleteField()
+      });
+      console.log("Notification removed successfully");
+    } catch (error) {
+      console.error("Error removing notification: ", error);
+    }
+  };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Notifications:</Text>
-      {notifications.map((notification) => (
-        <TouchableOpacity
-          key={notification.userId}
-          onPress={() => handleNotificationPress(notification.userId)}
-        >
-          <Text style={styles.text}>
-            {notification.userId}:
-            {notification.viewed ? "Go to chat." : "These users have swiped you right!"}
-          </Text>
-        </TouchableOpacity>
-      ))}
-      <View style={styles.container}>
+      <Text style={styles.title}>Notifications & Chat Requests:</Text>
+      <View style={styles.subContainer}>
         <ScrollView contentContainerStyle={styles.chatList}>
           {notifications.map((notification) => (
+            <View key={notification.userId}>
               <TouchableOpacity
-              key={notification.userId}
-              onPress={() => handleNotificationPress(notification.userId)}
-            >
+                onPress={() => handleNotificationPress(notification.userId)}
+              >
               <View style={styles.avatarContainer}>
-              <Image
-                    source={
-                      notification.photoURL
-                        ? { uri: notification.photoURL }
-                        : { uri: "https://i.stack.imgur.com/dr5qp.jpg" }
-                    }
-                    style={styles.avatar}
-                  />
+                <Image
+                  source={
+                    notification.photoURL
+                      ? { uri: notification.photoURL }
+                      : { uri: "https://i.stack.imgur.com/dr5qp.jpg" }
+                  }
+                  style={styles.avatar}
+                />
               </View>
               <View style={styles.chatDetails}>
                 <Text style={styles.chatName}>{notification.nameSurname}</Text>
                 <Text style={styles.lastMessage}>
-            {notification.viewed ? "Go to chat." : "These users have swiped you right!"}
-            </Text>
-
-                  <View style={styles.unreadBadge}>
-                    <Text style={styles.unreadBadgeText}>
-                    </Text>
-                  </View>
+                  {notification.viewed ? "Go to chat." : "These users have swiped you right!"}
+                </Text>
+                <View style={styles.unreadBadge}>
+                  <Text style={styles.unreadBadgeText}>
+                  </Text>
+                </View>
               </View>
-            </TouchableOpacity>
+
+              </TouchableOpacity>
+              {!notification.viewed && (
+                <View style={styles.actionContainer}>
+                  <TouchableOpacity
+                    onPress={() => handleCrossPress(notification.userId)}
+                  >
+                    <Text style={styles.actionText}>X</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => handleNotificationPress(notification.userId)}
+                  >
+                    <Text style={styles.actionText}>✔</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+            </View>
           ))}
         </ScrollView>
       </View>
-
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#000",
-    padding: 10,
-  },
-  title: {
-    color: "#fff",
-    fontSize: 24,
-    marginBottom: 10,
-  },
-  text: {
-    color: "#fff",
-    fontSize: 18,
-    marginBottom: 5,
-  },
-  container: {
-    flex: 1,
-    backgroundColor: "#F5F5F5",
-  },
-  chatList: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-  },
-  chatItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: "#CCCCCC",
-  },
-  avatarContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: "#2980B9",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  avatar: {
-    color: "#FFFFFF",
-    fontSize: 24,
-    fontWeight: "bold",
-  },
-  chatDetails: {
-    flex: 1,
-    marginLeft: 12,
-  },
-  chatName: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  lastMessage: {
-    fontSize: 14,
-    color: "#888888",
-  },
-  unreadBadge: {
-    marginTop: 4,
-    backgroundColor: "#E74C3C",
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 8,
-    alignSelf: "flex-start",
-  },
-  unreadBadgeText: {
-    color: "#FFFFFF",
-    fontSize: 12,
-  },
-});
-
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: "#000",
+      padding: 10,
+    },
+    title: {
+      color: "#fff",
+      fontSize: 24,
+      marginBottom: 10,
+    },
+    text: {
+      color: "#fff",
+      fontSize: 18,
+      marginBottom: 5,
+    },
+    subContainer: {
+      flex: 1,
+      backgroundColor: "#000",
+    },
+    chatList: {
+      paddingHorizontal: 16,
+      paddingVertical: 8,
+    },
+    avatarContainer: {
+      width: 48,
+      height: 48,
+      borderRadius: 24,
+      backgroundColor: "#333",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    avatar: {
+      width: 48,
+      height: 48,
+      borderRadius: 24,
+    },
+    chatDetails: {
+      flex: 1,
+      marginLeft: 12,
+    },
+    chatName: {
+      fontSize: 16,
+      fontWeight: "bold",
+      color: "#ddd",
+    },
+    lastMessage: {
+      fontSize: 14,
+      color: "#888",
+    },
+    unreadBadge: {
+      marginTop: 4,
+      backgroundColor: "#E74C3C",
+      paddingHorizontal: 8,
+      paddingVertical: 4,
+      borderRadius: 8,
+      alignSelf: "flex-start",
+    },
+    unreadBadgeText: {
+      color: "#FFFFFF",
+      fontSize: 12,
+    },
+    actionContainer: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      marginTop: 10,
+    },
+    actionText: {
+      color: "#fff",
+      fontSize: 24,
+    },
+  });
 export default ChatStart;
