@@ -8,6 +8,8 @@ import {
   ScrollView,
 } from "react-native";
 import { onSnapshot, getDoc, doc as docRef, setDoc, updateDoc } from "firebase/firestore";
+import { useNavigation } from "@react-navigation/native";
+import { useRoute } from "@react-navigation/native"
 import { doc } from '@firebase/firestore';
 import { db } from "../components/config";
 import { getAuth, signOut, deleteUser } from "firebase/auth";
@@ -15,6 +17,7 @@ import BottomNavigationArtist from "./BottomNavigationArtist";
 
 function ChatStart() {
   const [notifications, setNotifications] = useState([]);
+  const navigation = useNavigation();
   const auth = getAuth();
   const user = auth.currentUser;
   const uid = user.uid;
@@ -25,10 +28,10 @@ function ChatStart() {
     { id: "3", name: "Mike", message: "Long time no see!", unreadCount: 1 },
   ]);
 
- /* const openChat = (chatId) => {
+  const openChat = (user1, user2) => {
     // Implement your navigation logic here to open a specific chat
-    console.log("Opening chat with ID:", chatId);
-  }; */
+    navigation.navigate("ChatScreen",{ userID1: user1 , userID2: user2  });
+  }; 
 
   useEffect(() => {
     const unsubscribe = onSnapshot(doc(db, "notifications", uid), async (doc) => {
@@ -100,6 +103,8 @@ function ChatStart() {
   
     // Call the function to mark the notification as viewed
     await markNotificationAsViewed(uid, notificationUserId, db);
+
+    openChat(uid,notificationUserId);
   }
 
   return (

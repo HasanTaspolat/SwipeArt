@@ -6,6 +6,8 @@ import React, {
 } from "react";
 import { TouchableOpacity, Text, View, StyleSheet, Button, Image } from "react-native";
 import { GiftedChat } from "react-native-gifted-chat";
+import { useRoute } from "@react-navigation/native"
+import "@react-navigation/native-stack";
 import {
   collection,
   addDoc,
@@ -20,16 +22,18 @@ import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 
-export default function Chat() {
+export default function Chat(user) {
   const [messages, setMessages] = useState([]);
   const navigation = useNavigation();
-
+  const route = useRoute()
+  const userID1 = route.params?.userID1;
+  const userID2 = route.params?.userID2;
   const onSignOut = () => {
     signOut(auth).catch((error) => console.log("Error logging out: ", error));
   };
 
   const handlePress = () => {
-    navigation.navigate("ArtistDashboardPage");
+    navigation.navigate("ChatStart");
   };
 
   useLayoutEffect(() => {
@@ -110,9 +114,11 @@ export default function Chat() {
 
   const onSend = useCallback((messages = []) => {
     if (
-      auth?.currentUser?.email === userID1 ||
-      auth?.currentUser?.email === userID2
+      auth?.currentUser?.useruid === userID1 ||
+      auth?.currentUser?.useruid === userID2
     ) {
+      console.log(auth?.currentUser?.uid) 
+      console.log(userID1)
       setMessages((previousMessages) =>
         GiftedChat.append(previousMessages, messages)
       );
@@ -125,6 +131,7 @@ export default function Chat() {
       });
     } else {
       console.log("User is not allowed to send messages in this chat");
+
     }
   }, []);
 
@@ -151,7 +158,7 @@ export default function Chat() {
           borderRadius: 20,
         }}
         user={{
-          _id: auth?.currentUser?.email,
+          _id: auth?.currentUser?.uid,
           avatar: "https://i.pravatar.cc/300",
         }}
         renderMessageImage={renderMessageImage}
