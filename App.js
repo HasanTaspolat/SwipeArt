@@ -29,6 +29,10 @@ import EditListing from "./Screens/EditListing";
 import FilterScreen from "./Screens/FilterScreen";
 import ProfilePhotoUpload from "./Screens/ProfilePhotoUpload";
 import UploadCV from "./Screens/UploadCV";
+import FriendRequests from "./Screens/FriendRequests";
+import FriendStatCustomer from "./Screens/FriendStatCustomer";
+import FriendsList from "./Screens/FriendsList";
+import FriendListCustomer from "./Screens/FriendListCustomer";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import normalize from "react-native-normalize";
 import { Ionicons } from "@expo/vector-icons";
@@ -79,6 +83,70 @@ export default function App() {
             }}
             name="UploadCV"
             component={UploadCV}
+          />
+          <Tab.Screen
+            options={{
+              tabBarStyle: {
+                backgroundColor: "#000",
+                height: normalize(0, "height"),
+                borderTopColor: "#000",
+              },
+              headerShown: false,
+              tabBarActiveTintColor: "#000",
+              tabBarInactiveTintColor: "#000",
+              tabBarLabelStyle: {},
+              tabBarButton: (props) => null,
+            }}
+            name="FriendRequests"
+            component={FriendRequests}
+          />
+          <Tab.Screen
+            options={{
+              tabBarStyle: {
+                backgroundColor: "#000",
+                height: normalize(0, "height"),
+                borderTopColor: "#000",
+              },
+              headerShown: false,
+              tabBarActiveTintColor: "#000",
+              tabBarInactiveTintColor: "#000",
+              tabBarLabelStyle: {},
+              tabBarButton: (props) => null,
+            }}
+            name="FriendStatCustomer"
+            component={FriendStatCustomer}
+          />
+          <Tab.Screen
+            options={{
+              tabBarStyle: {
+                backgroundColor: "#000",
+                height: normalize(0, "height"),
+                borderTopColor: "#000",
+              },
+              headerShown: false,
+              tabBarActiveTintColor: "#000",
+              tabBarInactiveTintColor: "#000",
+              tabBarLabelStyle: {},
+              tabBarButton: (props) => null,
+            }}
+            name="FriendsList"
+            component={FriendsList}
+          />
+          <Tab.Screen
+            options={{
+              tabBarStyle: {
+                backgroundColor: "#000",
+                height: normalize(0, "height"),
+                borderTopColor: "#000",
+              },
+              headerShown: false,
+              tabBarActiveTintColor: "#000",
+              tabBarInactiveTintColor: "#000",
+              tabBarLabelStyle: {},
+              tabBarButton: (props) => null,
+            }}
+            name="FriendListCustomer"
+            component={FriendListCustomer}
           />
           <Tab.Screen
             options={{

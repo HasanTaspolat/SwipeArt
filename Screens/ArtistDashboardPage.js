@@ -14,6 +14,7 @@ import {
   doc,
 } from "firebase/firestore";
 import { auth, database } from "../firebase";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const ArtistDashboardPage = () => {
   const [orderCount, setOrderCount] = useState(0);
@@ -27,6 +28,10 @@ const ArtistDashboardPage = () => {
 
   const uploadListing = () => {
     navigation.navigate("ListingArtistCreator");
+  };
+
+  const friendRequestScreen = () => {
+    navigation.navigate("FriendRequests");
   };
 
   const seeListings = () => {
@@ -95,20 +100,30 @@ const ArtistDashboardPage = () => {
         </View> */}
         <View style={styles.card}>
           <View style={styles.textContainer}>
-            <Icon name="utensils" size={20} color="#fff" />
+            <Icon
+              name="utensils"
+              size={20}
+              color="#fff"
+              onPress={() => friendRequestScreen()}
+            />
           </View>
           <View style={styles.textContainer}>
             <Text style={styles.title}>Type: {orderType}</Text>
           </View>
         </View>
-       {/*  <View style={styles.card}>
+        <View style={styles.card}>
           <View style={styles.textContainer}>
-            <Icon name="star" size={20} color="#fff" />
+            <Icon
+              name="user-plus"
+              size={20}
+              color="#fff"
+              onPress={() => friendRequestScreen()}
+            />
           </View>
           <View style={styles.textContainer}>
-            <Text style={styles.title}>Rating: {rating}</Text>
+            <Text style={styles.title}>Friend Requests</Text>
           </View>
-        </View> */}
+        </View>
       </View>
       <View style={styles.cardContainer}>
         {/*   <View style={styles.card}>
@@ -166,7 +181,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "black",
     flex: 1,
-
   },
   cardContainer: {
     display: "flex",

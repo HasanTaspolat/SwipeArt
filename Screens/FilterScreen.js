@@ -33,6 +33,7 @@ import {
   query,
   onSnapshot,
 } from "firebase/firestore";
+import IconIcon from "react-native-vector-icons/FontAwesome5";
 import { db } from "../components/config";
 import { useNavigation } from "@react-navigation/native";
 
@@ -70,7 +71,7 @@ export default function FilterScreen() {
       setSearchResults(searchedUser);
       setFilterArr(searchedUser);
 
-      console.log("filterArr", filterArr);
+      //console.log("filterArr", filterArr);
 
       if (searchedUser[0].isCustomer === 1) {
         setSearchResults([]);
@@ -86,7 +87,7 @@ export default function FilterScreen() {
       return null;
     }
   }
-  console.log(searchResults);
+  // console.log(searchResults);
 
   async function listingFetchs(userId) {
     try {
@@ -223,6 +224,10 @@ export default function FilterScreen() {
     setSelectedImage(uri);
   };
 
+  const handlePressCustomerFriend = () => {
+    navigation.navigate("FriendStatCustomer");
+  };
+
   return (
     <View style={styles.cardContainer}>
       <View
@@ -251,6 +256,18 @@ export default function FilterScreen() {
       <Text style={styles.name}>
         You can search artist from here by using username!
       </Text>
+      <View>
+        <Text style={styles.bio2}>Your Request Status</Text>
+        <TouchableOpacity style={styles.buttonFire}>
+          <IconIcon
+            name="user"
+            size={20}
+            style={styles.icon3}
+            color="#fff"
+            onPress={() => handlePressCustomerFriend()}
+          />
+        </TouchableOpacity>
+      </View>
       <Modal
         visible={modalVisible}
         animationType="slide"
@@ -675,6 +692,19 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     margin: 10,
+  },
+  icon3: {
+    padding: 10,
+    textAlign: "center",
+  },
+  buttonFire: {
+    borderColor: "grey",
+    borderWidth: 1,
+    backgroundColor: "rgba(24, 20, 168, 1)",
+    marginTop: 15,
+    width: 100,
+    marginLeft: "auto",
+    marginRight: "auto",
   },
   icont: {
     margin: 10,
