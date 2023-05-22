@@ -53,6 +53,8 @@ export default function FilterScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const [nameListing, setNameListing] = useState("");
   const [currentArtistID, setcurrentArtistID] = useState("");
+  const [showCVModal, setShowCVModal] = useState(false);
+  const [CVImageUrl, setCVImageUrl] = useState("");
 
   async function fetchSearchResults() {
     try {
@@ -84,6 +86,7 @@ export default function FilterScreen() {
       return null;
     }
   }
+  console.log(searchResults);
 
   async function listingFetchs(userId) {
     try {
@@ -130,7 +133,7 @@ export default function FilterScreen() {
     }
   }
 
-  //console.log("datajob", dataJob);
+  // console.log("CVImageUrl", CVImageUrl);
   const sendFriendRequest = async () => {
     try {
       const senderRef = doc(db, "users", uid);
@@ -174,7 +177,7 @@ export default function FilterScreen() {
       const favoriteRef = doc(db, "favorites", uid);
       const userSnap = await getDoc(userRef);
       const favoriteSnap = await getDoc(favoriteRef);
-  
+
       if (userSnap.exists()) {
         const user = userSnap.data();
         const artistId = filterArr[0].id;
@@ -260,158 +263,195 @@ export default function FilterScreen() {
             <AntDesign name="close" size={24} color="white" />
           </TouchableOpacity>
 
-          <FlatList
-            style={styles.flatlist}
-            data={searchResults}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <View style={styles.listItem}>
-                <Image
-                  source={
-                    item.photoURL
-                      ? { uri: item.photoURL }
-                      : { uri: "https://i.stack.imgur.com/dr5qp.jpg" }
-                  }
-                  style={styles.cardImage}
-                />
-                {/*   <TouchableOpacity onPress={() => viewImage(item.cv)}>
-                    <Text style={styles.bio}>View CV</Text>
-                  </TouchableOpacity> */}
-                <Text style={styles.name}>{item.nameSurname}</Text>
+          {searchResults.length === 0 ? (
+            <View style={styles.noResultsContainer}>
+              <Text style={styles.noResultsText}>
+                No person found with the entered username.
+              </Text>
+            </View>
+          ) : (
+            <FlatList
+              style={styles.flatlist}
+              data={searchResults}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => (
+                <View style={styles.listItem}>
+                  <Image
+                    source={
+                      item.photoURL
+                        ? { uri: item.photoURL }
+                        : { uri: "https://i.stack.imgur.com/dr5qp.jpg" }
+                    }
+                    style={styles.cardImage}
+                  />
+                  <Text style={styles.name}>{item.nameSurname}</Text>
+                  <Text style={styles.bio}>{item.bio}</Text>
+                  <Text style={styles.info}>@{item.username}</Text>
+                  <Text style={styles.info}>{item.email}</Text>
+                  <Text style={styles.info}>{musicianJob}</Text>
 
-                <Text style={styles.bio}>{item.bio}</Text>
-                <Text style={styles.info}>@{item.username}</Text>
-                <Text style={styles.info}>{item.email}</Text>
-                <Text style={styles.info}>{musicianJob}</Text>
-                <View style={styles.icont}>
-                  <TouchableOpacity
-                    style={styles.iconticons}
-                    onPress={() => sendFriendRequest(item.id)}
-                  >
-                    <Icon
-                      style={styles.socialMediaIcon}
-                      name="user-plus"
-                      size={25}
-                      color="#ffff"
-                    />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.iconticons}
-                    onPress={() => addToFavorites(item.id)}
-                  >
-                    <Icon
-                      style={styles.socialMediaIcon}
-                      name="star"
-                      size={25}
-                      color="#ffff"
-                    />
-                  </TouchableOpacity>
-                </View>
-
-                {/*   <TouchableWithoutFeedback
-                    onPress={() => setSelectedImage(null)}
-                  >
-                    <View style={styles.modalContainer}>
-                      <Image
-                        source={{ uri: selectedImage }}
-                        style={styles.cardImage2}
-                        resizeMode="contain"
+                  <View style={styles.icont}>
+                    <TouchableOpacity
+                      style={styles.iconticons}
+                      onPress={() => sendFriendRequest(item.id)}
+                    >
+                      <Icon
+                        style={styles.socialMediaIcon}
+                        name="user-plus"
+                        size={25}
+                        color="#ffff"
                       />
-                    </View>
-                  </TouchableWithoutFeedback> */}
-                {/*       {item.cv && (
-                    <Button
-                      title="View CV"
-                      onPress={() => Linking.openURL(item.cv)}
-                    />
-                  )} */}
-                <View style={styles.startFilter}>
-                  {item.behance !== "" && (
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.iconticons}
+                      onPress={() => addToFavorites(item.id)}
+                    >
+                      <Icon
+                        style={styles.socialMediaIcon}
+                        name="star"
+                        size={25}
+                        color="#ffff"
+                      />
+                    </TouchableOpacity>
+                  </View>
+
+                  {item.cv && (
                     <View style={styles.iconContainer}>
                       <TouchableOpacity
-                        onPress={() => Linking.openURL(item.behance)}
+                        style={styles.viewCv}
+                        onPress={() => {
+                          setCVImageUrl(item.cv);
+                          setShowCVModal(true);
+                        }}
                       >
-                        <Icon
-                          style={styles.socialMediaIcon}
-                          name="behance"
-                          size={25}
-                          color="#1769FF"
-                        />
+                        <Text style={styles.view}>View CV</Text>
                       </TouchableOpacity>
                     </View>
                   )}
-                  {item.twitter !== "" && (
-                    <View style={styles.iconContainer}>
-                      <TouchableOpacity
-                        onPress={() => Linking.openURL(item.twitter)}
-                      >
-                        <Icon
-                          style={styles.socialMediaIcon}
-                          name="twitter"
-                          size={25}
-                          color="#1DA1F2"
-                        />
-                      </TouchableOpacity>
-                    </View>
+
+                  {showCVModal && (
+                    <Modal
+                      visible={showCVModal}
+                      transparent={true}
+                      style={styles.allModal}
+                      onRequestClose={() => setShowCVModal(false)}
+                    >
+                      <View style={styles.modalContainer}>
+                        <TouchableOpacity
+                          style={styles.closeButton}
+                          onPress={() => setShowCVModal(false)}
+                        >
+                          <AntDesign name="close" size={24} color="white" />
+                        </TouchableOpacity>
+                        <View style={styles.cvContainer}>
+                          <Text style={styles.info3}>CV of {nameListing} </Text>
+                          <Image
+                            source={{ uri: CVImageUrl }}
+                            style={styles.cvImage}
+                            resizeMode="contain"
+                          />
+                        </View>
+                      </View>
+                    </Modal>
                   )}
-                  {item.instagram !== "" && (
-                    <View style={styles.iconContainer}>
-                      <TouchableOpacity
-                        onPress={() => Linking.openURL(item.instagram)}
-                      >
-                        <Icon
-                          style={styles.socialMediaIcon}
-                          name="instagram"
-                          size={25}
-                          color="#C13584"
-                        />
-                      </TouchableOpacity>
+
+                  <View style={styles.startFilter}>
+                    {item.behance !== "" && (
+                      <View style={styles.iconContainer}>
+                        <TouchableOpacity
+                          onPress={() => Linking.openURL(item.behance)}
+                        >
+                          <Icon
+                            style={styles.socialMediaIcon}
+                            name="behance"
+                            size={25}
+                            color="#1769FF"
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    )}
+                    {item.twitter !== "" && (
+                      <View style={styles.iconContainer}>
+                        <TouchableOpacity
+                          onPress={() => Linking.openURL(item.twitter)}
+                        >
+                          <Icon
+                            style={styles.socialMediaIcon}
+                            name="twitter"
+                            size={25}
+                            color="#1DA1F2"
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    )}
+                    {item.instagram !== "" && (
+                      <View style={styles.iconContainer}>
+                        <TouchableOpacity
+                          onPress={() => Linking.openURL(item.instagram)}
+                        >
+                          <Icon
+                            style={styles.socialMediaIcon}
+                            name="instagram"
+                            size={25}
+                            color="#C13584"
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    )}
+                    {item.linkedin !== "" && (
+                      <View style={styles.iconContainer}>
+                        <TouchableOpacity
+                          onPress={() => Linking.openURL(item.linkedin)}
+                        >
+                          <Icon
+                            style={styles.socialMediaIcon}
+                            name="linkedin"
+                            size={25}
+                            color="#0077B5"
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    )}
+                  </View>
+
+                  <Text style={styles.listingName}>
+                    {nameListing}'s listings
+                  </Text>
+
+                  {data.length === 0 ? (
+                    <View>
+                      <Text style={styles.bio2}>
+                        There are no listings of {nameListing}
+                      </Text>
+                      <Text style={styles.bio2}>Please check again later!</Text>
                     </View>
-                  )}
-                  {item.linkedin !== "" && (
-                    <View style={styles.iconContainer}>
-                      <TouchableOpacity
-                        onPress={() => Linking.openURL(item.linkedin)}
-                      >
-                        <Icon
-                          style={styles.socialMediaIcon}
-                          name="linkedin"
-                          size={25}
-                          color="#0077B5"
-                        />
-                      </TouchableOpacity>
-                    </View>
+                  ) : (
+                    data.map((item) => (
+                      <View style={styles.listingcontainer} key={item.id}>
+                        <View style={styles.titleContainer}>
+                          <Text style={styles.bio}>
+                            Listing Title: {item.title}
+                          </Text>
+                          <View style={styles.iconsContainer}></View>
+                          <Text style={styles.bio}>
+                            Listing Desc: {item.desc}
+                          </Text>
+
+                          <View style={styles.allImage}>
+                            <Text style={styles.bio}>Image Preview:</Text>
+                            <Image
+                              source={{ uri: item.image }}
+                              style={styles.listingImage}
+                            />
+                          </View>
+                        </View>
+                      </View>
+                    ))
                   )}
                 </View>
-                <Text style={styles.listingName}>{nameListing}'s listings</Text>
-                {data.map((item) => (
-                  <View style={styles.listingcontainer} key={item.id}>
-                    <View style={styles.titleContainer}>
-                      <Text style={styles.bio}>
-                        Listing Title: {item.title}
-                      </Text>
-                      <View style={styles.iconsContainer}></View>
-                      <Text style={styles.bio}>Listing Desc: {item.desc}</Text>
-
-                      <View style={styles.allImage}>
-                        <Text style={styles.bio}>Image Preview:</Text>
-                        <Image
-                          source={{ uri: item.image }}
-                          style={{
-                            width: 100,
-                            height: 100,
-                            marginLeft: "auto",
-                            marginRight: "auto",
-                            marginBottom: 30,
-                          }}
-                        />
-                      </View>
-                    </View>
-                  </View>
-                ))}
-              </View>
-            )}
-          />
+              )}
+            />
+          )}
         </View>
       </Modal>
       <BottomNavigationCustomer
@@ -539,18 +579,30 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "black",
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background color
+    backgroundColor: "rgba(0, 0, 0, 1)", // Semi-transparent background color
     borderColor: "gray",
     borderWidth: 1,
   },
-  allModal: {},
+  allModal: { backgroundColor: "black" },
   closeButton: {
     position: "absolute",
     top: 10,
     right: 10,
     padding: 10,
     zIndex: 1,
+    backgroundColor: "black",
   },
+  viewCv: {
+    borderColor: "gray",
+    borderWidth: 2,
+    padding: 10,
+    backgroundColor: "rgba(4, 56, 253, 0.8)",
+  },
+  view: {
+    color: "white",
+    fontWeight: "bold",
+  },
+
   flatlist: {
     flex: 1,
     backgroundColor: "#000",
@@ -583,10 +635,39 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign: "center",
   },
+  noResultsText: {
+    fontSize: 22,
+    color: "#fff",
+    textAlign: "center",
+  },
+  noResultsContainer: {
+    marginTop: "auto",
+    marginBottom: "auto",
+  },
+  bio2: {
+    fontSize: 14,
+    color: "#fff",
+    marginTop: 10,
+    textAlign: "center",
+  },
   info: {
     fontSize: 14,
     color: "#fff",
     marginBottom: 10,
+    textAlign: "center",
+  },
+  info3: {
+    fontSize: 22,
+    color: "#fff",
+    marginBottom: 10,
+    textAlign: "center",
+    fontWeight: "bold",
+  },
+  cvContainer: {
+    fontSize: 14,
+    color: "#fff",
+    marginTop: "auto",
+    marginBottom: "auto",
     textAlign: "center",
   },
   socialLinks: {

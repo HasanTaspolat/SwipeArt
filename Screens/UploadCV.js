@@ -57,12 +57,13 @@ export default function UploadCV({ navigation }) {
     }
     console.log(cv);
     await updateDoc(doc(db, "users", uid), {
-      cv: cv,
+      cv: result.assets[0].uri,
     });
 
     alert("Uploaded Successfully!");
     navigation.navigate(ChooseScreenFirst);
   };
+
 
   /*   const uploadFile = async () => {
     if (cv == null) return;

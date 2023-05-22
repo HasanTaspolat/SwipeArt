@@ -302,7 +302,7 @@ const ProfileScreenCustomer = ({ navigation }) => {
         )}
       </View>
       <View style={styles.imageContainer}>
-      {/*   <TouchableOpacity onPress={handleImageUpload}>
+        {/*   <TouchableOpacity onPress={handleImageUpload}>
           <Image
             source={
               ImageURI
@@ -354,7 +354,10 @@ const ProfileScreenCustomer = ({ navigation }) => {
           </ScrollView>
         ) : (
           <ScrollView style={styles.profileInfo}>
-            <TouchableOpacity style={styles.imageContainer} onPress={handleImageUpload}>
+            <TouchableOpacity
+              style={styles.imageContainer}
+              onPress={handleImageUpload}
+            >
               <Image
                 source={
                   ImageURI
@@ -438,11 +441,19 @@ const ProfileScreenCustomer = ({ navigation }) => {
               </View>
 
               <View>
-                {favorites.map((favorite, index) => (
-                  <View key={index} style={styles.favoriteContainer}>
-                    <Text style={styles.favoriteText}>{favorite}</Text>
+                {favorites.length === 0 ? (
+                  <View style={styles.favoriteContainer}>
+                    <Text style={styles.favoriteText}>
+                      No favorites found.
+                    </Text>
                   </View>
-                ))}
+                ) : (
+                  favorites.map((favorite, index) => (
+                    <View key={index} style={styles.favoriteContainer}>
+                      <Text style={styles.favoriteText}>{favorite}</Text>
+                    </View>
+                  ))
+                )}
               </View>
               {/*  <View style={styles.bottomTexts}>
                   <Text style={styles.bottomText}>Genre:</Text>
@@ -575,7 +586,6 @@ const styles = StyleSheet.create({
     marginTop: 8,
     textAlign: "center",
     fontFamily: "circular",
-
   },
   socialLinks: {
     flexDirection: "row",

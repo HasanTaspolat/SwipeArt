@@ -220,6 +220,8 @@ const RegisterScreen = ({ navigation }) => {
           Fields marked with (*) are required to be filled.
         </Text>
 
+        
+
         <Text style={styles.header2}>E-mail*</Text>
         <TextInput
           style={styles.input}
