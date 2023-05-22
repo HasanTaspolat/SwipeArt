@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import { doc, onSnapshot, setDoc, getDoc } from "firebase/firestore";
+import { onSnapshot, getDoc, doc as docRef, setDoc, updateDoc } from "firebase/firestore";
+import { doc } from '@firebase/firestore';
 import { db } from "../components/config";
 import { getAuth, signOut, deleteUser } from "firebase/auth";
 import BottomNavigationArtist from "./BottomNavigationArtist";
@@ -37,20 +38,23 @@ function ChatStart() {
   
         for (let user in data) {
           // Fetch user data from the 'users' collection
-          const userDoc = await getDoc(doc(db, "users", user));
+          console.log(user)
+          console.log("buraya kadar gelemedi")
+          const userDoc = await getDoc(docRef(db, "users", user));
+
           if (userDoc.exists()) {
             const userData = userDoc.data();
             notificationList.push({
               userId: user, 
               viewed: data[user].viewed,
               nameSurname: userData.nameSurname,
-              avatar: photoURL
+              avatar: userData.photoURL
             });
           }
         }
   
         setNotifications(notificationList);
-        console.log(notificationList)
+
       }
     });
   
@@ -62,21 +66,49 @@ function ChatStart() {
     try {
       // Update the clicked notification's 'viewed' property to true
       const notificationRef = doc(db, "notifications", notificationUserId);
-      await updateDoc(notificationRef, {
-        [userId]: { viewed: true },
+      await setDoc(notificationRef, {
+        [uid]: { viewed: true },
       });
     } catch (error) {
       console.error("Error updating notification: ", error);
     }
   };
- 
+
+  async function markNotificationAsViewed(userId, senderId, db) {
+    console.log("Notification marked as viewed successfully");
+    try {
+      
+      // Get the document reference
+      const notificationRef = docRef(db, "notifications", userId);
+  
+      // Update the 'viewed' property of the senderId to true
+      await updateDoc(notificationRef, {
+        [`${senderId}.viewed`]: true
+      });
+  
+      console.log("Notification marked as viewed successfully");
+    } catch (error) {
+      console.error("Error marking notification as viewed: ", error);
+    }
+  }
+
+  const handleNotificationPress = async (notificationUserId) => {
+    // Call your existing function
+    // Replace 'yourExistingFunction' with the actual function name and arguments
+    console.log("Nfasfasfotifiasfasfasaslly");
+    await handleNotificationClick(notificationUserId);
+  
+    // Call the function to mark the notification as viewed
+    await markNotificationAsViewed(uid, notificationUserId, db);
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Notifications:</Text>
       {notifications.map((notification) => (
         <TouchableOpacity
           key={notification.userId}
-          onPress={() => handleNotificationClick(notification.userId)}
+          onPress={() => handleNotificationPress(notification.userId)}
         >
           <Text style={styles.text}>
             {notification.userId}:
@@ -89,13 +121,20 @@ function ChatStart() {
           {notifications.map((notification) => (
               <TouchableOpacity
               key={notification.userId}
-              onPress={() => handleNotificationClick(notification.userId)}
+              onPress={() => handleNotificationPress(notification.userId)}
             >
               <View style={styles.avatarContainer}>
-  
+              <Image
+                    source={
+                      notification.photoURL
+                        ? { uri: notification.photoURL }
+                        : { uri: "https://i.stack.imgur.com/dr5qp.jpg" }
+                    }
+                    style={styles.avatar}
+                  />
               </View>
               <View style={styles.chatDetails}>
-                <Text style={styles.chatName}>{notifications.nameSurname}</Text>
+                <Text style={styles.chatName}>{notification.nameSurname}</Text>
                 <Text style={styles.lastMessage}>
             {notification.viewed ? "Go to chat." : "These users have swiped you right!"}
             </Text>
