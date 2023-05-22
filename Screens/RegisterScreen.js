@@ -122,20 +122,49 @@ const RegisterScreen = ({ navigation }) => {
       });
   }
 
-  const handleSignUp = () => {
+  const checkIfUsernameExists = async (username) => {
+    const docRef = doc(db, "usernames", username);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      console.log("Username already exists!");
+      return true;
+    } else {
+      console.log("Username does not exist!");
+      return false;
+    }
+  };
+
+  const createUsernameDocument = async (username, userUID) => {
+    await setDoc(doc(db, "usernames", username), {
+      userUID: userUID,
+    });
+  };
+
+  const handleSignUp = async () => {
     const emailReg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     const passwordRegex = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[^0-9a-zA-Z]).{8,12}$/;
 
+    const isUsernameTaken = await checkIfUsernameExists(username); // wait for the promise to resolve
+
+    if (isUsernameTaken) {
+      console.log("Username already taken, choose another one!");
+      setUserMessage(
+        <Text style={styles.errorMessage2}>
+          Username already taken, choose another one!
+        </Text>
+      );
+      return; // Return here to stop execution
+    }
     if (passwordRegex.test(password) === false) {
       console.log(
         "Please enter a password that contains one uppercase letter, one numeric character, one non-alphanumeric character, and is between 8 and 12 characters long."
       );
       setUserMessage(
         <Text style={styles.errorMessage2}>
-          {" "}
           Please enter a password that contains one uppercase letter, one
           numeric character, one non-alphanumeric character, and is between 8
-          and 12 characters long.{" "}
+          and 12 characters long.
         </Text>
       );
       navigation.navigate(RegisterScreen);
@@ -150,22 +179,21 @@ const RegisterScreen = ({ navigation }) => {
     } else if (password === "" && email === "") {
       setUserMessage(
         <Text style={styles.errorMessage2}>
-          {" "}
-          Please fill E-mail and Password boxes!{" "}
+          Please fill E-mail and Password boxes!
         </Text>
       );
     } else if (emailReg.test(email) === false) {
       setUserMessage(
         <Text style={styles.errorMessage2}>
-          {" "}
           Please fill valid Email address!
         </Text>
       );
     } else {
       createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
+        .then(async (userCredential) => {
           var user = userCredential.user;
           create(user.uid);
+          await createUsernameDocument(username, user.uid);
           navigation.navigate("LoginScreen");
           setUserMessage(<Text> </Text>);
         })
@@ -229,7 +257,9 @@ const RegisterScreen = ({ navigation }) => {
         />
 
         <Text style={[styles.header2, styles.passHead]}>Social Media </Text>
-        <Text style={[styles.header5, styles]}>(please fill the blanks with full link)</Text>
+        <Text style={[styles.header5, styles]}>
+          (please fill the blanks with full link)
+        </Text>
 
         <View style={styles.socialMediaCont}>
           <Icon
