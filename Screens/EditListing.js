@@ -89,101 +89,91 @@ const EditListing = () => {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={handlePress} style={styles.back}>
-        <Ionicons name="arrow-back" size={24} color="white" />
+        <Ionicons name="arrow-back" size={24} color="#fff" />
       </TouchableOpacity>
       <Text style={styles.title}>Edit Listing</Text>
       <TextInput
         style={styles.input}
         placeholder="Title"
+        placeholderTextColor="#aaa"
         value={title}
         onChangeText={(text) => setTitle(text)}
       />
       <TextInput
         style={styles.input}
         placeholder="Description"
+        placeholderTextColor="#aaa"
         value={desc}
         onChangeText={(text) => setDesc(text)}
       />
-      <TouchableOpacity style={styles.imageButton} onPress={handleChooseImage}>
-        <Text style={styles.imageButtonText}>Choose Image</Text>
+      <TouchableOpacity style={styles.button} onPress={handleChooseImage}>
+        <Text style={styles.buttonText}>Choose Image</Text>
       </TouchableOpacity>
       {image && <Image source={{ uri: image }} style={styles.imagePreview} />}
-      {error ? <Text style={styles.error}>{error}</Text> : null}
+      {error ? <Text style={styles.errorText}>{error}</Text> : null}
       <TouchableOpacity
-        style={styles.imageButton}
+        style={styles.button}
         onPress={handleEditListing}
         disabled={loading}
       >
         <Text style={styles.buttonText}>{loading ? "Loading..." : "Save"}</Text>
       </TouchableOpacity>
-      {/*   <TouchableOpacity style={styles.visibilityButton} onPress={toggleVisible}>
-        <Ionicons name={visible ? "eye" : "eye-off"} size={24} color="white" />
-        <Text style={styles.visibilityText}>
-          {visible ? "Visible" : "Hidden"}
-        </Text>
-      </TouchableOpacity> */}
-      {error ? <Text style={styles.error}>{error}</Text> : null}
+      {error ? <Text style={styles.errorText}>{error}</Text> : null}
     </View>
   );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "black",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 20,
-  },
-  back: {
-    position: "absolute",
-    top: 40,
-    left: 20,
-    zIndex: 1,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-    color: "white",
-  },
-  visibilityButton: {
-    textAlign: "center",
-    color: "white",
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 4,
-    padding: 10,
-    marginBottom: 20,
-    width: "100%",
-    backgroundColor: "white",
-    color: "black",
-  },
-  imageButton: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 4,
-    padding: 10,
-    width: "100%",
-    marginBottom: 20,
-    color: "white",
-  },
-  imageButtonText: {
-    textAlign: "center",
-    color: "white",
-  },
-  buttonText: {
-    textAlign: "center",
-    color: "white",
-  },
-  imagePreview: {
-    width: "100%",
-    height: 200,
-    resizeMode: "cover",
-    marginBottom: 20,
-  },
-});
-
-export default EditListing;
+}
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: "#000",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: 20,
+    },
+    back: {
+      position: "absolute",
+      top: 40,
+      left: 20,
+    },
+    title: {
+      fontSize: 24,
+      fontWeight: "bold",
+      marginBottom: 20,
+      color: "#fff",
+    },
+    input: {
+      borderWidth: 1,
+      borderColor: "#9370DB",
+      borderRadius: 4,
+      padding: 10,
+      marginBottom: 20,
+      width: "100%",
+      backgroundColor: "#000",
+      color: "#fff",
+    },
+    button: {
+      backgroundColor: "#9370DB",
+      padding: 10,
+      borderRadius: 4,
+      marginBottom: 20,
+      width: "100%",
+      alignItems: "center",
+    },
+    buttonText: {
+      color: "#fff",
+      fontSize: 16,
+    },
+    imagePreview: {
+      width: "100%",
+      height: 200,
+      resizeMode: "cover",
+      marginBottom: 20,
+    },
+    errorText: {
+      fontSize: 16,
+      color: "#FF6347",
+      marginBottom: 10,
+    },
+  });
+  
+  export default EditListing;

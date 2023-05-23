@@ -75,143 +75,126 @@ const AllListings = () => {
 
   return (
     <ScrollView style={styles.container}>
-      <TouchableOpacity style={styles.icon2} onPress={() => handlePress()}>
-        <AntDesign name="left" size={16} color="white" />
+      <TouchableOpacity style={styles.icon2} onPress={handlePress}>
+        <AntDesign name="left" size={24} color="#fff" />
       </TouchableOpacity>
       <Text style={styles.topTitle}> All Listings Information: </Text>
       {data.map((item) => (
-        <View style={styles.container} key={item.id}>
+        <View style={styles.listingContainer} key={item.id}>
           {item.isArchived ? (
-            <Text style={styles.title}> Listing has been archived</Text>
+            <Text style={styles.archivedText}> Listing has been archived</Text>
           ) : (
-            <View style={styles.titleContainer}>
+            <View>
               <Text style={styles.title}>Listing Title: {item.title}</Text>
-              <View style={styles.iconsContainer}></View>
               <Text style={styles.desc}>Listing Desc: {item.desc}</Text>
-              <Text numberOfLines={1} ellipsizeMode="tail" style={styles.image}>
-                Listing Image: {item.image}
-              </Text>
-              <View style={styles.allImage}>
+              <Text style={styles.imageLabel}>Listing Image: {item.image}</Text>
+              <View style={styles.imageContainer}>
                 <Text style={styles.desc}>Image Preview:</Text>
                 <Image
                   source={{ uri: item.image }}
-                  style={{ width: 100, height: 100 }}
+                  style={styles.imagePreview}
                 />
               </View>
               <View style={styles.buttonContainer}>
                 <TouchableOpacity onPress={() => handleDelete(item.id)}>
-                  <Ionicons
-                    name="trash"
-                    size={24}
-                    color="white"
-                    onPress={() => deleteListing(item.id)}
-                  />
+                  <Ionicons name="trash" size={24} color="#fff" />
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={styles.button2}
-                  onPress={() =>
-                    navigation.navigate("EditListing", { id: item.id })
-                  }
+                  style={styles.editButton}
+                  onPress={() => navigation.navigate("EditListing", { id: item.id })}
                 >
-                  <Ionicons
-                    name="pencil-outline"
-                    size={24}
-                    color="white"
-                    style={styles.icon}
-                  />
+                  <Ionicons name="pencil-outline" size={24} color="#fff" />
                 </TouchableOpacity>
               </View>
             </View>
           )}
-          <TouchableOpacity onPress={() => archievedOrNot(item.id)}>
-            <Text style={styles.textArchive}>
-              {item.isArchived ? (
-                <Ionicons
-                  name="eye-off"
-                  size={24}
-                  color="white"
-                  style={styles.icon}
-                />
-              ) : (
-                <Ionicons
-                  name="eye"
-                  size={24}
-                  color="white"
-                  style={styles.icon}
-                />
-              )}
-            </Text>
+          <TouchableOpacity style={styles.archiveButton} onPress={() => archievedOrNot(item.id)}>
+            {item.isArchived ? (
+              <Ionicons name="eye-off" size={24} color="#fff" />
+            ) : (
+              <Ionicons name="eye" size={24} color="#fff" />
+            )}
           </TouchableOpacity>
         </View>
       ))}
     </ScrollView>
   );
-};
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 10,
-    backgroundColor: "black",
-    paddingHorizontal: 20,
-    borderBottomColor: "white",
-    borderWidth: 1,
-  },
-  icon2: {
-    top: normalize(60),
-    marginBottom: normalize(30),
-    left: 20,
-  },
-  buttonContainer: {
-    display: "flex",
-    flexDirection: "row",
-    marginRight: "auto",
-    marginVertical: 10,
-  },
-  button2: {
-    marginLeft: 40,
-  },
-  title: {
-    color: "white",
-    fontSize: 14,
-    fontWeight: "bold",
-    marginBottom: 5,
-  },
-  textArchive: {
-    color: "white",
-    fontSize: 26,
-    fontWeight: "bold",
-    marginBottom: 5,
-  },
-  allImage: {
-    marginBottom: 10,
-  },
-  goBack: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    marginLeft: 10,
-    marginTop: 10,
-  },
-  topTitle: {
-    color: "white",
-    fontSize: 18,
-    fontWeight: "bold",
-    paddingVertical: 20,
-    marginTop: 40,
-    borderBottomColor: "white",
-    borderWidth: 1,
-  },
-  desc: {
-    fontSize: 14,
-    fontWeight: "bold",
-    marginBottom: 5,
-    color: "white",
-  },
-  image: {
-    fontSize: 14,
-    color: "white",
-    marginBottom: 5,
-  },
-});
-
-export default AllListings;
+}
+  
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      padding: 20,
+      backgroundColor: "#000",
+    },
+    listingContainer: {
+      padding: 20,
+      borderBottomColor: "#9370DB",
+      borderBottomWidth: 1,
+      marginBottom: 20,
+    },
+    icon2: {
+      marginTop: normalize(60),
+      left: normalize(10),
+      padding: 5,
+      width: 40,
+      borderRadius: 12,
+      marginBottom: 10,
+      backgroundColor: "#673AB7",
+    },
+    title: {
+      color: "#fff",
+      fontSize: 18,
+      fontWeight: "bold",
+      marginBottom: 10,
+    },
+    archivedText: {
+      color: "#FF6347",
+      fontSize: 16,
+      fontWeight: "bold",
+      marginBottom: 10,
+    },
+    desc: {
+      color: "#fff",
+      fontSize: 16,
+      marginBottom: 10,
+    },
+    imageLabel: {
+      color: "#fff",
+      fontSize: 16,
+      marginBottom: 10,
+    },
+    imageContainer: {
+      marginBottom: 20,
+    },
+    imagePreview: {
+      width: "100%",
+      height: 200,
+      resizeMode: "contain",
+      marginBottom: 10,
+    },
+    buttonContainer: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      marginBottom: 20,
+    },
+    editButton: {
+      marginLeft: 20,
+    },
+    archiveButton: {
+      backgroundColor: "#9370DB",
+      padding: 10,
+      borderRadius: 5,
+      alignItems: "center",
+    },
+    topTitle: {
+      color: "#fff",
+      fontSize: 24,
+      fontWeight: "bold",
+      marginBottom: 30,
+      borderBottomColor: "#9370DB",
+      borderBottomWidth: 2,
+    },
+  });
+  
+  export default AllListings;

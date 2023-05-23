@@ -102,7 +102,7 @@ const ArtistDashboardPage = () => {
         <View style={styles.card}>
           <View style={styles.textContainer}>
             <Icon
-              name="utensils"
+              name="book-education"
               size={20}
               color="#fff"
               onPress={() => friendRequestScreen()}
@@ -180,57 +180,57 @@ const ArtistDashboardPage = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "black",
     flex: 1,
-  
+    backgroundColor: "#000",
+    paddingHorizontal: 20,
+    paddingTop: 50,
+    marginTop: normalize(35),
+  },
+  sidebarContainer: {
+    position: "absolute",
+    top: -70,
+    left: -40,
+    margin: 20,
   },
   cardContainer: {
-    display: "flex",
     flexDirection: "row",
-    justifyContent: "space-evenly",
-    padding: 0,
-  
+    justifyContent: "space-between",
+    flexWrap: "wrap",
   },
   header: {
-    marginTop: 22,
-    marginBottom: 20,
+    marginBottom: 40,
   },
   greeting: {
     fontSize: 24,
     fontWeight: "bold",
     color: "#fff",
-    width: "100%",
-    paddingLeft: normalize(20),
-    marginTop: normalize(80),
+    marginBottom: 10,
   },
   name: {
-    fontSize: 26,
+    fontSize: 28,
     fontWeight: "bold",
     color: "#fff",
-    padding: 10,
-    paddingLeft: normalize(20),
   },
   card: {
-    width: "45%",
-    height: 110,
+    width: "48%",
+    height: 120,
     borderRadius: 10,
-    backgroundColor: "#000212",
+    backgroundColor: "#1a1a1a",
     borderColor: "#004d6b",
     borderWidth: 0.3,
-    flexDirection: "column",
-    alignItems: "center",
     justifyContent: "center",
-    marginTop: normalize(40),
+    alignItems: "center",
+    marginBottom: 20,
   },
   title: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "bold",
     color: "#fff",
     textAlign: "center",
     marginTop: 10,
   },
   value: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "bold",
     textAlign: "center",
     color: "#fff",
@@ -239,3 +239,4 @@ const styles = StyleSheet.create({
 });
 
 export default ArtistDashboardPage;
+
