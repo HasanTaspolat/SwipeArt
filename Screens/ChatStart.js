@@ -149,12 +149,12 @@ function ChatStart() {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.icon2} onPress={() => handlePress()}>
+      <TouchableOpacity style={styles.icon2} onPress={() => handleBackNavigation()}>
         <AntDesign
           name="left"
           size={16}
           color="white"
-          onPress={() => handlePress()}
+          onPress={() => handleBackNavigation()}
         />
       </TouchableOpacity>
       <Text style={styles.title}>Notifications & Chat Requests:</Text>

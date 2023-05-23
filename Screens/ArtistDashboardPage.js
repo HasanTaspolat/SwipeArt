@@ -15,6 +15,7 @@ import {
 } from "firebase/firestore";
 import { auth, database } from "../firebase";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import normalize from "react-native-normalize";
 
 const ArtistDashboardPage = () => {
   const [orderCount, setOrderCount] = useState(0);
@@ -179,6 +180,7 @@ const ArtistDashboardPage = () => {
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: normalize(40),
     backgroundColor: "black",
     flex: 1,
   },

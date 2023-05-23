@@ -73,9 +73,9 @@ const ListingArtistCreator = () => {
   };
 
   return (
-    <View style={styles.header2}>
+    <View style={styles.container}>
       <TouchableOpacity
-        style={styles.goBack}
+        style={styles.backButton}
         onPress={() => navigation.goBack()}
       >
         <Ionicons
@@ -85,95 +85,105 @@ const ListingArtistCreator = () => {
           onPress={handlePress}
         />
       </TouchableOpacity>
-
-      <Text style={styles.text}>Title:</Text>
-      <TextInput
-        style={styles.input}
-        value={title}
-        onChangeText={setTitle}
-        placeholder="Enter title here"
-        placeholderTextColor="#999"
-      />
-      <Text style={styles.text}>Description:</Text>
-      <TextInput
-        value={desc}
-        onChangeText={setDesc}
-        style={styles.input}
-        placeholder="Enter description here"
-        placeholderTextColor="#999"
-      />
-
+  
+      <View style={styles.formWrapper}>
+        <Text style={styles.label}>Title:</Text>
+        <TextInput
+          style={styles.input}
+          value={title}
+          onChangeText={setTitle}
+          placeholder="Enter title here"
+          placeholderTextColor="#999"
+        />
+  
+        <Text style={styles.label}>Description:</Text>
+        <TextInput
+          value={desc}
+          onChangeText={setDesc}
+          style={styles.input}
+          placeholder="Enter description here"
+          placeholderTextColor="#999"
+        />
+      </View>
+  
       <TouchableOpacity
         style={styles.button}
-        title="Upload Image"
         onPress={pickImage}
       >
-        <Text style={styles.text}> Upload Listing Image </Text>
+        <Text style={styles.buttonText}>Upload Listing Image</Text>
       </TouchableOpacity>
-      <Text numberOfLines={1} ellipsizeMode="tail" style={styles.textImage}>
+      <Text numberOfLines={1} ellipsizeMode="tail" style={styles.imageText}>
         {image}
       </Text>
+  
       <TouchableOpacity
         style={styles.button}
-        title="Add Listing"
         onPress={addProduct}
       >
-        <Text style={styles.text}> Add Listing </Text>
+        <Text style={styles.buttonText}>Add Listing</Text>
       </TouchableOpacity>
-
-      <TextInput value={count} onChangeText={setCount} style={styles.text2} />
+  
+      <TextInput value={count} onChangeText={setCount} style={styles.counter} />
     </View>
   );
-};
-
-const styles = StyleSheet.create({
-  header2: {
-    padding: 10,
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "black",
-  },
-  button: {
-    borderRadius: normalize(10),
-    borderColor: "gray",
-    borderWidth: 1,
-    marginTop: normalize(10),
-    padding: 10,
-    width: "50%",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "black",
-  },
-  goBack: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    marginLeft: 10,
-    marginTop: 10,
-  },
-  text: {
-    color: "white",
-  },
-  text2: {
-    color: "white",
-    marginTop: 10,
-  },
-  textImage: {
-    color: "white",
-    width: 150,
-    margin: 10,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: "gray",
-    width: "50%",
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    margin: 10,
-    color: "white",
-  },
-});
-
-export default ListingArtistCreator;
+} 
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      padding: 20,
+      backgroundColor: '#111',
+    },
+    backButton: {
+      position: 'absolute',
+      top: 70,
+      left: 18,
+    },
+    formWrapper: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    label: {
+      fontSize: 16,
+      color: '#fff',
+      marginVertical: 8,
+    },
+    input: {
+      borderColor: '#666',
+      borderWidth: 1,
+      borderRadius: 8,
+      paddingVertical: 8,
+      paddingHorizontal: 12,
+      width: '70%',
+      color: '#fff',
+      marginBottom: 20,
+    },
+    button: {
+      borderRadius: 10,
+      paddingVertical: 10,
+      paddingHorizontal: 16,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: '#333',
+      marginTop: 20,
+      width: '70%',
+      alignSelf: 'center',
+    },
+    buttonText: {
+      color: '#fff',
+      fontSize: 16,
+    },
+    imageText: {
+      color: '#fff',
+      marginVertical: 10,
+      marginLeft: 10,
+    },
+    counter: {
+      color: '#fff',
+      marginTop: 20,
+      fontSize: 16,
+      textAlign: 'center',
+    },
+  });
+  
+  export default ListingArtistCreator;
