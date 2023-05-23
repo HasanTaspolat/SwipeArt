@@ -21,7 +21,7 @@ import { auth, database } from "../firebase";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { getAuth } from "firebase/auth";
-
+import normalize from "react-native-normalize";
 const AllListings = () => {
   const [data, setData] = useState([]);
   const navigation = useNavigation();
@@ -157,7 +157,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   icon2: {
-    marginTop: 20,
+    top: normalize(60),
+    marginBottom: normalize(30),
+    left: 20,
   },
   buttonContainer: {
     display: "flex",

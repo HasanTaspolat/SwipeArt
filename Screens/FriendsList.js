@@ -24,7 +24,11 @@ import { db } from "../components/config";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/FontAwesome";
+import normalize from "react-native-normalize";
 
+/* top: normalize(40),
+    marginBottom: normalize(10),
+    left: 20, */
 export default function FriendsList() {
   const [friends, setFriends] = useState([]);
   const auth = getAuth();
@@ -62,8 +66,8 @@ export default function FriendsList() {
   };
   const startChat = (user1, user2) => {
     // Implement your navigation logic here to open a specific chat
-    navigation.navigate("ChatScreen",{ userID1: user1 , userID2: user2  });
-  }; 
+    navigation.navigate("ChatScreen", { userID1: user1, userID2: user2 });
+  };
 
   useEffect(() => {
     if (uid) {
@@ -98,9 +102,12 @@ export default function FriendsList() {
   const renderItem = ({ item }) => (
     <View style={styles.item}>
       <Text style={styles.title}>{item.name || item.id}</Text>
-      <TouchableOpacity style={styles.openChatButton} onPress={() => startChat(uid, item.id)}>
-      <Text style={styles.openChatText}>Open Chat</Text>
-    </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.openChatButton}
+        onPress={() => startChat(uid, item.id)}
+      >
+        <Text style={styles.openChatText}>Open Chat</Text>
+      </TouchableOpacity>
       <TouchableOpacity>
         <Icon
           name="remove"
@@ -124,6 +131,11 @@ export default function FriendsList() {
         data={friends}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
+        ListEmptyComponent={() => (
+          <Text style={styles.emptyText}>
+            You do not have any friends right now!
+          </Text>
+        )}
       />
     </View>
   );
@@ -150,16 +162,21 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
   },
+  emptyText: {
+    color: "white",
+    fontSize: 16,
+    padding: 20,
+  },
   openChatButton: {
-    backgroundColor: '#1e90ff',
+    backgroundColor: "#1e90ff",
     padding: 10,
     borderRadius: 5,
     marginTop: 10,
   },
   openChatText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 18,
-    textAlign: 'center',
+    textAlign: "center",
   },
   friendTitle: {
     color: "white",
@@ -167,6 +184,8 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   icon2: {
-    padding: 20,
+    top: normalize(60),
+    marginBottom: normalize(70),
+    left: 20,
   },
 });
