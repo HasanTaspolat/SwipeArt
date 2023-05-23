@@ -101,11 +101,13 @@ export default function Chat(user) {
             text: doc.data().text,
             user: doc.data().user,
             image: doc.data().uri,
+            receiver: doc.data().receiver, // add this line
           }))
-          // Filter messages only from the specific users
+          // Update the filter
           .filter(
             (message) =>
-              message.user._id === userID1 || message.user._id === userID2
+              (message.user._id === userID1 && message.receiver === userID2) ||
+              (message.user._id === userID2 && message.receiver === userID1)
           )
       );
     });
@@ -127,7 +129,8 @@ export default function Chat(user) {
         _id,
         createdAt,
         text,
-        user,
+        user, // sender
+        receiver: userID2// the ID of the receiver
       });
     } else {
       console.log("User is not allowed to send messages in this chat");
