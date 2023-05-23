@@ -68,7 +68,7 @@ export default function ArtistPainter({ navigation }) {
         what is your specific profession?
       </Text>
       <View style={styles.radioButton}>
-        <RadioButton
+        <RadioButton.Android
           label="Digital Design"
           value="1"
           status={digitalDesign === true ? "checked" : "unchecked"}
@@ -78,7 +78,7 @@ export default function ArtistPainter({ navigation }) {
       </View>
 
       <View style={styles.radioButton}>
-        <RadioButton
+        <RadioButton.Android
           label="Restoration"
           value="1"
           status={restoration === true ? "checked" : "unchecked"}
@@ -88,7 +88,7 @@ export default function ArtistPainter({ navigation }) {
       </View>
 
       <View style={styles.radioButton}>
-        <RadioButton
+        <RadioButton.Android
           label="Graffiti"
           value="1"
           status={graffiti === true ? "checked" : "unchecked"}
@@ -98,7 +98,7 @@ export default function ArtistPainter({ navigation }) {
       </View>
 
       <View style={styles.radioButton}>
-        <RadioButton
+        <RadioButton.Android
           label="Industrial"
           value="1"
           status={industrial === true ? "checked" : "unchecked"}

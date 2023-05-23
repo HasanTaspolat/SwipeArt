@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import Background from "../components/Background";
 import {
   Text,
@@ -38,6 +39,13 @@ export default function ArtistMusician({ navigation }) {
   const [producer, setProducer] = useState(false);
   const [engineer, setEngineer] = useState(false);
   const [composer, setComposer] = useState(false);
+  const theme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      primary: 'white', // or any color that contrasts with your background
+    },
+  };
 
   function setMusicianJob() {
     setDoc(doc(db, "users", uid, "artistPreference", "MusicianProfession"), {
@@ -61,14 +69,17 @@ export default function ArtistMusician({ navigation }) {
   }
 
   return (
-    <Background>
+    <View
+    style={styles.container2}
+    >
       <Text style={[{ color: "white", marginBottom: 20, fontWeight: "bold" }]}>
         what is your specific profession?
       </Text>
 
       <View style={styles.radioButton}>
-        <RadioButton
-          label="Vocalist"
+        <RadioButton.Android
+          color="red" 
+          uncheckedColor="grey"
           value="1"
           status={vocalist === true ? "checked" : "unchecked"}
           onPress={() => setVocalist(!vocalist)}
@@ -77,8 +88,7 @@ export default function ArtistMusician({ navigation }) {
       </View>
 
       <View style={styles.radioButton}>
-        <RadioButton
-          label="Producer"
+        <RadioButton.Android
           value="1"
           status={producer === true ? "checked" : "unchecked"}
           onPress={() => setProducer(!producer)}
@@ -87,8 +97,7 @@ export default function ArtistMusician({ navigation }) {
       </View>
 
       <View style={styles.radioButton}>
-        <RadioButton
-          label="Sound Engineer"
+        <RadioButton.Android
           value="1"
           status={engineer === true ? "checked" : "unchecked"}
           onPress={() => setEngineer(!engineer)}
@@ -97,8 +106,7 @@ export default function ArtistMusician({ navigation }) {
       </View>
 
       <View style={styles.radioButton}>
-        <RadioButton
-          label="Composer"
+        <RadioButton.Android
           value="1"
           status={composer === true ? "checked" : "unchecked"}
           onPress={() => setComposer(!composer)}
@@ -111,16 +119,23 @@ export default function ArtistMusician({ navigation }) {
           <Text style={styles.textButton}>Next</Text>
         </View>
       </TouchableHighlight>
-    </Background>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     height: 75,
-    flexDirection: "row",
+    flexDirection: "column",
     justifyContent: "space-around",
     alignItems: "center",
+  },
+  container2: {
+    height: "100%",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "black",
   },
   button: {
     width: 200,
@@ -141,9 +156,12 @@ const styles = StyleSheet.create({
     elevation: 9,
   },
   radioButton: {
+    display: "flex",
+    flexDirection: "row",
     padding: 10,
     justifyContent: "center",
     alignItems: "center",
+    color: "black",
   },
   textButton: {
     color: "white",

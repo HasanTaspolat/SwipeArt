@@ -258,7 +258,9 @@ const RegisterScreen = ({ navigation }) => {
         });
     }
   };
-
+  const handlePress = () => {
+    navigation.navigate("LoginScreen");
+  };
   return (
     <ScrollView style={styles.main2}>
       <TouchableOpacity onPress={() => handlePress()}>

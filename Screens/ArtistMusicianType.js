@@ -68,7 +68,7 @@ export default function ArtistMusicianType({ navigation }) {
         what is your specific profession?
       </Text>
       <View style={styles.container}>
-        <RadioButton
+        <RadioButton.Android
           label="Pop"
           value="1"
           status={pop === true ? "checked" : "unchecked"}
@@ -77,7 +77,7 @@ export default function ArtistMusicianType({ navigation }) {
         <Text style={styles.textButton}>Pop</Text>
       </View>
       <View style={styles.container}>
-        <RadioButton
+        <RadioButton.Android
           label="Rock"
           value="1"
           status={rock === true ? "checked" : "unchecked"}
@@ -86,7 +86,7 @@ export default function ArtistMusicianType({ navigation }) {
         <Text style={styles.textButton}>Rock</Text>
       </View>
       <View style={styles.container}>
-        <RadioButton
+        <RadioButton.Android
           label="Rap"
           value="1"
           status={rap === true ? "checked" : "unchecked"}
@@ -95,7 +95,7 @@ export default function ArtistMusicianType({ navigation }) {
         <Text style={styles.textButton}>Rap</Text>
       </View>
       <View style={styles.container}>
-        <RadioButton
+        <RadioButton.Android
           label="blues"
           value="1"
           status={blues === true ? "checked" : "unchecked"}
@@ -104,7 +104,7 @@ export default function ArtistMusicianType({ navigation }) {
         <Text style={styles.textButton}>Blues</Text>
       </View>
       <View style={styles.container}>
-        <RadioButton
+        <RadioButton.Android
           label="edm"
           value="1"
           status={edm === true ? "checked" : "unchecked"}

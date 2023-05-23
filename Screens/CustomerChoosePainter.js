@@ -47,7 +47,7 @@ export default function CustomerChoosePainter({ navigation }) {
         <Background>
             <Text style={[{ color: 'white', marginBottom: 20, fontWeight: 'bold' }]} > Which specific profession are you looking for?</Text>
             <View style={styles.container}>
-                <RadioButton 
+                <RadioButton.Android 
                     label="Design"
                     value="1"
                     status={ design === true ? 'checked' : 'unchecked' }
@@ -58,7 +58,7 @@ export default function CustomerChoosePainter({ navigation }) {
                     </Text>
             </View>
             <View style={styles.container}>
-                <RadioButton 
+                <RadioButton.Android 
                     label="Restoration"
                     value="1"
                     status={ restoration === true ? 'checked' : 'unchecked' }
@@ -69,7 +69,7 @@ export default function CustomerChoosePainter({ navigation }) {
                     </Text>
             </View>
             <View style={styles.container}>
-                <RadioButton 
+                <RadioButton.Android 
                     label="graffiti"
                     value="1"
                     status={ graf === true ? 'checked' : 'unchecked' }
@@ -81,7 +81,7 @@ export default function CustomerChoosePainter({ navigation }) {
             </View>
 
             <View style={styles.container}>
-                <RadioButton 
+                <RadioButton.Android 
                     label="industrial"
                     value="1"
                     status={ industrial === true ? 'checked' : 'unchecked' }
