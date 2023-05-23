@@ -101,8 +101,8 @@ const styles = StyleSheet.create({
   },
   icon: {
     position: "absolute", // add if dont work with above
-    left: 40,
-    top: normalize(60),
+    left: 20,
+    top: normalize(20),
   },
   sidebar: {
     position: "absolute",
@@ -118,7 +118,6 @@ const styles = StyleSheet.create({
   sidebarText: {
     fontSize: 20,
     fontWeight: "bold",
-
     color: "white",
   },
   closeIcon: {

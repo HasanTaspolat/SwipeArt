@@ -70,7 +70,7 @@ const ArtistDashboardPage = () => {
       const currentUser = docs_pref.find(
         (item) => item.id === auth.currentUser.uid
       );
-     /*  console.log("artistPreference data", docs_pref);
+      /*  console.log("artistPreference data", docs_pref);
       console.log("sss:", docs_pref[0].id); */
       setOrderType(docs_pref[0].id);
       setData(docs_pref);
@@ -188,9 +188,9 @@ const styles = StyleSheet.create({
   },
   sidebarContainer: {
     position: "absolute",
-    top: -70,
-    left: -40,
-    margin: 20,
+  
+    backgroundColor: "black",
+    zIndex: 2222222,
   },
   cardContainer: {
     flexDirection: "row",
@@ -205,11 +205,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#fff",
     marginBottom: 10,
+    top:20,
   },
   name: {
     fontSize: 28,
     fontWeight: "bold",
     color: "#fff",
+    top:20,
   },
   card: {
     width: "48%",
@@ -239,4 +241,3 @@ const styles = StyleSheet.create({
 });
 
 export default ArtistDashboardPage;
-

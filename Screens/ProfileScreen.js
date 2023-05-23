@@ -113,6 +113,26 @@ const EditProfileScreen = ({ navigation }) => {
       });
   };
 
+  const updateCV = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      const url = await uploadImageToFirebase(result.assets[0].uri);
+      setCv(url);
+
+      await updateDoc(doc(db, "users", uid), {
+        cv: url,
+      });
+
+      alert("CV Updated Successfully!");
+    }
+  };
+
   useEffect(() => {
     const q = query(collection(database, "users"));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -252,6 +272,39 @@ const EditProfileScreen = ({ navigation }) => {
       });
   };
 
+  const uploadImageToFirebase = async (uri) => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+
+    const storage = getStorage();
+    const storageRef = ref(
+      storage,
+      "images/" + Math.random().toString(36).substring(2, 15)
+    );
+    const uploadTask = uploadBytesResumable(storageRef, blob);
+
+    return new Promise((resolve, reject) => {
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          var progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log("Upload is " + progress + "% done");
+        },
+        (error) => {
+          console.log(error);
+          reject(error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            console.log("File available at", downloadURL);
+            resolve(downloadURL);
+          });
+        }
+      );
+    });
+  };
+
   //console.log(storage);
   const handleDocumentUpload = async () => {
     let result = await DocumentPicker.getDocumentAsync({});
@@ -332,12 +385,9 @@ const EditProfileScreen = ({ navigation }) => {
             <Text style={styles.label}>Bio</Text>
             <TextInput style={styles.input} value={bio} onChangeText={setBio} />
             <Text style={styles.label}>Document</Text>
-            <TouchableOpacity
-              style={styles.uploadButton}
-              onPress={handleDocumentUpload}
-            >
+            <TouchableOpacity style={styles.uploadButton} onPress={updateCV}>
               <Feather name="upload" size={24} color="white" />
-              <Text style={styles.uploadText}>Upload document</Text>
+              <Text style={styles.uploadText}>update CV</Text>
             </TouchableOpacity>
 
             {/*     {behance !== "" && ( */}
