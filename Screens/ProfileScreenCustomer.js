@@ -669,8 +669,8 @@ const styles = StyleSheet.create({
     width: "100%",
     borderColor: "rgba(197, 197, 197, 0.62)",
     borderWidth: 1,
-    fontFamily: "circular",
     paddingHorizontal: 40,
+    fontFamily: "circular",
   },
   bottomTexts2: {
     marginTop: 10,
