@@ -20,7 +20,7 @@ import BottomNavigationCustomer from "./BottomNavigationCustomer";
 import normalize from "react-native-normalize";
 import Icon from "react-native-vector-icons/FontAwesome";
 import storage from "../components/config";
-
+import { db } from "../components/config";
 import {
   collection,
   query,
@@ -91,25 +91,27 @@ const ProfileScreenCustomer = ({ navigation }) => {
         const userUid = auth.currentUser.uid;
         const favoriteRef = doc(database, "favorites", userUid);
         const favoriteSnap = await getDoc(favoriteRef);
-        let favoritesNames = [];
+        let favoritesArray = [];
         if (favoriteSnap.exists()) {
           const favorite = favoriteSnap.data();
-          // console.log("favoriteSnap",favorite.artists[0]);
 
           for (let i = 0; i < favorite.artists.length; i++) {
             const artistRef = doc(database, "users", favorite.artists[i]);
             const artistSnap = await getDoc(artistRef);
-            console.log("artistRef", artistSnap.data());
 
             if (artistSnap.exists() && artistSnap.data().isArtist === 1) {
-              favoritesNames.push(artistSnap.data().nameSurname);
-              favoritesNames.push(artistSnap.data().username);
-              favoritesNames.push(artistSnap.data().email);
+              const artistData = artistSnap.data();
+              favoritesArray.push({
+                id: artistData.useruid,
+                nameSurname: artistData.nameSurname,
+                username: artistData.username,
+                email: artistData.email,
+              });
             }
           }
         }
 
-        setFavorites(favoritesNames);
+        setFavorites(favoritesArray);
       } catch (error) {
         console.error("Error getting documents: ", error);
       }
@@ -117,7 +119,7 @@ const ProfileScreenCustomer = ({ navigation }) => {
     fetchFavorites();
   }, [auth.currentUser.uid]);
 
-  console.log(favorites[0]);
+  //console.log(favorites);
 
   const handleSocialMediaChange = (platform, value) => {
     setSocialMedia((prevState) => ({
@@ -226,8 +228,8 @@ const ProfileScreenCustomer = ({ navigation }) => {
       const currentUser = docs_pref.find(
         (item) => item.id === auth.currentUser.uid
       );
-      console.log("artistPreference data", docs_pref);
-      console.log("sss:", docs_pref[0]);
+      /*  console.log("artistPreference data", docs_pref);
+      console.log("sss:", docs_pref[0]); */
       setData(docs_pref);
 
       const handleProfessionSelect = (profession) => {
@@ -287,6 +289,41 @@ const ProfileScreenCustomer = ({ navigation }) => {
         // The write failed...
         console.log(error);
       });
+  };
+
+  const removeFromFavorites = async (artistId) => {
+    try {
+      const userUid = auth.currentUser.uid;
+      const favoriteRef = doc(database, "favorites", userUid);
+      const favoriteSnap = await getDoc(favoriteRef);
+
+      if (favoriteSnap.exists()) {
+        const favorite = favoriteSnap.data();
+        // Check if the artist is in the user's favorites
+        const index = favorite.artists.indexOf(artistId);
+        if (index !== -1) {
+          // Remove the artist from the user's favorites
+          favorite.artists.splice(index, 1);
+          await updateDoc(favoriteRef, {
+            artists: favorite.artists,
+          });
+
+          // Also update the local state
+          const newFavorites = favorites.filter(
+            (artist) => artist.id !== artistId
+          );
+          setFavorites(newFavorites);
+
+          console.log("Artist removed from user's favorites.");
+        } else {
+          console.log("Artist is not in user's favorites.");
+        }
+      } else {
+        console.log("Favorites document does not exist.");
+      }
+    } catch (error) {
+      console.error("Error removing artist from user's favorites:", error);
+    }
   };
 
   return (
@@ -443,18 +480,38 @@ const ProfileScreenCustomer = ({ navigation }) => {
               <View>
                 {favorites.length === 0 ? (
                   <View style={styles.favoriteContainer}>
-                    <Text style={styles.favoriteText}>
-                      No favorites found.
-                    </Text>
+                    <Text style={styles.favoriteText}>No favorites found.</Text>
                   </View>
                 ) : (
                   favorites.map((favorite, index) => (
-                    <View key={index} style={styles.favoriteContainer}>
-                      <Text style={styles.favoriteText}>{favorite}</Text>
+                    <View key={index} style={styles.favoriteContainer2}>
+                      <View>
+                        <Text style={styles.favoriteText}>
+                          {favorite.nameSurname}
+                        </Text>
+                        <Text style={styles.favoriteText}>
+                          {favorite.username}
+                        </Text>
+                        <Text style={styles.favoriteText}>
+                          {favorite.email}
+                        </Text>
+                      </View>
+
+                      <View>
+                        <TouchableOpacity style={styles.removeIcon}>
+                          <Icon
+                            name="remove"
+                            size={26}
+                            color="red"
+                            onPress={() => removeFromFavorites(favorite.id)}
+                          />
+                        </TouchableOpacity>
+                      </View>
                     </View>
                   ))
                 )}
               </View>
+
               {/*  <View style={styles.bottomTexts}>
                   <Text style={styles.bottomText}>Genre:</Text>
                   <Text style={styles.bottomText}>{selectedGenre}</Text>
@@ -637,6 +694,13 @@ const styles = StyleSheet.create({
     margin: 4,
     marginLeft: 15,
   },
+  favoriteContainer2: {
+    margin: 4,
+    marginLeft: 15,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+  },
   favorCont: {
     display: "flex",
     flexDirection: "row",
@@ -649,6 +713,9 @@ const styles = StyleSheet.create({
   },
   starIcon: {
     marginRight: 15,
+  },
+  removeIcon: {
+    marginLeft: 15,
   },
 });
 
