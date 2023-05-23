@@ -306,7 +306,7 @@ export default function FilterScreen() {
                   <Text style={styles.info}>@{item.username}</Text>
                   <Text style={styles.info}>{item.email}</Text>
                   <Text style={styles.info}>{musicianJob}</Text>
-
+                  <Text style={styles.info}>{musicianJob}</Text>
                   <View style={styles.icont}>
                     <TouchableOpacity
                       style={styles.iconticons}

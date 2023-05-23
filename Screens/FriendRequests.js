@@ -17,6 +17,7 @@ import {
   updateDoc,
   arrayUnion,
   writeBatch,
+  addDoc,
 } from "firebase/firestore";
 import Icon from "react-native-vector-icons/FontAwesome5";
 
@@ -81,9 +82,31 @@ export default function FriendRequests() {
 
       return () => unsubscribe();
     }
-  }, [uid]); // Re-run the effect when uid changes
+  }, [uid]);
 
   const handleAccept = async (requestId, senderId) => {
+    const batch = writeBatch(db);
+
+    // Add each user to the other's friend list
+    const userRef = doc(db, "users", uid);
+    const senderRef = doc(db, "users", senderId);
+    batch.update(userRef, { friends: arrayUnion(senderId) });
+    batch.update(senderRef, { friends: arrayUnion(uid) });
+
+    // Delete the friend request from the database
+    const requestRef = doc(db, "friendRequests", requestId);
+    batch.delete(requestRef);
+
+    await batch.commit();
+  };
+
+  // Function to handle declining a friend request
+  const handleDecline = async (requestId) => {
+    const requestRef = doc(db, "friendRequests", requestId);
+    await deleteDoc(requestRef);
+  };
+
+  /*  const handleAccept = async (requestId, senderId) => {
     const batch = writeBatch(db);
 
     // Add each user to the other's friend list
@@ -104,7 +127,7 @@ export default function FriendRequests() {
     const requestRef = doc(db, "friendRequests", requestId);
     await updateDoc(requestRef, { status: "declined" });
   };
-
+ */
   console.log(name);
   const renderItem = ({ item }) => (
     <View style={styles.item}>
