@@ -9,7 +9,6 @@ import {
   ScrollView,
   Linking,
 } from "react-native";
-import { WebView } from "react-native-webview";
 import * as Font from "expo-font";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";

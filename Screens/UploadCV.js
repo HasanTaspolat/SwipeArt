@@ -13,7 +13,7 @@ import { getAuth } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../components/config";
 import ChooseScreenFirst from "./ChooseScreenFirst";
-import { WebView } from "react-native-webview";
+
 import * as FileSystem from "expo-file-system";
 
 export default function UploadCV({ navigation }) {
