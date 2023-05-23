@@ -38,6 +38,10 @@ function ChatStart() {
     navigation.navigate("ChatScreen", { userID1: user1, userID2: user2 });
   };
 
+  const handlePress = () => {
+    navigation.navigate("MainPage");
+  };
+
   useEffect(() => {
     const unsubscribe = onSnapshot(
       doc(db, "notifications", uid),
@@ -145,7 +149,7 @@ function ChatStart() {
 
   return (
     <View style={styles.container}>
-        <TouchableOpacity style={styles.icon2} onPress={() => handlePress()}>
+      <TouchableOpacity style={styles.icon2} onPress={() => handlePress()}>
         <AntDesign
           name="left"
           size={16}
