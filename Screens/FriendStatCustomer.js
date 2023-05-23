@@ -24,6 +24,7 @@ import { db } from "../components/config";
 import { getAuth } from "firebase/auth";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import normalize from "react-native-normalize";
 
 export default function FriendStatCustomer() {
   const [requests, setRequests] = useState([]);
@@ -134,7 +135,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
   },
   icon2: {
-    padding: 20,
+    marginTop: normalize(40),
+    left:20,
+    top:10,
   },
   flexCont: {
     display: "flex",

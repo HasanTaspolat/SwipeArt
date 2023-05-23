@@ -554,11 +554,17 @@ const styles = StyleSheet.create({
     color: "#5769FA",
     fontWeight: "bold",
     fontFamily: "circular",
+    fontSize:16,
+    marginTop:normalize(30),
+    left: normalize(10),
   },
   saveText: {
     color: "#5769FA",
     fontWeight: "bold",
     fontFamily: "circular",
+    fontSize:16,
+    marginTop:normalize(30),
+    right: normalize(10),
   },
   imageContainer: {
     alignItems: "center",

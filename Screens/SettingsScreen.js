@@ -20,6 +20,7 @@ import {
   doc,
 } from "firebase/firestore";
 import { auth, database } from "../firebase";
+import normalize from "react-native-normalize";
 
 const SettingsScreen = ({ navigation }) => {
   const auth = getAuth();
@@ -153,26 +154,30 @@ const SettingsScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex:1,
     backgroundColor: "black",
-    paddingHorizontal: 20,
-    paddingVertical: 40,
+    paddingHorizontal: normalize(20),
+    paddingVertical:  normalize(50),
   },
   section: {
-    marginBottom: 20,
+    marginBottom: normalize(20),
     borderBottomWidth: 1,
     borderBottomColor: "#e3e3e3",
     borderRadius: 2,
-    padding: 10,
+    padding: normalize(10),
   },
   sectionTitle: {
     fontWeight: "bold",
     fontSize: 16,
-    marginBottom: 10,
+    marginBottom: normalize(10),
     color: "white",
   },
   logoutIcon: {
     paddingLeft: 10,
+  },
+  icon: {
+    padding: normalize(10),
+    marginTop: normalize(5),
   },
   row: {
     flexDirection: "row",
@@ -187,8 +192,8 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     color: "white",
-    marginTop: 15,
-    marginBottom: 15,
+    marginTop:normalize(15),
+    marginBottom: normalize(15),
   },
   label3: {
     fontSize: 14,
@@ -201,16 +206,16 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "hsla(0, 0%, 100% , 0.4)",
     marginTop: 15,
-    marginBottom: 15,
+    marginBottom: normalize(15),
     marginLeft: 50,
   },
   button: {
     backgroundColor: "#3f62d1",
     borderRadius: 10,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+    paddingVertical:normalize(10),
+    paddingHorizontal: normalize(20),
     alignSelf: "center",
-    marginTop: 20,
+    marginTop: normalize(20),
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",

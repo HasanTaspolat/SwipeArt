@@ -11,6 +11,7 @@ import { AntDesign } from "@expo/vector-icons";
 import LoginScreen from "./LoginScreen";
 import SettingsScreen from "./SettingsScreen";
 import { useNavigation } from "@react-navigation/native";
+import normalize from "react-native-normalize";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -80,7 +81,7 @@ const Sidebar = () => {
               <AntDesign name="setting" size={24} color="white" />
               <Text style={styles.settingsText}> Settings </Text>
             </TouchableOpacity>
-          {/*   <TouchableOpacity
+            {/*   <TouchableOpacity
               style={styles.settingsIcon}
               onPress={multiplePresses}
             >
@@ -100,28 +101,27 @@ const Sidebar = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "flex-start",
     justifyContent: "center",
     paddingHorizontal: 120,
     zIndex: 222,
-    marginTop: 150,
     backgroundColor: "red",
+    justifyContent: "flex-end",
   },
   icon: {
     position: "absolute", // add if dont work with above
-    top: 50,
     left: 20,
+    top: normalize(60),
   },
   sidebar: {
     position: "absolute",
-    top: 0,
+    top: normalize(3),
     left: 0,
     height: windowHeight,
     width: "50%",
     backgroundColor: "black",
     zIndex: 22,
-    paddingHorizontal: 20,
-    paddingVertical: 30,
+    paddingHorizontal: normalize(20),
+    paddingVertical: normalize(30),
   },
   sidebarText: {
     fontSize: 20,
@@ -131,6 +131,7 @@ const styles = StyleSheet.create({
   },
   closeIcon: {
     marginBottom: 20,
+    top: normalize(25),
     color: "white",
     display: "flex",
     flexDirection: "row",

@@ -11,6 +11,7 @@ import {
   Modal,
   Linking,
 } from "react-native";
+import normalize from "react-native-normalize";
 import { AntDesign } from "@expo/vector-icons";
 import Icon from "react-native-vector-icons/FontAwesome";
 const { width, height } = Dimensions.get("window");
@@ -202,34 +203,6 @@ const SwipeCard = ({ data, onSwipe, onSwipeLeft, onSwipeRight, children }) => {
               </View>
             )}
           </View>
-
-          {/*     {data.socialMedia.behance && (
-            <Text style={styles.name}>
-              Instagram: {data.socialMedia.behance}
-            </Text>
-          )}
-          {data.socialMedia.instagram && (
-            <Text style={styles.name}>
-              Instagram: {data.socialMedia.instagram}
-            </Text>
-          )}
-          {data.socialMedia.twitter && (
-            <Text style={styles.name}>
-              Instagram: {data.socialMedia.twitter}
-            </Text>
-          )}
-          {data.socialMedia.linkedin && (
-            <Text style={styles.name}>
-              Instagram: {data.socialMedia.linkedin}
-            </Text>
-          )} */}
-
-          {/*  {data.socialMedia.behance && (
-            <Text style={styles.name}>Behance: {data.socialMedia.behance}</Text>
-          )} */}
-
-          {/* Add more social media accounts as needed */}
-          {/* Render additional artist information here */}
         </View>
       </Modal>
 
@@ -259,11 +232,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     left: 0,
     right: 0,
-    marginTop: 80,
+    marginTop: normalize(40),
   },
   name: {
     color: "white",
   },
+
   open: {
     color: "rgba(207, 208, 223, 1)",
     fontFamily: "circular",
@@ -271,7 +245,7 @@ const styles = StyleSheet.create({
   },
   button: {
     position: "absolute",
-    top: 500,
+    top: normalize(430),
     width: 50,
     padding: 10,
     justifyContent: "center",
@@ -321,7 +295,7 @@ const styles = StyleSheet.create({
   },
   button2: {
     position: "absolute",
-    top: 500,
+    top: normalize(430),
     width: 50,
     padding: 10,
     justifyContent: "center",
@@ -341,7 +315,8 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     position: "absolute",
-    top: 20,
+    top: normalize(30),
+    margin:normalize(30),
     right: 20,
     zIndex: 1,
   },

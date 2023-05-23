@@ -17,6 +17,9 @@ import { AntDesign } from "@expo/vector-icons";
 import BottomNavigationCustomer from "./BottomNavigationCustomer";
 import { getAuth } from "firebase/auth";
 import OpenSwipeAnimation from "./OpenSwipeAnimation";
+import normalize from "react-native-normalize";
+import { Dimensions } from "react-native";
+
 import {
   collection,
   doc,
@@ -55,7 +58,7 @@ export default function SwipeContainer() {
   const [searchResults, setSearchResults] = useState([]);
   const [filterArr, setFilterArr] = useState([]);
   const [isPopupVisible, setPopupVisible] = useState(false);
-
+  const screenHeight = Dimensions.get("window").height;
   useEffect(() => {
     if (counter < 12 && artists.length < 1) {
       const fetchData = async () => {
@@ -172,8 +175,7 @@ export default function SwipeContainer() {
                   artistjob: temp,
                   username: artist.username,
                 });
-              }
-              else if (artiststemp[0][highestPreference2] === 1) {
+              } else if (artiststemp[0][highestPreference2] === 1) {
                 listedArtists.push({
                   artistid: artist.id,
                   bio: artist.bio,
@@ -289,15 +291,19 @@ export default function SwipeContainer() {
       const notificationRef = doc(db, "notifications", userId);
 
       // Set or update the 'viewed' property for the target user
-      await setDoc(notificationRef, {
-        [targetUserId]: { viewed: false }
-      }, { merge: true });
+      await setDoc(
+        notificationRef,
+        {
+          [targetUserId]: { viewed: false },
+        },
+        { merge: true }
+      );
 
       console.log("Notification added successfully");
     } catch (error) {
       console.error("Error adding notification: ", error);
     }
-}
+  }
 
   async function setPrefferedArtists() {
     await handlePreCreate();
@@ -311,7 +317,6 @@ export default function SwipeContainer() {
     setCards(newCards);
     setCardNumber(newCards);
     console.log("Swiped left on card at index", cardIndex);
-
   };
 
   const onSwipeRight = (cardIndex) => {
@@ -355,6 +360,7 @@ export default function SwipeContainer() {
                     }
                     style={styles.cardImage}
                   />
+
                   <View style={styles.textContainer}>
                     <Text style={styles.name}>{card.nameSurname}</Text>
                     <Text style={styles.profession}>@{card.username}</Text>
@@ -374,26 +380,28 @@ export default function SwipeContainer() {
 
 const styles = StyleSheet.create({
   cardContainer: {
-    width: "100%",
     height: "100%",
+    justifyContent: "center",
+    bottom: normalize(280),
   },
   cardImage: {
-    width: "80%",
+    width: normalize(200),
     height: "80%",
     borderRadius: 10,
     borderWidth: 2,
     borderColor: "white",
   },
+  imageImage: {},
   card: {
     flexDirection: "column",
-    paddingHorizontal: 55,
+    paddingHorizontal: normalize(55),
     width: 400,
     alignItems: "center",
     justifyContent: "center",
   },
   card2: {
     flexDirection: "column",
-    paddingHorizontal: 55,
+    paddingHorizontal: normalize(55),
     width: 400,
     height: 500,
     alignItems: "center",
@@ -403,15 +411,14 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    marginRight: 16,
+    marginRight: normalize(16),
   },
   loginText: {
     color: "#fff",
     fontSize: 25,
-    top: 30,
     fontWeight: "bold",
     textAlign: "center",
-    right:10,
+    right: normalize(10),
   },
   textContainer: {
     flex: 1,
@@ -421,19 +428,20 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 24,
     fontWeight: "bold",
-    marginTop: 14,
+    marginTop: normalize(14),
     color: "white",
   },
   shown: {
     fontSize: 16,
     fontWeight: "thin",
     color: "white",
-    flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    top: 300,
-    marginRight: "auto",
+    top: normalize(220),
+    marginTop: "auto",
+    marginBottom: "auto",
     marginLeft: "auto",
+    marginRight: "auto",
   },
   profession: {
     fontSize: 16,
@@ -442,7 +450,7 @@ const styles = StyleSheet.create({
   },
   button: {
     width: 50,
-    padding: 10,
+    padding: normalize(10),
     position: "absolute",
     left: "30%",
     backgroundColor: "red",
@@ -452,7 +460,7 @@ const styles = StyleSheet.create({
   },
   button2: {
     width: 50,
-    padding: 10,
+    padding: normalize(10),
     position: "absolute",
     right: "30%",
     backgroundColor: "green",

@@ -13,6 +13,7 @@ import SwipeContainer from "./SwipeContainer";
 import SwipeCard from "./SwipeCard";
 import jsonData from "../person.json";
 import BottomNavigationCustomer from "./BottomNavigationCustomer";
+import normalize from "react-native-normalize";
 
 const customFonts = {
   circular: require("../assets/circular.ttf"),
@@ -38,7 +39,7 @@ export default function MainPage({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: "flex-end",
+
     backgroundColor: "rgba(2, 4, 14, 1)",
     display: "flex",
     flexDirection: "column",

@@ -20,6 +20,8 @@ import { AntDesign } from "@expo/vector-icons";
 import BottomNavigationCustomer from "./BottomNavigationCustomer";
 import { getAuth } from "firebase/auth";
 import OpenSwipeAnimation from "./OpenSwipeAnimation";
+import normalize from "react-native-normalize";
+
 import {
   collection,
   doc,
@@ -234,8 +236,8 @@ export default function FilterScreen() {
         style={{
           flexDirection: "row",
           alignItems: "center",
-          paddingHorizontal: 10,
-          paddingVertical: 30,
+          paddingHorizontal: normalize(10),
+          paddingVertical: normalize(50),
         }}
       >
         <Ionicons
@@ -483,9 +485,10 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     backgroundColor: "black",
+    padding: normalize(0),
   },
   listingcontainer: {
-    margin: 10,
+    margin: normalize(11),
     borderWidth: 2,
     borderBottomColor: "white",
     textAlign: "center",
@@ -501,6 +504,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 2,
     borderColor: "white",
+
+    borderWidth: 2,
+    borderColor: "white",
+
   },
   cardImage2: {
     width: 40,
@@ -534,6 +541,8 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 30,
     marginRight: 16,
+    borderWidth: 2,
+    borderColor: "white",
   },
   textContainer: {
     flex: 1,
@@ -582,25 +591,26 @@ const styles = StyleSheet.create({
     height: 40,
     borderColor: "gray",
     borderWidth: 1,
-    padding: 5,
+    padding: normalize(11),
     color: "white",
   },
   flatlist: {
     flex: 1,
     borderColor: "gray",
     borderWidth: 1,
-    padding: 5,
+    padding: normalize(5),
     color: "white",
   },
   modalContainer: {
     flex: 1,
-    backgroundColor: "black",
-    flex: 1,
     backgroundColor: "rgba(0, 0, 0, 1)", // Semi-transparent background color
     borderColor: "gray",
     borderWidth: 1,
+    marginTop: normalize(90),
   },
-  allModal: { backgroundColor: "black" },
+  allModal: {
+    backgroundColor: "black",
+  },
   closeButton: {
     position: "absolute",
     top: 10,
@@ -627,7 +637,8 @@ const styles = StyleSheet.create({
   listItem: {
     flexDirection: "column",
     alignItems: "center",
-    padding: 16,
+    padding: normalize(16),
+    marginTop: normalize(20),
   },
   startFilter: {
     flexDirection: "row",
@@ -638,12 +649,15 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 50,
+    padding: normalize(25),
+    borderWidth: 2,
+    borderColor: "white",
   },
   name: {
     fontSize: 20,
     fontWeight: "bold",
     color: "#fff",
-    margin: 10,
+    marginTop: normalize(20),
     textAlign: "center",
   },
   bio: {

@@ -23,7 +23,9 @@ import { getAuth } from "firebase/auth";
 import { db } from "../components/config";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+
 import Icon from "react-native-vector-icons/FontAwesome";
+import normalize from "react-native-normalize";
 
 export default function FriendsListCustomer() {
   const [friends, setFriends] = useState([]);
@@ -118,11 +120,15 @@ export default function FriendsListCustomer() {
       </TouchableOpacity>
 
       <Text style={styles.friendTitle}>Friend List:</Text>
-
       <FlatList
         data={friends}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
+        ListEmptyComponent={() => (
+          <Text style={styles.emptyText}>
+            You do not have any friends right now!
+          </Text>
+        )}
       />
     </View>
   );
@@ -149,12 +155,18 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
   },
+  emptyText: {
+    color: "white",
+    fontSize: 16,
+    padding: normalize(20),
+  },
   friendTitle: {
     color: "white",
     fontSize: 20,
     padding: 20,
   },
   icon2: {
-    padding: 20,
+    marginTop: normalize(50),
+    left: normalize(20),
   },
 });
