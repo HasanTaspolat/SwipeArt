@@ -60,6 +60,10 @@ export default function FriendsList() {
       return null;
     }
   };
+  const startChat = (user1, user2) => {
+    // Implement your navigation logic here to open a specific chat
+    navigation.navigate("ChatScreen",{ userID1: user1 , userID2: user2  });
+  }; 
 
   useEffect(() => {
     if (uid) {
@@ -94,6 +98,9 @@ export default function FriendsList() {
   const renderItem = ({ item }) => (
     <View style={styles.item}>
       <Text style={styles.title}>{item.name || item.id}</Text>
+      <TouchableOpacity style={styles.openChatButton} onPress={() => startChat(uid, item.id)}>
+      <Text style={styles.openChatText}>Open Chat</Text>
+    </TouchableOpacity>
       <TouchableOpacity>
         <Icon
           name="remove"
@@ -144,6 +151,17 @@ const styles = StyleSheet.create({
   title: {
     color: "white",
     fontSize: 16,
+  },
+  openChatButton: {
+    backgroundColor: '#1e90ff',
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 10,
+  },
+  openChatText: {
+    color: '#fff',
+    fontSize: 18,
+    textAlign: 'center',
   },
   friendTitle: {
     color: "white",

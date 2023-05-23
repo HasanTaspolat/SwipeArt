@@ -13,10 +13,12 @@ import { useRoute } from "@react-navigation/native"
 import { doc } from '@firebase/firestore';
 import { db } from "../components/config";
 import { getAuth, signOut, deleteUser } from "firebase/auth";
+import Icon from "react-native-vector-icons/Ionicons";
 import BottomNavigationArtist from "./BottomNavigationArtist";
 
 function ChatStart() {
   const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
   const navigation = useNavigation();
   const auth = getAuth();
   const user = auth.currentUser;
@@ -34,15 +36,17 @@ function ChatStart() {
       if (doc.exists()) {
         const data = doc.data();
         let notificationList = [];
+        let unreadCountTemp = 0; // temporary variable to hold unread count
   
         for (let user in data) {
           // Fetch user data from the 'users' collection
-          console.log(user)
-          console.log("buraya kadar gelemedi")
           const userDoc = await getDoc(docRef(db, "users", user));
-
+  
           if (userDoc.exists()) {
             const userData = userDoc.data();
+            if (!data[user].viewed) {
+              unreadCountTemp++; // increment if notification is not viewed
+            }
             notificationList.push({
               userId: user, 
               viewed: data[user].viewed,
@@ -53,7 +57,7 @@ function ChatStart() {
         }
   
         setNotifications(notificationList);
-
+        setUnreadCount(unreadCountTemp); // update the state
       }
     });
   
@@ -114,10 +118,33 @@ function ChatStart() {
       console.error("Error removing notification: ", error);
     }
   };
+  // function to handle back navigation
+  const handleBackNavigation = async () => {
+    // Fetch the current user's data
+    const userDoc = await getDoc(doc(db, "users", uid));
+    if (userDoc.exists()) {
+      const userData = userDoc.data();
+      if (userData.isArtist === 1) {
+        navigation.navigate("ArtistDashboardPage");
+      } else {
+        navigation.navigate("MainPage");
+      }
+    } else {
+      console.log("No such user!");
+    }
+  };
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity onPress={handleBackNavigation} style={styles.backButton}>
+      <Icon name="arrow-back" size={24} color="#fff" /> 
+    </TouchableOpacity>
       <Text style={styles.title}>Notifications & Chat Requests:</Text>
+      {unreadCount > 0 && (
+      <View style={styles.unreadBubble}>
+        <Text style={styles.unreadText}>{unreadCount}</Text>
+      </View>
+    )}
       <View style={styles.subContainer}>
         <ScrollView contentContainerStyle={styles.chatList}>
           {notifications.map((notification) => (
@@ -140,10 +167,6 @@ function ChatStart() {
                 <Text style={styles.lastMessage}>
                   {notification.viewed ? "Go to chat." : "These users have swiped you right!"}
                 </Text>
-                <View style={styles.unreadBadge}>
-                  <Text style={styles.unreadBadgeText}>
-                  </Text>
-                </View>
               </View>
 
               </TouchableOpacity>
@@ -178,6 +201,7 @@ function ChatStart() {
       color: "#fff",
       fontSize: 24,
       marginBottom: 10,
+      marginTop: 45,
     },
     text: {
       color: "#fff",
@@ -200,6 +224,11 @@ function ChatStart() {
       justifyContent: "center",
       alignItems: "center",
     },
+    backButton: {
+      position: "absolute",
+      top: 20,
+      left: 10,
+    },
     avatar: {
       width: 48,
       height: 48,
@@ -218,6 +247,19 @@ function ChatStart() {
       fontSize: 14,
       color: "#888",
     },
+    unreadBubble: {
+      width: 24,
+      height: 24,
+      borderRadius: 12,
+      backgroundColor: 'purple',
+      justifyContent: 'center',
+      alignItems: 'center',
+      alignSelf: 'center',
+    },
+    unreadText: {
+      color: '#fff',
+      fontSize: 12,
+    },
     unreadBadge: {
       marginTop: 4,
       backgroundColor: "#E74C3C",
@@ -232,7 +274,7 @@ function ChatStart() {
     },
     actionContainer: {
       flexDirection: "row",
-      justifyContent: "space-between",
+      justifyContent: "space-evenly",
       marginTop: 10,
     },
     actionText: {

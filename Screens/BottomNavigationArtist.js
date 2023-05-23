@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
+import { onSnapshot, getDoc, doc, setDoc, updateDoc, deleteField } from "firebase/firestore";
+import { db } from "../components/config";
+import { getAuth, signOut, deleteUser } from "firebase/auth";
 import {
   View,
   StyleSheet,
@@ -26,6 +29,31 @@ const BottomNavigation = () => {
   const handlePressOutChat = () => setisPressedChat(false);
 
   const [activeScreen, setActiveScreen] = useState("ArtistDashboardPage");
+  const [unreadCount, setUnreadCount] = useState(0);
+  const auth = getAuth();
+  const user = auth.currentUser;
+  const uid = user.uid;
+
+  useEffect(() => {
+    const notificationsRef = doc(db, "notifications", uid);
+  
+    const unsubscribe = onSnapshot(notificationsRef, (doc) => {
+      if (doc.exists()) {
+        const data = doc.data();
+        let unreadCount = 0;
+  
+        for (let user in data) {
+          if (!data[user].viewed) {
+            unreadCount++;
+          }
+        }
+  
+        setUnreadCount(unreadCount);
+      }
+    });
+  
+    return () => unsubscribe();
+  }, [db, uid]); // add dependencies
 
   const onPress = (screenName) => {
     setActiveScreen(screenName);
@@ -108,6 +136,11 @@ const BottomNavigation = () => {
             name={activeScreen === "ChatStart" ? "ios-chatbox" : "ios-chatbox"}
             size={24}
           />
+          {unreadCount > 0 && (
+            <View style={styles.unreadBubble}>
+              <Text style={styles.unreadText}>{unreadCount}</Text>
+            </View>
+          )}
           <Text
             style={[
               styles.tabText,
@@ -142,7 +175,21 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-
+  unreadBubble: {
+    position: 'absolute',
+    right: -10, // Adjust these values to position the bubble as needed
+    top: -10,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: 'purple',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  unreadText: {
+    color: '#fff',
+    fontSize: 12,
+  },
   activeTabButton: {},
   tabText: {
     fontSize: 12,
