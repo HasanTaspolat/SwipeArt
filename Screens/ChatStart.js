@@ -244,8 +244,12 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   icon2: {
-    marginTop: normalize(40),
+    marginTop: normalize(60),
     left: normalize(10),
+    padding: 5,
+    width: 30,
+    borderRadius: 12,
+    backgroundColor: "#673AB7",
   },
   subContainer: {
     flex: 1,
