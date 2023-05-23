@@ -23,8 +23,7 @@ const SwipeCard = ({ data, onSwipe, onSwipeLeft, onSwipeRight, children }) => {
   const [position, setPosition] = useState(new Animated.ValueXY());
   const [gestureDy, setGestureDy] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
-  const [showCVModal, setShowCVModal] = useState(false);
-  const [CVImageUrl, setCVImageUrl] = useState("");
+
   const [panResponder, setPanResponder] = useState(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
@@ -48,8 +47,6 @@ const SwipeCard = ({ data, onSwipe, onSwipeLeft, onSwipeRight, children }) => {
     setIsDisliked(false);
     setPosition(new Animated.ValueXY());
   }, [data]);
-
-  //console.log(data);
 
   useEffect(() => {
     if (isLiked) {
@@ -126,6 +123,8 @@ const SwipeCard = ({ data, onSwipe, onSwipeLeft, onSwipeRight, children }) => {
           <Text style={styles.open}>OPEN</Text>
         </TouchableOpacity>
       </Animated.View>
+
+      {/* Modal */}
       <Modal
         visible={modalVisible}
         animationType="slide"
@@ -138,12 +137,10 @@ const SwipeCard = ({ data, onSwipe, onSwipeLeft, onSwipeRight, children }) => {
           >
             <AntDesign name="close" size={24} color="white" />
           </TouchableOpacity>
-          <Text style={styles.name}>Name Surname: {data.nameSurname}</Text>
-          <Text style={styles.name}>Biography: {data.bio}</Text>
-          <Text style={styles.name}>Profession: {data.profession}</Text>
-          <Text style={styles.name}>Username: @{data.username}</Text>
-
-          <Text style={styles.sos}>Social Media Links:</Text>
+          <Text style={styles.name}>{data.nameSurname}</Text>
+          <Text style={styles.name}>{data.bio}</Text>
+          <Text style={styles.name}>{data.profession}</Text>
+          <Text style={styles.name}>{data.username}</Text>
 
           <View style={styles.socialLinks}>
             {data.socialMedia && data.socialMedia.behance !== "" && (
@@ -206,44 +203,6 @@ const SwipeCard = ({ data, onSwipe, onSwipeLeft, onSwipeRight, children }) => {
               </View>
             )}
           </View>
-
-          <View style={styles.iconContainer}>
-            <TouchableOpacity
-              style={styles.viewCv}
-              onPress={() => {
-                setCVImageUrl(data.cv);
-                setShowCVModal(true);
-              }}
-            >
-              <Text style={styles.cvBut}>View CV</Text>
-            </TouchableOpacity>
-
-            {showCVModal && (
-              <Modal
-                visible={showCVModal}
-                transparent={true}
-                style={styles.allModal}
-                onRequestClose={() => setShowCVModal(false)}
-              >
-                <View style={styles.modalContainer}>
-                  <TouchableOpacity
-                    style={styles.closeButton}
-                    onPress={() => setShowCVModal(false)}
-                  >
-                    <AntDesign name="close" size={24} color="white" />
-                  </TouchableOpacity>
-                  <View style={styles.cvContainer}>
-                    <Text style={styles.sos2}>CV of {data.nameSurname}: </Text>
-                    <Image
-                      source={{ uri: CVImageUrl }}
-                      style={styles.cvImage}
-                      resizeMode="center"
-                    />
-                  </View>
-                </View>
-              </Modal>
-            )}
-          </View>
         </View>
       </Modal>
 
@@ -275,73 +234,8 @@ const styles = StyleSheet.create({
     right: 0,
     marginTop: normalize(40),
   },
-  cvImage: {
-    height: 200,
-    width: 200,
-  },
   name: {
     color: "white",
-    margin: normalize(8),
-    fontSize: 16,
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    backgroundColor: "rgba(36, 36, 36, 0.62)",
-    width: 240,
-    borderColor: "rgba(197, 197, 197, 0.62)",
-    borderWidth: 1,
-    padding: normalize(12),
-    textAlign: "center",
-  },
-  cvImage: {
-    height: 300,
-    width: 300,
-    textAlign: "center",
-    justifyContent: "center",
-    borderColor: "rgba(255, 255, 255, 1)",
-    borderWidth: 1,
-  },
-  sos2: {
-    color: "white",
-    margin: normalize(8),
-    fontSize: 16,
-    width: "100%",
-    padding: normalize(16),
-    textAlign: "center",
-    justifyContent: "center",
-    display: "flex", // Changed from "flex" to "block"
-    left: normalize(70),
-  },
-  sos: {
-    color: "white",
-    margin: normalize(8),
-    fontSize: 16,
-    width: "100%",
-    padding: normalize(16),
-    textAlign: "center",
-    justifyContent: "center",
-    display: "flex", // Changed from "flex" to "block"
-  },
-  cvContainer: {
-    textAlign: "center",
-    justifyContent: "center",
-    display: "flex",
-    flexDirection: "column",
-  },
-  cvBut: {
-    color: "white",
-    margin: normalize(8),
-    fontSize: 16,
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
-    backgroundColor: "rgba(12, 13, 46, 0.96)",
-    borderColor: "rgba(255, 255, 255, 1)",
-    borderWidth: 1,
-    padding: normalize(16),
-    textAlign: "center",
-    borderRadius: 14,
   },
 
   open: {
@@ -422,7 +316,7 @@ const styles = StyleSheet.create({
   closeButton: {
     position: "absolute",
     top: normalize(30),
-    margin: normalize(30),
+    margin:normalize(30),
     right: 20,
     zIndex: 1,
   },
@@ -441,6 +335,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  
 });
 
 export default SwipeCard;

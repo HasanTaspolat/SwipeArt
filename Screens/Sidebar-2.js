@@ -11,7 +11,6 @@ import { AntDesign } from "@expo/vector-icons";
 import LoginScreen from "./LoginScreen";
 import SettingsScreen from "./SettingsScreen";
 import { useNavigation } from "@react-navigation/native";
-import normalize from "react-native-normalize";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -85,7 +84,7 @@ const Sidebar = () => {
         </View>
       )}
       <TouchableOpacity style={styles.icon} onPress={handleSidebarOpen}>
-        <AntDesign name="menu-fold" size={24} color="white" onPress={handleSidebarOpen} />
+        <AntDesign name="menu-fold" size={24} color="white" />
       </TouchableOpacity>
     </View>
   );
@@ -101,8 +100,9 @@ const styles = StyleSheet.create({
   },
   icon: {
     position: "absolute", // add if dont work with above
-    left: 40,
-    top: normalize(60),
+    top: 0,
+    left: 10,
+    paddingVertical: 20,
   },
   sidebar: {
     position: "absolute",

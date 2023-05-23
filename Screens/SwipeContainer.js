@@ -144,6 +144,7 @@ export default function SwipeContainer() {
       docSnap.forEach((doc) => {
         artists.push({ ...doc.data(), id: doc.id });
       });
+      //console.log("artists",artists);
 
       artists.map((artist) => {
         getDocs(collection(db, "users", artist.id, "artistPreference")).then(
@@ -171,7 +172,6 @@ export default function SwipeContainer() {
                   nameSurname: artist.nameSurname,
                   profession: highestPreference,
                   photoURL: artist.photoURL,
-                  cv: artist.cv,
                   artistjob: temp,
                   username: artist.username,
                 });
@@ -183,7 +183,6 @@ export default function SwipeContainer() {
                   nameSurname: artist.nameSurname,
                   profession: highestPreference2,
                   photoURL: artist.photoURL,
-                  cv: artist.cv,
                   artistjob: temp,
                   username: artist.username,
                 });
@@ -328,8 +327,6 @@ export default function SwipeContainer() {
     setCards(newCards);
     console.log("Swiped right on card at index", cardIndex);
   };
-
-  //console.log(cards);
 
   const hideModal = () => {
     setSelectedCard(null);

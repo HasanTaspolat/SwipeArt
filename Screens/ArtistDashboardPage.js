@@ -47,7 +47,7 @@ const ArtistDashboardPage = () => {
         docs.push({ id: doc.id, ...doc.data() });
       });
       const currentUser = docs.find((item) => item.id === auth.currentUser.uid);
-      //console.log("current name", currentUser);
+      console.log("current name", currentUser);
       setData(docs);
       setNameSurname(currentUser.nameSurname);
     });
@@ -70,8 +70,8 @@ const ArtistDashboardPage = () => {
       const currentUser = docs_pref.find(
         (item) => item.id === auth.currentUser.uid
       );
-     /*  console.log("artistPreference data", docs_pref);
-      console.log("sss:", docs_pref[0].id); */
+      console.log("artistPreference data", docs_pref);
+      console.log("sss:", docs_pref[0].id);
       setOrderType(docs_pref[0].id);
       setData(docs_pref);
     });
@@ -180,16 +180,16 @@ const ArtistDashboardPage = () => {
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: normalize(40),
     backgroundColor: "black",
     flex: 1,
-  
   },
   cardContainer: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-evenly",
+
     padding: 0,
-  
   },
   header: {
     marginTop: 22,
@@ -200,15 +200,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#fff",
     width: "100%",
-    paddingLeft: normalize(20),
-    marginTop: normalize(80),
+    marginTop: 48,
+    paddingLeft: 10,
   },
   name: {
     fontSize: 26,
     fontWeight: "bold",
     color: "#fff",
     padding: 10,
-    paddingLeft: normalize(20),
   },
   card: {
     width: "45%",
@@ -220,7 +219,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    marginTop: normalize(40),
+    marginTop: 10,
   },
   title: {
     fontSize: 16,

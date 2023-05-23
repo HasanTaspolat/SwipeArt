@@ -50,16 +50,8 @@ import { db } from "../components/config";
 import ChooseScreenFirst from "./ChooseScreenFirst";
 import "@react-navigation/native-stack";
 import * as DocumentPicker from "expo-document-picker";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { firebaseConfig } from "../components/config"; // Modify the path to your Firebase config
-import {
-  getStorage,
-  ref,
-  uploadString,
-  uploadBytes,
-  uploadBytesResumable,
-  getDownloadURL,
-} from "firebase/storage";
-import storage from "../components/config";
 
 WebBrowser.maybeCompleteAuthSession();
 const RegisterScreen = ({ navigation }) => {
@@ -92,39 +84,6 @@ const RegisterScreen = ({ navigation }) => {
     }));
   };
 
-  const uploadImageToFirebase = async (uri) => {
-    const response = await fetch(uri);
-    const blob = await response.blob();
-
-    const storage = getStorage();
-    const storageRef = ref(
-      storage,
-      "profileImages/" + Math.random().toString(36).substring(2, 15)
-    );
-    const uploadTask = uploadBytesResumable(storageRef, blob);
-
-    return new Promise((resolve, reject) => {
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          var progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log("Upload is " + progress + "% done");
-        },
-        (error) => {
-          console.log(error);
-          reject(error);
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            console.log("File available at", downloadURL);
-            resolve(downloadURL);
-          });
-        }
-      );
-    });
-  };
-
   const handleChoosePhoto = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -136,18 +95,9 @@ const RegisterScreen = ({ navigation }) => {
 
     console.log(result);
 
-    if (!result.cancelled) {
-      const url = await uploadImageToFirebase(result.assets[0].uri);
-      setPhotoURL(url);
-
-      console.log(url);
-      await updateDoc(doc(db, "users", uid), {
-        photoURL: url,
-      });
-
-   
+    if (!result.canceled) {
+      setPhotoURL(result.assets[0].uri);
     }
-
   };
 
   function create(userUID) {
@@ -269,6 +219,8 @@ const RegisterScreen = ({ navigation }) => {
         <Text style={styles.header4}>
           Fields marked with (*) are required to be filled.
         </Text>
+
+        
 
         <Text style={styles.header2}>E-mail*</Text>
         <TextInput

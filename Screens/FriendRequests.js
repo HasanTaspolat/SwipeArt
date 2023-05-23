@@ -20,7 +20,6 @@ import {
   addDoc,
 } from "firebase/firestore";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import normalize from "react-native-normalize";
 
 import { db } from "../components/config";
 import { getAuth } from "firebase/auth";
@@ -178,11 +177,6 @@ export default function FriendRequests() {
         data={requests}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
-        ListEmptyComponent={() => (
-          <Text style={styles.emptyText}>
-            You do not have any friends right now!
-          </Text>
-        )}
       />
     </View>
   );
@@ -192,11 +186,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "black",
-  },
-  emptyText: {
-    color: "white",
-    fontSize: 16,
-    padding: 20,
   },
   button: {
     backgroundColor: "rgba(24, 20, 168, 1)",
@@ -251,9 +240,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   icon2: {
-    top: normalize(60),
-    marginBottom: normalize(70),
-    left: 20,
+    padding: 20,
   },
   icon3: {
     padding: 10,
