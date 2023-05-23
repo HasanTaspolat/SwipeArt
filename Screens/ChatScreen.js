@@ -151,12 +151,10 @@ export default function Chat(user) {
         showUserAvatar={false}
         onSend={(messages) => onSend(messages)}
         messagesContainerStyle={{
-          backgroundColor: "#222",
+          backgroundColor: "rgba(10, 11, 33, 0.96)",
         }}
         textInputStyle={{
-          backgroundColor: "#333",
-          borderRadius: 20,
-          color: "#fff",
+          color: "rgba(10, 11, 33, 0.96)",
         }}
         user={{
           _id: auth?.currentUser?.uid,
@@ -164,7 +162,7 @@ export default function Chat(user) {
         }}
         renderMessageImage={renderMessageImage}
       ></GiftedChat>
-      <Button title="Pick an image" onPress={pickImage} color="#fff" />
+      <Button title="Pick an image" onPress={pickImage} color="black"  />
     </View>
   );
 }  
