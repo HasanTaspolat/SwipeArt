@@ -230,6 +230,8 @@ export default function FilterScreen() {
     navigation.navigate("FriendStatCustomer");
   };
 
+  console.log(searchResults);
+
   return (
     <View style={styles.cardContainer}>
       <View
@@ -307,7 +309,6 @@ export default function FilterScreen() {
                   <Text style={styles.bio}>{item.bio}</Text>
                   <Text style={styles.info}>@{item.username}</Text>
                   <Text style={styles.info}>{item.email}</Text>
-                  <Text style={styles.info}>{musicianJob}</Text>
                   <Text style={styles.info}>{musicianJob}</Text>
                   <View style={styles.icont}>
                     <TouchableOpacity
@@ -487,6 +488,15 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     padding: normalize(0),
   },
+  cvImage: {
+    height: 300,
+    width: 300,
+    textAlign: "center",
+    borderColor: "rgba(255, 255, 255, 1)",
+    borderWidth: 1,
+    textAlign:"center",
+    left: normalize(50)
+  },
   listingcontainer: {
     margin: normalize(11),
     borderWidth: 2,
@@ -507,7 +517,6 @@ const styles = StyleSheet.create({
 
     borderWidth: 2,
     borderColor: "white",
-
   },
   cardImage2: {
     width: 40,
