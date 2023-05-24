@@ -96,7 +96,7 @@ const AllListings = () => {
                 />
               </View>
               <View style={styles.buttonContainer}>
-                <TouchableOpacity onPress={() => handleDelete(item.id)}>
+                <TouchableOpacity onPress={() => deleteListing(item.id)}>
                   <Ionicons name="trash" size={24} color="#fff" />
                 </TouchableOpacity>
                 <TouchableOpacity

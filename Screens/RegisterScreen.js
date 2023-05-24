@@ -27,6 +27,7 @@ import * as WebBrowser from "expo-web-browser";
 import { LogBox } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 
+const auth = getAuth();
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -80,9 +81,6 @@ const RegisterScreen = ({ navigation }) => {
   const storage = getStorage(firebaseConfig);
   const [photoURL, setPhotoURL] = useState("");
 
-  const auth = getAuth();
-  const user = auth.currentUser;
-  const uid = user.uid;
 
   LogBox.ignoreAllLogs(); // to hide the warnings
 
@@ -142,10 +140,7 @@ const RegisterScreen = ({ navigation }) => {
       setPhotoURL(url);
 
       console.log(url);
-      await updateDoc(doc(db, "users", uid), {
-        photoURL: url,
-      });
-
+  
    
     }
 
@@ -386,7 +381,7 @@ const RegisterScreen = ({ navigation }) => {
           onChangeText={setBio}
         />
 
-        <TouchableHighlight
+<TouchableHighlight
           style={styles.buttonPhoto}
           activeOpacity={0.6}
           underlayColor="#DDDDDD"
@@ -395,7 +390,7 @@ const RegisterScreen = ({ navigation }) => {
           }}
         >
           <Text style={styles.button3title}>Choose Profile Image*</Text>
-        </TouchableHighlight>
+        </TouchableHighlight> 
 
         <TouchableHighlight
           style={styles.button}
@@ -423,6 +418,8 @@ const styles = StyleSheet.create({
   },
   icon2: {
     padding: 20,
+    marginTop:30,
+    top:20,
   },
   main2: {
     backgroundColor: "#000000",

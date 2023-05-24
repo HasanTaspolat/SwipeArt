@@ -4,9 +4,16 @@ import React, {
   useLayoutEffect,
   useCallback,
 } from "react";
-import { TouchableOpacity, Text, View, StyleSheet, Button, Image } from "react-native";
+import {
+  TouchableOpacity,
+  Text,
+  View,
+  StyleSheet,
+  Button,
+  Image,
+} from "react-native";
 import { GiftedChat } from "react-native-gifted-chat";
-import { useRoute } from "@react-navigation/native"
+import { useRoute } from "@react-navigation/native";
 import "@react-navigation/native-stack";
 import {
   collection,
@@ -25,7 +32,7 @@ import * as ImagePicker from "expo-image-picker";
 export default function Chat(user) {
   const [messages, setMessages] = useState([]);
   const navigation = useNavigation();
-  const route = useRoute()
+  const route = useRoute();
   const userID1 = route.params?.userID1;
   const userID2 = route.params?.userID2;
   const onSignOut = () => {
@@ -119,8 +126,8 @@ export default function Chat(user) {
       auth?.currentUser?.uid === userID1 ||
       auth?.currentUser?.uid === userID2
     ) {
-      console.log(auth?.currentUser?.uid) 
-      console.log(userID1)
+      console.log(auth?.currentUser?.uid);
+      console.log(userID1);
       setMessages((previousMessages) =>
         GiftedChat.append(previousMessages, messages)
       );
@@ -130,11 +137,10 @@ export default function Chat(user) {
         createdAt,
         text,
         user, // sender
-        receiver: userID2// the ID of the receiver
+        receiver: userID2, // the ID of the receiver
       });
     } else {
       console.log("User is not allowed to send messages in this chat");
-
     }
   }, []);
 
@@ -161,57 +167,56 @@ export default function Chat(user) {
         }}
         user={{
           _id: auth?.currentUser?.uid,
-          avatar: "https://i.pravatar.cc/300",
         }}
         renderMessageImage={renderMessageImage}
       ></GiftedChat>
-      <Button title="Pick an image" onPress={pickImage} color="black"  />
+      <Button title="Pick an image" onPress={pickImage} color="black" />
     </View>
   );
-}  
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: "black",
-      borderBottomColor: "#444",
-      borderWidth: 1,
-      position: "relative",
-    },
-    title: {
-      color: "#ddd",
-      fontSize: 14,
-      fontWeight: "bold",
-      marginBottom: 5,
-    },
-    allImage: {
-      marginBottom: 10,
-    },
-    goBack: {
-      position: "absolute",
-      top: 0,
-      left: 0,
-      marginLeft: 10,
-      marginTop: 30,
-      zIndex: 221,
-    },
-    topTitle: {
-      color: "#ddd",
-      fontSize: 18,
-      fontWeight: "bold",
-      paddingVertical: 20,
-      marginTop: 40,
-      borderBottomColor: "#444",
-      borderWidth: 1,
-    },
-    desc: {
-      fontSize: 14,
-      fontWeight: "bold",
-      marginBottom: 5,
-      color: "#ddd",
-    },
-    image: {
-      fontSize: 14,
-      color: "#ddd",
-      marginBottom: 5,
-    },
-  });
+}
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "black",
+    borderBottomColor: "#444",
+    borderWidth: 1,
+    position: "relative",
+  },
+  title: {
+    color: "#ddd",
+    fontSize: 14,
+    fontWeight: "bold",
+    marginBottom: 5,
+  },
+  allImage: {
+    marginBottom: 10,
+  },
+  goBack: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    marginLeft: 10,
+    marginTop: 30,
+    zIndex: 221,
+  },
+  topTitle: {
+    color: "#ddd",
+    fontSize: 18,
+    fontWeight: "bold",
+    paddingVertical: 20,
+    marginTop: 40,
+    borderBottomColor: "#444",
+    borderWidth: 1,
+  },
+  desc: {
+    fontSize: 14,
+    fontWeight: "bold",
+    marginBottom: 5,
+    color: "#ddd",
+  },
+  image: {
+    fontSize: 14,
+    color: "#ddd",
+    marginBottom: 5,
+  },
+});
