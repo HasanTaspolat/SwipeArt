@@ -518,6 +518,16 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: "white",
   },
+  listingImage: {
+    width: 140,
+    height: 140,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: "white",
+    marginBottom:10,
+    borderWidth: 2,
+    borderColor: "white",
+  },
   cardImage2: {
     width: 40,
     height: 40,

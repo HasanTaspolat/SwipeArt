@@ -82,6 +82,7 @@ const RegisterScreen = ({ navigation }) => {
 
   const auth = getAuth();
   const user = auth.currentUser;
+  const uid = user.uid;
 
   LogBox.ignoreAllLogs(); // to hide the warnings
 
