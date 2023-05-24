@@ -27,6 +27,7 @@ import * as ImagePicker from "expo-image-picker";
 import normalize from "react-native-normalize";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import { getAuth } from "firebase/auth";
 import { firebaseConfig } from "../components/config"; // Modify the path to your Firebase config
 import {
@@ -129,16 +130,8 @@ const ListingArtistCreator = () => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.backButton}
-        onPress={() => navigation.goBack()}
-      >
-        <Ionicons
-          name="arrow-back"
-          size={24}
-          color="white"
-          onPress={handlePress}
-        />
+      <TouchableOpacity style={styles.icon2} onPress={handlePress}>
+        <AntDesign name="left" size={24} color="#fff" />
       </TouchableOpacity>
 
       <View style={styles.formWrapper}>
@@ -182,10 +175,23 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: "#111",
   },
+  icon2: {
+    marginTop: normalize(60),
+    left: normalize(10),
+    padding: 5,
+    width: 40,
+    borderRadius: 12,
+    marginBottom: 10,
+    backgroundColor: "#673AB7",
+  },
   backButton: {
     position: "absolute",
     top: 70,
     left: 18,
+    padding: 5,
+    width: 40,
+    borderRadius: 12,
+    backgroundColor: "#673AB7",
   },
   formWrapper: {
     flex: 1,

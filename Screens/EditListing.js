@@ -134,6 +134,10 @@ const EditListing = () => {
       position: "absolute",
       top: 40,
       left: 20,
+      padding: 5,
+      width: 30,
+      borderRadius: 12,
+      backgroundColor: "#673AB7",
     },
     title: {
       fontSize: 24,
